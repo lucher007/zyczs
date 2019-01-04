@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MarketMap">
+	<typeAlias alias="MarketMap" type="cn.gov.zyczs.cspt.po.MarketMap" />
+	
+	<insert id="save" parameterClass="MarketMap">
+		<![CDATA[
+			insert into zs_marketmap
+  			(area, floor, image, areanum, mapname, mapcontent, cpccorp, floornum)
+			values
+ 			(#area#, #floor#, #image#, #areanum#, #mapname#, #mapcontent#, #cpccorp#, #floornum#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_MarketMap.CURRVAL as id FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+    
+    <sql id="findByWhere">
+		<isNotEmpty property="id" prepend="and">
+			<![CDATA[
+				id = #id#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+				area = #area#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="floor" prepend="and">
+			<![CDATA[
+				floor = #floor#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+				cpccorp = #cpccorp#
+			]]>		
+		</isNotEmpty>
+	</sql>
+    
+    <sql id="findByArea">
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+				lower(area) like lower('%'||#area#||'%') 
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+				cpccorp = #cpccorp#
+			]]>		
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="MarketMap" resultClass="MarketMap">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from zs_marketmap where 1=1
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByArea" />
+			</dynamic>
+			<![CDATA[
+			 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount" parameterClass="MarketMap" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_marketmap where  1=1
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByArea" />
+		</dynamic>
+	</select>
+   
+   <select id="findMaxareanum"  resultClass="Integer" parameterClass="String">
+		<![CDATA[
+			 select nvl(max(areanum),0)+1 maxareanum from zs_marketmap where cpccorp=#cpccorp#
+		]]>
+	</select>
+   
+   <update id="updateById" parameterClass="MarketMap">
+		<![CDATA[
+			update zs_marketmap
+		]]>
+		<dynamic prepend="SET">
+			<isNotEmpty property="image" prepend=",">
+				<![CDATA[
+						image=#image#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mapname" prepend=",">
+				<![CDATA[
+						mapname=#mapname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mapcontent" prepend=",">
+				<![CDATA[
+						mapcontent=#mapcontent#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhere" />
+		</dynamic>
+	</update>
+	
+	<resultMap id="matDataResult" class="MarketMap">   
+       <result property="id" column="id"/>   
+       <result property="area" column="area"/>
+       <result property="floor" column="floor"/>
+       <result property="image" column="image" jdbcType="BLOB"/>
+       <result property="mapname" column="mapname"/>
+       <result property="mapcontent" column="mapcontent"/>
+       <result property="areanum" column="areanum"/>
+       <result property="addtime" column="addtime"/>
+       <result property="floornum" column="floornum"/>
+       <result property="cpccorp" column="cpccorp"/>
+   </resultMap>  
+   
+	<select id="findByCondtion" parameterClass="MarketMap" resultMap="matDataResult">
+		<![CDATA[
+		 	select * from zs_marketmap where  mapcontent is not null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	 <select id="findByIdMarketMapImage" parameterClass="String" resultMap="matDataResult">
+		<![CDATA[
+			select * from zs_marketmap where mapcontent=#mapcontent# and rownum<2
+		]]>
+	</select>
+	
+	<update id="updateImage" parameterClass="MarketMap">
+		<![CDATA[
+			update zs_marketmap
+		]]>
+		<dynamic prepend="SET">
+			<isNull property="image" prepend=",">
+				<![CDATA[
+						image=#image#
+				]]>
+			</isNull>
+			<isNull property="mapname" prepend=",">
+				<![CDATA[
+						mapname=#mapname#
+				]]>
+			</isNull>
+			<isNull property="mapcontent" prepend=",">
+				<![CDATA[
+						mapcontent=#mapcontent#
+				]]>
+			</isNull>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhere" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findMarketFloor" parameterClass="MarketMap" resultClass="MarketMap">
+		<![CDATA[
+		 	select * from zs_marketmap where 1=1
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	
+	<select id="findMarketAreaByCpc" parameterClass="MarketMap" resultClass="MarketMap">
+		<![CDATA[
+		 	select distinct t.area,t.areanum from zs_marketmap t where 1=1
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere"/>
+		</dynamic>
+		<![CDATA[
+		 	order by area asc
+		]]>
+	</select>
+	
+	<select id="findMarketFloorByCpc" parameterClass="MarketMap" resultClass="MarketMap">
+		<![CDATA[
+		 	select distinct t.floor,t.floornum,o.orgname from zs_marketmap t
+		 	inner join zs_org o
+			on o.cpccorp = t.cpccorp where 1=1 and t.area=#area# and t.cpccorp = #cpccorp# 
+			order by floor desc  
+		]]>
+	</select>
+	
+	<select id="findMarketFloorImage" parameterClass="MarketMap" resultMap="matDataResult">
+		<![CDATA[
+			select * from zs_marketmap where areanum=#areanum# and floornum=#floornum# and cpccorp=#cpccorp# and rownum<2
+		]]>
+	</select>
+	
+	
+	<select id="findExist" parameterClass="MarketMap" resultClass="MarketMap">
+		<![CDATA[
+			select * from zs_marketmap
+		]]>	
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+		
+	<update id="updateAreaFloor" parameterClass="MarketMap">
+		<![CDATA[
+			update zs_marketmap
+		]]>
+		<dynamic prepend="SET">
+			<isNotEmpty property="area" prepend=",">
+				<![CDATA[
+						area=#area#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="floor" prepend=",">
+				<![CDATA[
+						floor=#floor#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[
+			where cpccorp=#cpccorp# and id=#id#
+		]]>
+	</update>
+	
+	<delete id="delMarketMap" parameterClass="MarketMap">
+		<![CDATA[
+			delete from zs_marketmap where id = #id#
+		]]>
+	</delete>
+	
+	
+	<select id="findFloorByCpc" parameterClass="MarketMap" resultClass="MarketMap">
+		<![CDATA[
+			select t.floor,t.mapcontent from zs_marketmap t where t.cpccorp = #cpccorp# order by floor asc
+		]]>
+	</select>
+	
+</sqlMap>

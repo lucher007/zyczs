@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Pesticide">
+	<typeAlias alias="Pesticide" type="cn.gov.zyczs.cspt.po.Pesticide"/>	
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   pesticideid = #pesticideid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="cpcplant" prepend="and">
+			<![CDATA[
+					cpcplant=#cpcplant#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="pesticidename" prepend="and">
+			<![CDATA[
+					lower(pesticidename) like lower('%'||#pesticidename#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<insert id="save" parameterClass="Pesticide">
+		<![CDATA[
+			insert into ZS_PESTICIDE (pesticidename,pesticideweight,cpcplant,pesticidetime)
+			values (#pesticidename#,#pesticideweight#,#cpcplant#,to_date('$pesticidetime$','YYYY-MM-DD HH24:MI:SS'))				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_PESTICIDE.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<select id="findByList" parameterClass="Pesticide" resultClass="Pesticide">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from ZS_PESTICIDE where pesticideid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by pesticideid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="Pesticide" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_PESTICIDE
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findById" parameterClass="Pesticide" resultClass="Pesticide">
+		<![CDATA[
+		 	select * from ZS_PESTICIDE
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+		
+</sqlMap>

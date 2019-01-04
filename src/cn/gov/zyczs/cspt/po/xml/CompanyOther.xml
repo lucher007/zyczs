@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="CompanyOther">
+	<typeAlias alias="CompanyOther" type="cn.gov.zyczs.cspt.po.CompanyOther"/>
+	<typeAlias alias="InOutStor" type="cn.gov.zyczs.cspt.po.InOutStor"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="corpnameother" prepend="and">
+			<![CDATA[
+					lower(corpnameother) like lower('%'||#corpnameother#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="addressother" prepend="and">
+			<![CDATA[
+					lower(addressother) like lower('%'||#addressother#||'%')
+			]]>
+		</isNotEmpty>
+		
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   companyotherid = #companyotherid#
+	    ]]>
+	</sql>
+	
+	<select id="findByCount" parameterClass="CompanyOther" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_COMPANYOTHER
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="CompanyOther" resultClass="CompanyOther">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from ZS_COMPANYOTHER where companyotherid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by companyotherid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findById" parameterClass="Integer" resultClass="CompanyOther">
+		<![CDATA[
+		 	select * from ZS_COMPANYOTHER
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<update id="updateById" parameterClass="CompanyOther">
+		<![CDATA[
+			update ZS_COMPANYOTHER
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="corpnameother" prepend=",">
+				<![CDATA[
+						corpnameother=#corpnameother#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mobileother" prepend=",">
+				<![CDATA[
+						mobileother=#mobileother#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="addressother" prepend=",">
+				<![CDATA[
+						addressother=#addressother#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<insert id="save" parameterClass="CompanyOther">
+		<![CDATA[
+			insert into ZS_COMPANYOTHER
+  			(corpnameother, mobileother, addressother,orgid)
+			values
+  			(#corpnameother#,#mobileother#,#addressother#,#orgid#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_COMPANYOTHER.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	
+	
+	<!--销售企业历史记录-->
+	<select id="findByCompanyCount" parameterClass="InOutStor" resultClass="Integer">
+		<![CDATA[
+			select count(*) from (select distinct(corpnameother) corpnameother, mobileother, addressother,orgid,opersystime from ZS_COMPANYOTHER where corpnameother is not null and  orgid = #orgid# )a      
+		]]>					
+		
+	</select>
+	
+	<select id="findByCompanyList" parameterClass="InOutStor" resultClass="CompanyOther">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select distinct(corpnameother) corpnameother, mobileother, addressother,orgid,opersystime from ZS_COMPANYOTHER 
+			where corpnameother is not null and	orgid = #orgid#
+			]]>
+			
+			<![CDATA[
+			 	order by OPERSYSTIME desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	
+</sqlMap>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">			
+		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.8.66:1521:zyczsdb"></property> 
+<!--		<property name="jdbcUrl" value="jdbc:oracle:thin:@125.70.14.55:7521:zyczsdb"></property>-->
+		<property name="user" value="zyczs"></property>
+		<property name="password" value="zyczs123"></property>
+		<property name="initialPoolSize" value="3"></property>
+		<property name="minPoolSize" value="3"></property>
+		<property name="maxPoolSize" value="30"></property>
+		<property name="acquireRetryDelay" value="2000"></property>
+		<property name="breakAfterAcquireFailure" value="false"></property>		
+	</bean>
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:SqlMapConfig.xml</value>
+		</property>
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />				
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="del*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="allManagerMethod" expression="execution(* cn.gov.zyczs.cspt.action.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod" />
+	</aop:config>
+	
+	
+	<!-- 植物dao配置 -->
+<!--	<bean id="xmlTaskDao" class="com.dao.impl.XmlTaskDao">-->
+<!--		<property name="zyczsXmlDao" ref="zyczsXmlDao" />-->
+<!--	</bean>-->
+<!--	-->
+<!--	<bean id="saveIndexUserAndIndexWeekRegularTask"   class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> -->
+<!--	   <property name="targetObject">   -->
+<!--	         <ref bean="xmlTaskDao" />   -->
+<!--	    </property>   -->
+<!--	 	<property name="targetMethod">   -->
+<!--	     	 <value>createXml</value>   -->
+<!--	    </property>   -->
+<!-- 	 </bean>-->
+<!-- 	 -->
+<!--	<bean id="saveIndexUserAndIndexWeekRegularTrigger"   class="org.springframework.scheduling.quartz.CronTriggerBean">   -->
+<!--	      <property name="jobDetail">   -->
+<!--	          <ref bean="saveIndexUserAndIndexWeekRegularTask" />   -->
+<!--	        </property>   -->
+<!--	        <property name="cronExpression">   -->
+<!--	           <value>*/5 * * * * ?</value> -->
+<!--	      </property>   -->
+<!--  	 </bean> 	   -->
+<!-- 	   	 -->
+<!--  	 -->
+<!--    <bean autowire="no"  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">   -->
+<!--        <property name="triggers">   -->
+<!--            <list>   -->
+<!--               <ref local="saveIndexUserAndIndexWeekRegularTrigger"/> -->
+<!--            </list>   -->
+<!--       </property>   -->
+<!--    </bean>-->
+
+    
+</beans>

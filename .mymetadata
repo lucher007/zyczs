@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="zyczs"
+  id="myeclipse.1311316494671"
+  context-root="/ROOT"
+  j2ee-spec="5.0"
+  archive="zyczs.war">
+  <attributes>
+    <attribute name="webrootdir" value="/WebRoot" />
+  </attributes>
+</project-module>
+

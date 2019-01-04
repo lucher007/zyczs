@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ScoreFinal">
+	<typeAlias alias="ScoreFinal" type="cn.gov.zyczs.cspt.po.ScoreFinal"/>	
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   id = #id#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="corpname" prepend="and">
+			<![CDATA[
+					lower(corpname) like lower('%'||#corpname#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="addtime">
+			<isNotEqual property="addtime" prepend="and" compareValue="-1">
+			<![CDATA[
+					addtime=to_date('$addtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+			</isNotEqual>
+		</isNotEmpty>
+		
+	</sql>
+	
+	<select id="findByList" parameterClass="ScoreFinal" resultClass="ScoreFinal">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_scorefinal where id is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="ScoreFinal" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_scorefinal
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByMaxAddTime" resultClass="String">
+		<![CDATA[
+			select max(addtime) as addtime from zs_scorefinal
+		]]>
+	</select>
+	
+	<select id="findByAddTime" resultClass="String">
+		<![CDATA[
+			select to_char(addtime,'YYYY-MM-DD HH24:MI:SS') as addtime from zs_scorefinal group by addtime
+		]]>
+	</select>
+	
+		
+</sqlMap>

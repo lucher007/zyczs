@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Rp_Rate">
+	<typeAlias alias="Rp_Rate" type="cn.gov.zyczs.cspt.po.Rp_Rate" />
+	
+	
+	
+	<select id="findCompTotalByMonth"  resultClass="Integer" parameterClass="String">
+		<![CDATA[
+			select count(*) from zs_org where marketcode is null and addtime<to_date('$time$','YYYY-MM-DD HH24:MI:SS') 
+		]]>
+	</select>
+	
+	<select id="findCompCurTotalByMonth" resultClass="Integer" parameterClass="String">
+		<![CDATA[
+			select nvl(count(month),0) from v_company_userate  where month=#month# group by month
+		]]>
+	</select>
+	
+	<select id="findMedTypeByMonth" resultClass="Rp_Rate" parameterClass="String">
+		<![CDATA[
+			select  m.medtype ,sum(m.medweight)/10000 medweight from zs_med m 
+			where harvesttime>=to_date('$month$-1 00:00:00','YYYY-MM-DD HH24:MI:SS')  
+			and harvesttime<=last_day(to_date('$month$-1 23:59:59','YYYY-MM-DD HH24:MI:SS'))
+			group by m.medtype 
+		]]>
+	</select>
+	
+	<select id="findChengData" resultClass="Rp_Rate" parameterClass="String">
+		<![CDATA[
+			select  nvl(sum(m.weight),0) medweight from c_chengdata m    
+  where tradetime>=to_date('$month$-1 00:00:00','YYYY-MM-DD HH24:MI:SS')      
+  and tradetime<=last_day(to_date('$month$-1 23:59:59','YYYY-MM-DD HH24:MI:SS'))
+		]]>
+	</select>
+	
+	<select id="findChengCount" resultClass="Rp_Rate" parameterClass="String">
+		<![CDATA[
+			select  nvl(count(*),0) total from c_chengdata m    
+  where tradetime>=to_date('$month$-1 00:00:00','YYYY-MM-DD HH24:MI:SS')      
+  and tradetime<=last_day(to_date('$month$-1 23:59:59','YYYY-MM-DD HH24:MI:SS'))
+		]]>
+	</select>
+	
+	<select id="findShopsData" resultClass="Rp_Rate" parameterClass="String">
+		<![CDATA[
+			select count(*) total from zs_org  o where o.marketcode is not null 
+			and o.addtime<=last_day(to_date('$month$-1 23:59:59','YYYY-MM-DD HH24:MI:SS'))
+		]]>
+	</select>
+	
+	<select id="findMedSellData" resultClass="Rp_Rate" parameterClass="String">
+		<![CDATA[
+			select  nvl(sum(m.totalweight/1000),0) medweight from zs_inoutstor m    
+  where opersystime>=to_date('$month$-1 00:00:00','YYYY-MM-DD HH24:MI:SS')      
+  and opersystime<=last_day(to_date('$month$-1 23:59:59','YYYY-MM-DD HH24:MI:SS'))
+		]]>
+	</select>
+	
+	<!-- 获取药材预计产出、实际产出 -->
+	<parameterMap id="medContrastMap" class="java.util.Map" >         		
+		<parameter property="ytime" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="medname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="yutotal" jdbcType="INTEGER" javaType="java.lang.Integer" mode="OUT"/>
+		<parameter property="shitotal" jdbcType="INTEGER" javaType="java.lang.Integer" mode="OUT"/>
+		
+	</parameterMap>
+	
+	<procedure id="findMedContrast" parameterMap="medContrastMap" >   
+    	<![CDATA[
+    	{call report_medcy(?,?,?,?)}
+    	]]>  
+	</procedure>
+	
+</sqlMap>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>注册提示 -- 中药材产地追溯系统</title>
+<link type="text/css" rel="stylesheet" href="style/login.css">
+</head>
+
+<body>
+	<div id="regmain">
+    	<form action="" method="post">
+    	<div class="reg_box">
+            <div class="rb-tit">温馨提示</div>
+        	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="rb-con">
+              <tr>
+                <td height="120" width="200" align="right"><img src="images/frame/dui.png"></td>
+                <td class="green b">注册信息已经提交，待审核通过后方可登陆系统！</td>
+              </tr>
+              <tr>
+                <td colspan="2" height="80" class="rb-btn">
+                	<input type="submit" value="" class="gnreg">
+                    <a href="login.html">返回登录</a>
+                </td>
+              </tr>
+            </table>
+            <div class="rb-bom"></div>
+        </div>
+        <div class="login-copy">Copyright &copy; 2012 国富通信息技术发展有限公司</div>
+        </form>
+    </div>
+    <script type="text/javascript" language="javascript" src="js/common/jquery.js"></script>
+	<script type="text/javascript" language="javascript">
+    forbg();
+	$(window).resize(function() {
+		forbg();
+	});
+
+	function forbg(){
+		var t = (($(window).width()-660)/2)%18;
+		if(t!=0){$("body").css("background-position","-"+(t-3)+"px top")};
+	}
+    </script>
+</body>
+</html>

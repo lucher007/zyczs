@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="IndexWeek">
+	<typeAlias alias="IndexWeek" type="cn.gov.zyczs.cspt.po.IndexWeek" />
+	
+	
+	<insert id="saveIndexWeek" parameterClass="IndexWeek">
+		<![CDATA[
+			insert into zs_indexweek(indexweekdate,indexweekcode,indexweekname,indexweekvalue,indexweekperiod,inserttime) 
+			values(#indexweekdate#,#indexweekcode#,#indexweekname#,#indexweekvalue#,#indexweekperiod#,#inserttime#) 
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_INDEXWEEK.NEXTVAL as indexweekid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<select id="getInsertTime" resultClass="int">
+		<![CDATA[
+			select distinct max(w.inserttime) inserttime from zs_indexweek w
+		]]>
+	</select>
+	
+</sqlMap>

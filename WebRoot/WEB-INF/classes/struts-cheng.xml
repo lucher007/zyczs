@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="cheng" extends="strutsdefault">
+		<!-- 溯源秤配置action -->
+		<action name="chengConf" class="chengConfAction">
+		    <result name="findByList">/manage/cheng/findChengConfList.jsp</result>
+		    <result name="updateInit">/manage/cheng/updateChengConf.jsp</result>
+		    <result name="update" type="redirect">
+				<param name="location">chengConf!findByList.shtml</param>
+			</result>
+			<result name="save" type="redirect">
+				<param name="location">chengConf!findByList.shtml</param>
+			</result>
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		<!-- 溯源秤action -->
+		<action name="cheng" class="chengAction">
+		    <result name="findByList">/manage/cheng/findChengList.jsp</result>
+		    <result name="addChengInit">/manage/cheng/addCheng.jsp</result>
+		    <result name="companyChoice">/manage/cheng/companyChoice.jsp</result>
+		    <result name="chengChoice">/manage/cheng/chengChoice.jsp</result>
+			<result name="recoverDeviceInit_cheng">/manage/cheng/recoverDevice_cheng.jsp</result>
+			
+			<result name="findChengFckByList">/manage/cheng/findChengFckList.jsp</result>
+			<result name="updateChengFckInit">/manage/cheng/updateChengFck.jsp</result>
+			<result name="updateChengFck" type="redirect">
+				<param name="location">cheng!findChengFckByList.shtml</param>
+			</result>
+			
+			<result name="findChengLockedByList">/manage/cheng/findChengLockedList.jsp</result>
+			<result name="updateChengLocked" type="redirect">
+				<param name="location">cheng!findChengLockedByList.shtml</param>
+			</result>
+			
+			<result name="findChengModeByList">/manage/cheng/findChengModeList.jsp</result>
+			
+			<result name="findChengCardByList">/manage/cheng/findChengCardList.jsp</result>
+			
+			<result name="findChengDataByList">/manage/cheng/findChengDataList.jsp</result>
+			<result name="findChengDataByList_chengCode">/manage/cheng/findChengDataList_chengCode.jsp</result>
+			<result name="findChengStateLogByList_chengCode">/manage/cheng/findChengStateLogList_chengCode.jsp</result>
+			
+			<result name="success" type="stream"> 
+				<param name="contentType">image/jpeg</param> 
+				<param name="inputName">inputStream</param> 
+				<param name="bufferSize">4096</param> 
+			</result> 
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		
+		<!-- 溯源秤模板action -->
+		<action name="chengTmp" class="chengTmpAction">
+		    <result name="findByList">/manage/cheng/findChengTmpList.jsp</result>
+		    <result name="addChengTmpInit">/manage/cheng/addChengTmp.jsp</result>
+			<result name="updateChengTmpInit">/manage/cheng/updateChengTmp.jsp</result>
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		<!-- 设备配置action -->
+		<action name="deviceConf" class="deviceConfAction">
+		    <result name="findByList">/manage/device/findDeviceConfList.jsp</result>
+		    <result name="updateInit">/manage/device/updateDeviceConf.jsp</result>
+		    <result name="update" type="redirect">
+				<param name="location">deviceConf!findByList.shtml</param>
+			</result>
+			<result name="save" type="redirect">
+				<param name="location">deviceConf!findByList.shtml</param>
+			</result>
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		
+		<!-- 设备action -->
+		<action name="device" class="deviceAction">
+		    <result name="findByList_scanner">/manage/device/findDeviceList_scanner.jsp</result>
+		    <result name="addDeviceInit_scanner">/manage/device/addDevice_scanner.jsp</result>
+		    <result name="updateDeviceInit_scanner">/manage/device/updateDevice_scanner.jsp</result>
+			<result name="recoverDeviceInit_scanner">/manage/device/recoverDevice_scanner.jsp</result>
+			
+			<result name="findByList_printer">/manage/device/findDeviceList_printer.jsp</result>
+		    <result name="addDeviceInit_printer">/manage/device/addDevice_printer.jsp</result>
+		    <result name="updateDeviceInit_printer">/manage/device/updateDevice_printer.jsp</result>
+		    <result name="recoverDeviceInit_printer">/manage/device/recoverDevice_printer.jsp</result>
+		    
+		    <result name="findByList_card">/manage/device/findDeviceList_card.jsp</result>
+		    <result name="addDeviceInit_card">/manage/device/addDevice_card.jsp</result>
+		    <result name="updateDeviceInit_card">/manage/device/updateDevice_card.jsp</result>
+		    <result name="recoverDeviceInit_card">/manage/device/recoverDevice_card.jsp</result>
+		    
+		    <result name="findByList_mobile">/manage/device/findDeviceList_mobile.jsp</result>
+		    <result name="addDeviceInit_mobile">/manage/device/addDevice_mobile.jsp</result>
+		    <result name="updateDeviceInit_mobile">/manage/device/updateDevice_mobile.jsp</result>
+		    <result name="recoverDeviceInit_mobile">/manage/device/recoverDevice_mobile.jsp</result>
+		    
+		    <result name="findByList_querymachine">/manage/device/findDeviceList_querymachine.jsp</result>
+		    <result name="addDeviceInit_querymachine">/manage/device/addDevice_querymachine.jsp</result>
+		    <result name="updateDeviceInit_querymachine">/manage/device/updateDevice_querymachine.jsp</result>
+		    <result name="recoverDeviceInit_querymachine">/manage/device/recoverDevice_querymachine.jsp</result>
+		    
+		    <result name="findByList_material">/manage/device/findDeviceList_material.jsp</result>
+		    <result name="addDeviceInit_material">/manage/device/addDevice_material.jsp</result>
+		    <result name="updateDeviceInit_material">/manage/device/updateDevice_material.jsp</result>
+		    <result name="recoverDeviceInit_material">/manage/device/recoverDevice_material.jsp</result>
+		    
+		    <result name="findByList_computer">/manage/device/findDeviceList_computer.jsp</result>
+		    <result name="addDeviceInit_computer">/manage/device/addDevice_computer.jsp</result>
+		    <result name="updateDeviceInit_computer">/manage/device/updateDevice_computer.jsp</result>
+		    <result name="recoverDeviceInit_computer">/manage/device/recoverDevice_computer.jsp</result>
+		    
+		    <result name="findByList_reader">/manage/device/findDeviceList_reader.jsp</result>
+		    <result name="addDeviceInit_reader">/manage/device/addDevice_reader.jsp</result>
+		    <result name="updateDeviceInit_reader">/manage/device/updateDevice_reader.jsp</result>
+		    <result name="recoverDeviceInit_reader">/manage/device/recoverDevice_reader.jsp</result>
+		    
+		    <result name="findByList_others">/manage/device/findDeviceList_others.jsp</result>
+		    <result name="addDeviceInit_others">/manage/device/addDevice_others.jsp</result>
+		    <result name="updateDeviceInit_others">/manage/device/updateDevice_others.jsp</result>
+		    <result name="recoverDeviceInit_others">/manage/device/recoverDevice_others.jsp</result>
+		    
+			<result name="companyChoice">/manage/device/companyChoice.jsp</result>
+			<result name="chengCompanyChoice">/manage/device/chengCompanyChoice.jsp</result>
+			<result name="deviceChoice">/manage/device/deviceChoice.jsp</result>
+			
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		<!-- 设备回收action -->
+		<action name="deviceRec" class="deviceRecAction">
+		    <result name="findByList">/manage/device/findDeviceRecList.jsp</result>
+		    <result name="findByList_cheng">/manage/cheng/findDeviceRecList_cheng.jsp</result>
+		</action>
+    </package>
+</struts>

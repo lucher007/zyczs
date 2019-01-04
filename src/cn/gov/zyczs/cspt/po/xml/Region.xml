@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Region">
+		
+	<parameterMap id="codeMap" class="java.util.Map" >         		
+		<parameter property="typeid" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="companycodein" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="zycid" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+	</parameterMap>
+	
+	<procedure id="findByCode" parameterMap="codeMap">   
+    	<![CDATA[
+    	{call proc_findID(?,?,?)}
+    	]]>  
+	</procedure>
+</sqlMap>

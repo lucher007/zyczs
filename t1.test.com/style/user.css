@@ -1,0 +1,21 @@
+@import url(common.css);
+@import url(listform.css);
+
+body{ padding:20px; width:748px; overflow:hidden;}
+.reg-stp1{ height:40px; background:url(../images/user/company.png) no-repeat left top; overflow:hidden;}
+.reg-stp2{ height:40px; background:url(../images/user/company.png) no-repeat left -40px; overflow:hidden;}
+.reg-stp3{ height:40px; background:url(../images/user/company.png) no-repeat left bottom; overflow:hidden;}
+.reg-box td{ padding-left:10px;}
+.reg-box ul{ line-height:30px;}
+.rb-suc{ background:#E8FFD0; padding:10px; line-height:240%; margin:10px auto;}
+.rb-suc h2{ font-size:18px;}
+
+
+
+
+
+
+
+
+
+

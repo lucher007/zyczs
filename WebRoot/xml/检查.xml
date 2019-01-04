@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs>
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="check">
+		<code>检查单编号（市场CPC编码+10位顺序号）</code>
+		<codeinfo>
+  
+		    <checktime desc="检查时间">2012-07-11 00:00:00</checktime>
+		    <checkproject desc="检查项目(1安全,2质量,3卫生,4价格,5其他)">1</checkproject>
+		    <checkresult desc="检查结果(1合格,2不合格,3检查中)">1</checkresult> 
+		    <opername desc="执行单位">安国市药监局</opername> 
+		    <cpccorp desc="经营户编号">10720311111111</cpccorp> 
+		    <cpcmeds desc="药材批次号,多个批次号用,隔开">12121212,121212121</cpcmeds>  
+		    <deductscore desc="扣分">0</deductscore>  
+		</codeinfo>
+	</msgbody>
+</zyczs>

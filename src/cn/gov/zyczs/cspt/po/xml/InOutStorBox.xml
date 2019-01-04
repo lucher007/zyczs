@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="InOutStorBox">
+	<typeAlias alias="InOutStorBox" type="cn.gov.zyczs.cspt.po.InOutStorBox"/>
+	<typeAlias alias="Box" type="cn.gov.zyczs.cspt.po.Box"/>
+	<typeAlias alias="BoxItem" type="cn.gov.zyczs.cspt.po.BoxItem"/>
+		
+	<sql id="findByWhereId">
+		<![CDATA[
+		   inoutstorboxid = #inoutstorboxid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(prodname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(batchcpc) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="inoutstorid" prepend="and" >
+			<![CDATA[
+					inoutstorid = #inoutstorid#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<insert id="save" parameterClass="InOutStorBox">
+		<![CDATA[
+		    insert into zs_inoutstorbox
+  				(batchcpc, boxnum, boxnumweight, totalweight, realtotalweight, price, totalmoney, prodname, inoutstorid, prodcode, prodnumber, boxitemnum,codetype,packstorboxid)
+			values
+  				(#batchcpc#,NVL(#boxnum#,0),#boxnumweight#,NVL(#totalweight#,0),NVL(#realtotalweight#,0),#price#,NVL(#totalmoney#,0),#prodname#,#inoutstorid#,#prodcode#,#prodnumber#,#boxitemnum#,#codetype#,#packstorboxid#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_zs_inoutstorbox.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<select id="findBoxCount" parameterClass="InOutStorBox" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_inoutstorbox where packstorboxid is null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findBoxList" parameterClass="InOutStorBox" resultClass="InOutStorBox">
+		<![CDATA[
+		 select b.* from (select a.*,rownum r from (select box.*,
+		 rtrim(rtrim(to_char(totalweight/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight, 
+		 rtrim(rtrim(to_char(realtotalweight/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strrealtotalweight,
+		 rtrim(rtrim(to_char(totalmoney/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalmoney 
+		 from zs_inoutstorbox box where packstorboxid is null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by inoutstorboxid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findById" parameterClass="InOutStorBox" resultClass="InOutStorBox">
+		<![CDATA[
+		 	select * from zs_inoutstorbox
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<select id="findItemList" parameterClass="InOutStorBox" resultClass="Box">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (
+		      select * from zs_box b where b.boxcode is not null
+		]]>
+		<isEqual property="stortype" compareValue="0" prepend="and">
+			<![CDATA[
+					b.instorboxid = #inoutstorboxid#
+			]]>
+		</isEqual>
+		<isEqual property="stortype" compareValue="1" prepend="and">
+			<![CDATA[
+					b.outstorboxid = #inoutstorboxid#
+			]]>
+		</isEqual>
+		<isNotEmpty property="codetype" prepend="and" >
+			<![CDATA[
+					packcode = #codetype#
+			]]>
+		</isNotEmpty>
+		<![CDATA[
+		 	order by b.boxcode asc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findItemCount" parameterClass="InOutStorBox" resultClass="Integer">
+		<![CDATA[
+			select count(distinct b.boxcode) from zs_box b where b.boxcode is not null
+		]]>
+		<isEqual property="stortype" compareValue="0" prepend="and">
+			<![CDATA[
+					b.instorboxid = #inoutstorboxid#
+			]]>
+		</isEqual>
+		<isEqual property="stortype" compareValue="1" prepend="and">
+			<![CDATA[
+					b.outstorboxid = #inoutstorboxid#
+			]]>
+		</isEqual>
+	</select>
+</sqlMap>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="Tablet">
+	<typeAlias alias="Tablet" type="cn.gov.zyczs.cspt.po.Tablet"/>
+	<typeAlias alias="Check" type="cn.gov.zyczs.cspt.po.Check"/>
+		
+	<parameterMap id="tabletXmlMap" class="Tablet" >         		
+		<parameter property="tabletname" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="tabletnumber" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="tabletspec" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="execstandard" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="medname" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="cpcmed" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="medweight" jdbcType="DOUBLE" javaType="java.lang.Double"/>
+		<parameter property="meduseweight" jdbcType="DOUBLE" javaType="java.lang.Double"/>
+		<parameter property="medaddress" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="operator" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="manager" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="qa" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="createtime" jdbcType="DATE" javaType="java.lang.String"/>
+		<parameter property="remark" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="processflow" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="cpctabletimg" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="tabletweight" jdbcType="DOUBLE" javaType="java.lang.Double"/>
+		<parameter property="medid" jdbcType="NUMBER" javaType="java.lang.Integer"/>
+		<parameter property="cpctablet" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="prodcode" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="areacode" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="province" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="city" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="area" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="userid" jdbcType="NUMBER" javaType="java.lang.Integer"/>
+		<parameter property="orgid" jdbcType="NUMBER" javaType="java.lang.Integer"/>
+		<parameter property="prodcontent" jdbcType="CLOB" javaType="java.lang.String"/>
+	</parameterMap>	
+		
+	<insert id="save" parameterMap="tabletXmlMap">
+		<![CDATA[
+			insert into ZS_TABLET(tabletname,tabletnumber,tabletspec,execstandard,medname,
+			cpcmed,medweight,meduseweight,medaddress,operator,
+			manager,qa,createtime,remark,processflow,
+			cpctabletimg,tabletweight,medid,cpctablet,prodcode,
+			areacode,province,city,area,userid,
+			orgid,prodcontent) 
+			values (?,?,?,?,?,?,?,?,?,?,?,?,to_date(?,'YYYY-MM-DD HH24:MI:SS'),?,?,?,?,?,?,?,?,?,?,?,?,?,?) 
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_TABLET.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="tabletname" prepend="and" >
+			<![CDATA[
+					lower(tabletname) like lower('%'||#tabletname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpctablet" prepend="and" >
+			<![CDATA[
+					lower(cpctablet) like lower('%'||#cpctablet#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">			
+			<![CDATA[
+					state=#state#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="checkstate" prepend="and">			
+			<![CDATA[
+					checkstate=#checkstate#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+					orgid=#orgid#
+			]]>			
+		</isNotEmpty>		
+		<isNotEmpty property="createtime" prepend="and">
+			<![CDATA[
+					createtime >= to_date('$createtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endtime" prepend="and">
+			<![CDATA[
+					createtime <= to_date('$endtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		
+	</sql>
+	
+	<sql id="findByWhereCpc">
+		<![CDATA[
+		   cpctablet = #cpctablet#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   tabletid = #tabletid#
+	    ]]>
+	</sql>
+	
+
+	
+	<select id="findByCount" parameterClass="Tablet" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_tablet
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="Tablet" resultClass="Tablet">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_tablet where tabletid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by tabletid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCpc" parameterClass="Tablet" resultClass="Tablet">
+		<![CDATA[
+		 	select * from zs_tablet
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereCpc" />
+		</dynamic>
+	</select>
+	
+	<select id="findById" parameterClass="Integer" resultClass="Tablet">
+		<![CDATA[
+		 	select * from zs_tablet where  tabletid = #tabletid#
+		]]>
+		
+	</select>
+	
+	<update id="updateByCpc" parameterClass="Tablet">
+		<![CDATA[
+			update zs_tablet
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="checkstate" prepend=",">
+				<![CDATA[
+						checkstate=#checkstate#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereCpc" />
+		</dynamic>
+	</update>
+	
+	<update id="update" parameterClass="Tablet">
+		<![CDATA[
+			update zs_tablet
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="checkstate" prepend=",">
+				<![CDATA[
+						checkstate=#checkstate#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<update id="updateByCheck" parameterClass="Check">
+		<![CDATA[
+			update zs_tablet
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="checkstate" prepend=",">
+				<![CDATA[
+						checkstate=#checkstate#,tabletweight=#tabletweight#
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+			where tabletid = #tabletid# 
+		]]>
+	</update>
+	
+</sqlMap>

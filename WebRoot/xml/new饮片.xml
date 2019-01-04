@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs guid="1201023102030123">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="tablet">
+		<code>1101273000049981208210031</code>
+		<codeinfo desc="饮片">
+			<name desc="饮片名称">麦冬</name>
+			<spec desc="生产规格">片</spec>
+			<standard desc="执行标准">中国药典2010年版</standard>
+			<processflow desc="生产流程">精选,</processflow>
+			<operator desc="工艺员">张三</operator>
+			<manager desc="生产部经理">张三</manager>
+			<qa desc="QA">张三</qa>
+			<producedate desc="生产日期">2012-05-31</producedate>
+			<remark desc="备注">生产正常</remark>
+			<weight desc="待包装重量(单位:g)">100</weight>
+			<medicinalcode desc="药材批次码,关联外键">1101273000049981208210031</medicinalcode>
+			<medicinalweight desc="药材总重量(单位：g)">80</medicinalweight>
+			<areacode desc="地区编码,按国标处理">510500</areacode>
+			<innerbatchno desc="企业内容批次号">23123123</innerbatchno>
+		</codeinfo>
+		<materials desc="检验">
+			<material desc="检验">
+				<corpcode desc="企业代码(14位)，流通节点编号">10127300005094</corpcode>
+				<checkmethod desc="检验方法">企业标准</checkmethod>
+				<checkgrade desc="质量级别">一级</checkgrade>
+				<checkthickmethod desc="粗加工方法">净选</checkthickmethod>
+				<checkcondition desc="贮藏条件">冷冻</checkcondition>
+				<checkuser desc="检验人员">张三</checkuser>
+				<checktime desc="检验时间">2012-12-13</checktime>
+				<reports>
+					<report>
+						 <type desc="检验报告类型：(检验报告|产地报告">1</type>
+						 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+					</report>
+					<report>
+						 <type desc="检验报告类型：(检验报告|产地报告">2</type>
+						 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+					</report>
+				</reports>
+			</material>
+		</materials>
+		<assists desc="辅料">
+				<assist>
+					<assistplantname desc="辅料品名">水</assistplantname>
+					<assistgpcode desc="辅料编号">FL-0001</assistgpcode>
+					<assistarea desc="辅料产地">成都</assistarea>
+					<assistweight desc="辅料重量(单位：g)">20</assistweight>
+					<assistusecount desc="辅料使用比列">1:10</assistusecount>
+					<assistmaterial desc="辅料净药材">2</assistmaterial>
+				</assist>
+				<assist>
+					<assistplantname desc="辅料品名">水</assistplantname>
+					<assistgpcode desc="辅料编号">FL-0001</assistgpcode>
+					<assistarea desc="辅料产地">成都</assistarea>
+					<assistweight desc="辅料重量(单位：g)">20</assistweight>
+					<assistusecount desc="辅料使用比列">1:10</assistusecount>
+					<assistmaterial desc="辅料净药材">2</assistmaterial>
+				</assist>
+		</assists>
+		
+		
+		<boxs desk="包装">
+			<box desk="箱">
+			    <boxweight desc="每箱重量单位（kg)"></boxweight>
+				<boxcode desc="箱码">234234234</boxcode>
+				<boxtime desc="包装时间">2012-12-13 01:12:22</boxtime>
+				<weight desc="每包重量单位(g)"></weight>
+				<pcode desc="商品编码"/>
+				<pname desc="品名"/>
+				<areacode desc="区域编码"/>
+				<spec desc="规格"/>
+				<sourcecode>
+					<code desc="溯源码">35位数据</code>
+					<code desc="溯源码">35位数据</code>
+					<code desc="溯源码">35位数据</code>
+				</sourcecode>
+            </box>
+			<box desk="箱">
+			    <boxweight desc="每箱重量单位（kg)"></boxweight>
+				<boxcode desc="箱码">234234234</boxcode>
+				<boxtime desc="包装时间">2012-12-13 01:12:22</boxtime>
+				<weight desc="每包重量单位(g)"></weight>
+				<pcode desc="商品编码"/>
+				<pname desc="品名"/>
+				<areacode desc="区域编码"/>
+				<spec desc="规格"/>
+				<sourcecode>
+					<code desc="溯源码">35位数据</code>
+					<code desc="溯源码">35位数据</code>
+					<code desc="溯源码">35位数据</code>
+				</sourcecode>
+           </box>
+		</boxs>
+	</msgbody>
+</zyczs>

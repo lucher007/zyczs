@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true" 
+			  enhancementEnabled="true" 
+			  lazyLoadingEnabled="true"
+			  useStatementNamespaces="true" />
+			  
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/User.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Org.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Company.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/PlantBase.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Plant.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Fertilizer.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Pesticide.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/GoodsCode.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Med.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/TabletBase.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Tablet.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/TabletStorage.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/TabletAssist.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/MedStorage.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/MedBase.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/CodeRegion.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/CheckMat.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Check.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Region.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/InOutStor.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/InOutStorBox.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Box.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/BoxItem.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/MedStat.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/TabletStat.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/CompanyOther.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/IndexUser.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/IndexWeek.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/TempBox.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ZyczsXml.xml" />
+
+
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/GovmentTabletStat.xml" />
+
+
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/GovmentStat.xml" />
+
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/GovmentMedStat.xml" />
+	
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Freeze.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ScaleConf.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ScaleKeyConf.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Mappdata.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Scalestat.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Scale.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Scalefck.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Scaleplu.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ChengConf.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ChengKey.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Cheng.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ChengFck.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ChengSql.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ChengData.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/CodeArea.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/OpLog.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Role.xml" />
+	
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/OrgUpload.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/DeviceConf.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Device.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/DeviceRec.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Examine.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/MarketMap.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ScoreFinal.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ScoreDeduct.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ChengTmp.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ChengFckTmp.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/ScanCompany.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/DailyCheck.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/FieldCare.xml" />
+
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/TabletPackLog.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Search.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/LabelPrint.xml" />
+	
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Rp_Rate.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Rp_Stat.xml" />
+	<sqlMap resource="cn/gov/zyczs/cspt/po/xml/Rp_Build.xml" />
+	
+</sqlMapConfig>
+
+
+
+

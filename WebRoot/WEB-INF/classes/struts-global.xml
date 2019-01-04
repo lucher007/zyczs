@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+  <package name="strutsdefault"  extends="jfreechart-default">
+    <interceptors>
+    	<interceptor name="loginInterceptor" class="cn.gov.zyczs.cspt.common.LoginInterceptor" />
+    	<interceptor-stack name="MyInterceptor">
+    		<interceptor-ref name="defaultStack" />
+    		<interceptor-ref name="loginInterceptor" />
+    	</interceptor-stack>
+    </interceptors>
+    <default-interceptor-ref name="MyInterceptor" />
+    <global-results>
+    	<result name="nologin">/gologin.jsp</result>
+    	<result name="charerror">/charerror.jsp</result>
+    </global-results>
+  </package>   
+</struts>

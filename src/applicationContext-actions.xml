@@ -1,0 +1,598 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	
+	<bean name="userAction" class="cn.gov.zyczs.cspt.action.UserAction" scope="prototype">
+		<property name="userDao" ref="userDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="companyDao" ref="companyDao" />
+		<property name="freezeDao" ref="freezeDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="roleDao" ref="roleDao" />
+	</bean>
+	
+	
+	
+	<!-- 饮片生成action配置 -->
+	<bean name="tabletAction" class="cn.gov.zyczs.cspt.action.TabletAction" scope="prototype">
+		<property name="tabletDao" ref="tabletDao" />
+		<property name="tabletAssistDao" ref="tabletAssistDao" />
+		<property name="medDao" ref="medDao" />
+		<property name="checkDao" ref="checkDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="goodsCodeDao" ref="goodsCodeDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="tabletPackLogDao" ref="tabletPackLogDao" />
+		
+	</bean>
+	
+	<!-- 饮片基础action配置 -->
+	<bean name="tabletBaseAction" class="cn.gov.zyczs.cspt.action.TabletBaseAction" scope="prototype">
+		<property name="tabletBaseDao" ref="tabletBaseDao" />
+		<property name="goodsCodeDao" ref="goodsCodeDao" />
+		
+	</bean>
+	
+	<!-- 饮片库存action配置 -->
+	<bean name="tabletStorageAction" class="cn.gov.zyczs.cspt.action.TabletStorageAction" scope="prototype">
+		<property name="tabletStorageDao" ref="tabletStorageDao" />
+		<property name="tabletDao" ref="tabletDao" />
+		<property name="boxDao" ref="boxDao" />
+		<property name="tabletPackLogDao" ref="tabletPackLogDao" />
+	</bean>
+	
+	<!-- 植物action配置 -->
+	<bean name="plantAction" class="cn.gov.zyczs.cspt.action.PlantAction" scope="prototype">
+		<property name="plantDao" ref="plantDao" />
+		<property name="plantBaseDao" ref="plantBaseDao" />
+		<property name="medBaseDao" ref="medBaseDao" />
+		<property name="fertilizerDao" ref="fertilizerDao" />
+		<property name="pesticideDao" ref="pesticideDao" />
+		<property name="medDao" ref="medDao"/>
+		<property name="regionDao" ref="regionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="fieldCareDao" ref="fieldCareDao" />
+	</bean>
+	
+	<!-- 肥料action配置 -->
+	<bean name="fertilizerAction" class="cn.gov.zyczs.cspt.action.FertilizerAction" scope="prototype">
+		<property name="plantDao" ref="plantDao" />
+		<property name="fertilizerDao" ref="fertilizerDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	<!-- 农药action配置 -->
+	<bean name="pesticideAction" class="cn.gov.zyczs.cspt.action.PesticideAction" scope="prototype">
+		<property name="plantDao" ref="plantDao" />
+		<property name="pesticideDao" ref="pesticideDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+		<!-- 药材action配置 -->
+	<bean name="medAction" class="cn.gov.zyczs.cspt.action.MedAction" scope="prototype">
+		<property name="medDao" ref="medDao" />
+		<property name="medBaseDao" ref="medBaseDao" />
+		<property name="goodsCodeDao" ref="goodsCodeDao" />
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="plantDao" ref="plantDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="checkDao" ref="checkDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="chengSqlDao" ref="chengSqlDao" />
+	</bean>
+
+	<!--药材库存action配置 -->
+	<bean name="medStorageAction" class="cn.gov.zyczs.cspt.action.MedStorageAction" scope="prototype">
+		<property name="medStorageDao" ref="medStorageDao" />	
+		<property name="checkMatDao" ref="checkMatDao" />	
+		<property name="boxDao" ref="boxDao" />
+		<property name="checkDao" ref="checkDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="boxItemDao" ref="boxItemDao" />
+	</bean>
+	
+	
+	
+	<!-- 企业action -->
+	<bean name="companyAction" class="cn.gov.zyczs.cspt.action.CompanyAction" scope="prototype">
+		<property name="companyDao" ref="companyDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="userDao" ref="userDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="roleDao" ref="roleDao" />
+		<property name="orgUploadDao" ref="orgUploadDao" />
+	</bean>
+	
+	<!-- 组织action -->
+	<bean name="orgAction" class="cn.gov.zyczs.cspt.action.OrgAction" scope="prototype">
+		<property name="orgDao" ref="orgDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="companyDao" ref="companyDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="roleDao" ref="roleDao" />
+		<property name="orgUploadDao" ref="orgUploadDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="userDao" ref="userDao" />
+	</bean>
+	
+	<!-- 检验action -->
+	<bean name="checkAction" class="cn.gov.zyczs.cspt.action.CheckAction" scope="prototype">
+		<property name="checkDao" ref="checkDao" />
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="tabletDao" ref="tabletDao" />
+		<property name="tabletStorageDao" ref="tabletStorageDao" />
+		<property name="checkMatDao" ref="checkMatDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="tabletAssistDao" ref="tabletAssistDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		
+	</bean>
+	
+	<!-- 出入库action -->
+	<bean name="inOutStorAction" class="cn.gov.zyczs.cspt.action.InOutStorAction" scope="prototype">
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="boxDao" ref="boxDao" />
+		<property name="companyOtherDao" ref="companyOtherDao" />
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="tabletStorageDao" ref="tabletStorageDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="scalestatDao" ref="scalestatDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	<!-- 出入库明细action -->
+	<bean name="inOutStorBoxAction" class="cn.gov.zyczs.cspt.action.InOutStorBoxAction" scope="prototype">
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+	</bean>
+	
+	<!-- 药材种植平台统计action -->
+	<bean name="medStatAction" class="cn.gov.zyczs.cspt.action.MedStatAction" scope="prototype">
+		<property name="medStatDao" ref="medStatDao" />
+	</bean>
+	<!-- 生产平台 统计分析action -->
+	<bean name="tabletStatAction" class="cn.gov.zyczs.cspt.action.TabletStatAction" scope="prototype">
+		<property name="tabletStatDao" ref="tabletStatDao" />
+	</bean>
+	<!-- 药材经销平台 统计分析action -->
+	<bean name="medSellStatAction" class="cn.gov.zyczs.cspt.action.MedSellStatAction" scope="prototype">
+		<property name="medStatDao" ref="medStatDao" />
+	</bean>
+	
+	<!-- 药材饮片打印action -->
+	<bean name="printCodeAction" class="cn.gov.zyczs.cspt.action.PrintCodeAction" scope="prototype">
+		<property name="boxDao" ref="boxDao" />
+		<property name="boxItemDao" ref="boxItemDao" />
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="tabletStorageDao" ref="tabletStorageDao" />
+		
+		<property name="medDao" ref="medDao" />
+		<property name="tabletDao" ref="tabletDao" />
+		
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		
+	</bean>
+	
+	<!--中药材价格走势action  -->
+	<bean name="indexUserAction" class="cn.gov.zyczs.cspt.action.IndexUserAction" scope="prototype">
+		<property name="indexUserDao" ref="indexUserDao" />
+		<property name="indexWeekDao" ref="indexWeekDao" />	
+		<property name="medStorageDao" ref="medStorageDao" />	
+		<property name="medStatDao" ref="medStatDao" />
+	</bean>
+	
+	<!--饮片药材库存管理action  -->
+	<bean name="tabletMedStorage" class="cn.gov.zyczs.cspt.action.TabletMedStorageAction" scope="prototype">
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="medBaseDao" ref="medBaseDao" />
+		<property name="goodsCodeDao" ref="goodsCodeDao" />
+		<property name="medDao" ref="medDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+	</bean>
+	
+		<!--药材经销商action  -->
+	<bean name="medSellAction" class="cn.gov.zyczs.cspt.action.MedSellAction" scope="prototype">
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="boxDao" ref="boxDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="medBaseDao" ref="medBaseDao" />
+		<property name="goodsCodeDao" ref="goodsCodeDao" />
+		<property name="medDao" ref="medDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="checkDao" ref="checkDao" />
+		<property name="checkMatDao" ref="checkMatDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="chengSqlDao" ref="chengSqlDao" />
+	</bean>
+	
+	<!--饮片经销出入库扫码操作action  -->
+	<bean name="tabletSellInOutAction" class="cn.gov.zyczs.cspt.action.TabletSellInOutAction" scope="prototype">
+		<property name="tabletStorageDao" ref="tabletStorageDao" />
+		<property name="tabletDao" ref="tabletDao" />
+		<property name="boxDao" ref="boxDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="companyOtherDao" ref="companyOtherDao" />
+		<property name="tempBoxDao" ref="tempBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />	
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	<!-- 饮片经销 统计分析action -->
+	<bean name="tabletSellStatAction" class="cn.gov.zyczs.cspt.action.TabletSellStatAction" scope="prototype">
+		<property name="tabletStatDao" ref="tabletStatDao" />
+	</bean>
+	
+
+	<!--医院出入库action  -->
+	<bean name="hospitalInOutAction" class="cn.gov.zyczs.cspt.action.HospitalInOutAction" scope="prototype">
+		<property name="tabletStorageDao" ref="tabletStorageDao" />
+		<property name="tabletDao" ref="tabletDao" />
+		<property name="boxDao" ref="boxDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="tempBoxDao" ref="tempBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	<!-- 医院平台 统计分析action -->
+	<bean name="hospitalStatAction" class="cn.gov.zyczs.cspt.action.HospitalStatAction" scope="prototype">
+		<property name="tabletStatDao" ref="tabletStatDao" />
+	</bean>
+
+	<!--药材市场action  -->
+	<bean name="medMarketAction" class="cn.gov.zyczs.cspt.action.MedMarketAction" scope="prototype">
+		<property name="medStorageDao" ref="medStorageDao" />
+		<property name="userDao" ref="userDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="companyDao" ref="companyDao" />
+		<property name="boxDao" ref="boxDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="medBaseDao" ref="medBaseDao" />
+		<property name="goodsCodeDao" ref="goodsCodeDao" />
+		<property name="medDao" ref="medDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="checkDao" ref="checkDao" />
+		<property name="checkMatDao" ref="checkMatDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="chengSqlDao" ref="chengSqlDao" />
+	</bean>
+    
+	<!--药材经销商出入库扫码操作action  -->
+	<bean name="medSellInOutAction" class="cn.gov.zyczs.cspt.action.MedSellInOutAction" scope="prototype">
+		<property name="medStorageDao" ref="medStorageDao" />		
+		<property name="boxDao" ref="boxDao" />
+		<property name="companyOtherDao" ref="companyOtherDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="tempBoxDao" ref="tempBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="scalestatDao" ref="scalestatDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="chengSqlDao" ref="chengSqlDao" />
+	</bean>
+    
+    <!-- 药材市场平台 统计分析action -->
+	<bean name="medMarketStatAction" class="cn.gov.zyczs.cspt.action.MedMarketStatAction" scope="prototype">
+		<property name="medStatDao" ref="medStatDao" />
+	</bean>
+	<!--药材市场出入库扫码操作action  -->
+	<bean name="medMarketInOutAction" class="cn.gov.zyczs.cspt.action.MedMarketInOutAction" scope="prototype">
+		<property name="medStorageDao" ref="medStorageDao" />		
+		<property name="boxDao" ref="boxDao" />
+		<property name="companyOtherDao" ref="companyOtherDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="tempBoxDao" ref="tempBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="scalestatDao" ref="scalestatDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	<bean name="medBaseAction" class="cn.gov.zyczs.cspt.action.MedBaseAction" scope="prototype">
+		<property name="medBaseDao" ref="medBaseDao" />
+	</bean>
+	
+	<!-- 植物基础action -->
+	<bean name="plantBaseAction" class="cn.gov.zyczs.cspt.action.PlantBaseAction" scope="prototype">
+		<property name="plantBaseDao" ref="plantBaseDao" />
+	</bean>
+	
+	<!--饮片生产入库药材扫码操作action  -->
+	<bean name="tabletMedInOutAction" class="cn.gov.zyczs.cspt.action.TabletMedInOutAction" scope="prototype">
+		<property name="medStorageDao" ref="medStorageDao" />		
+		<property name="boxDao" ref="boxDao" />
+		<property name="companyOtherDao" ref="companyOtherDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="inOutStorBoxDao" ref="inOutStorBoxDao" />
+		<property name="tempBoxDao" ref="tempBoxDao" />
+		<property name="codeRegionDao" ref="codeRegionDao" />
+		<property name="regionDao" ref="regionDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	 <!-- 监管平台 统计分析action -->
+	<bean name="govmentStatAction" class="cn.gov.zyczs.cspt.action.GovmentStatAction" scope="prototype">
+		<property name="govmentStatDao" ref="govmentStatDao" />
+	</bean>
+	 <!-- 药材市场监管统计分析action -->
+	<bean name="govmentMedStatAction" class="cn.gov.zyczs.cspt.action.GovmentMedStatAction" scope="prototype">
+		<property name="govmentMedStatDao" ref="govmentMedStatDao" />
+	</bean>
+	
+	<!-- 药材市场监管统计分析action -->
+	<bean name="govmentTabletStatAction" class="cn.gov.zyczs.cspt.action.GovmentTabletStatAction" scope="prototype">
+		<property name="govmentTabletStatDao" ref="govmentTabletStatDao" />
+	</bean>
+	
+	<!-- 药材市场监管应急处置action -->
+	<bean name="freezeAction" class="cn.gov.zyczs.cspt.action.FreezeAction" scope="prototype">
+		<property name="freezeDao" ref="freezeDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	<!-- 溯源秤配置action -->
+	<bean name="scaleConfAction" class="cn.gov.zyczs.cspt.action.ScaleConfAction" scope="prototype">
+		<property name="scaleConfDao" ref="scaleConfDao" />
+		<property name="scaleKeyConfDao" ref="scaleKeyConfDao" />
+	</bean>
+	<!-- 溯源秤action -->
+	<bean name="mappdataAction" class="cn.gov.zyczs.cspt.action.MappdataAction" scope="prototype">
+		<property name="mappdataDao" ref="mappdataDao" />
+	</bean>
+	<bean name="scalestatAction" class="cn.gov.zyczs.cspt.action.ScalestatAction" scope="prototype">
+		<property name="scalestatDao" ref="scalestatDao" />
+		<property name="scalepluDao" ref="scalepluDao" />
+	</bean>
+	<bean name="scaleAction" class="cn.gov.zyczs.cspt.action.ScaleAction" scope="prototype">
+		<property name="scaleDao" ref="scaleDao" />
+		<property name="scaleConfDao" ref="scaleConfDao" />
+		<property name="scaleKeyConfDao" ref="scaleKeyConfDao" />
+		<property name="scalefckDao" ref="scalefckDao" />
+		<property name="medBaseDao" ref="medBaseDao" />
+		<property name="scalestatDao" ref="scalestatDao" />
+		<property name="scalepluDao" ref="scalepluDao" />
+	</bean>
+    
+    <!-- 溯源秤配置action -->
+	<bean name="chengConfAction" class="cn.gov.zyczs.cspt.action.ChengConfAction" scope="prototype">
+		<property name="chengConfDao" ref="chengConfDao" />
+		<property name="chengKeyDao" ref="chengKeyDao" />
+	</bean>
+	
+	<!-- 溯源秤action -->
+	<bean name="chengAction" class="cn.gov.zyczs.cspt.action.ChengAction" scope="prototype">
+		<property name="chengDao" ref="chengDao" />
+		<property name="chengConfDao" ref="chengConfDao" />
+		<property name="chengKeyDao" ref="chengKeyDao" />
+		<property name="chengFckDao" ref="chengFckDao" />
+		<property name="chengSqlDao" ref="chengSqlDao" />
+		<property name="chengDataDao" ref="chengDataDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="deviceRecDao" ref="deviceRecDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="chengTmpDao" ref="chengTmpDao" />
+		<property name="chengFckTmpDao" ref="chengFckTmpDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+	</bean>
+	
+	<!-- 溯源秤模板action -->
+	<bean name="chengTmpAction" class="cn.gov.zyczs.cspt.action.ChengTmpAction" scope="prototype">
+		<property name="chengTmpDao" ref="chengTmpDao" />
+		<property name="chengConfDao" ref="chengConfDao" />
+		<property name="chengKeyDao" ref="chengKeyDao" />
+		<property name="chengFckTmpDao" ref="chengFckTmpDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	<!-- 监管平台 jfreechart 统计action -->
+	<bean name="jFreeChartStatAction" class="cn.gov.zyczs.cspt.action.JFreeChartStatAction" scope="prototype">
+		<property name="govmentStatDao" ref="govmentStatDao" />
+	</bean>
+	
+	<!-- 监管平台 jfreechart 统计action -->
+	<bean name="sellTotalWeightStatAction" class="cn.gov.zyczs.cspt.action.SellTotalWeightStatAction" scope="prototype">
+		<property name="govmentStatDao" ref="govmentStatDao" />
+	</bean>
+
+	
+	<bean name="codeAreaAction" class="cn.gov.zyczs.cspt.action.CodeAreaAction" scope="prototype">
+		<property name="codeAreaDao" ref="codeAreaDao" />
+	</bean>
+	
+	<!-- 操作日志action -->
+	<bean name="opLogAction" class="cn.gov.zyczs.cspt.action.OpLogAction" scope="prototype">
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	<!-- 权限管理action -->
+	<bean name="roleAction" class="cn.gov.zyczs.cspt.action.RoleAction" scope="prototype">
+		<property name="roleDao" ref="roleDao" />
+		<property name="orgDao" ref="orgDao" />
+	</bean>
+	
+	<!-- 查看检验报告action -->
+	<bean name="checkMatImageAction" class="cn.gov.zyczs.cspt.action.CheckMatImageAction" scope="prototype">
+		<property name="checkMatDao" ref="checkMatDao" />
+	</bean>
+	
+	<!-- 查看企业组织上传报告action -->
+	<bean name="orgUploadImageAction" class="cn.gov.zyczs.cspt.action.OrgUploadImageAction" scope="prototype">
+		<property name="orgUploadDao" ref="orgUploadDao" />
+	</bean>
+	
+	
+	<!-- 企业组织上传附件action -->
+	<bean name="orgUploadAction" class="cn.gov.zyczs.cspt.action.OrgUploadAction" scope="prototype">
+		<property name="orgUploadDao" ref="orgUploadDao" />
+	</bean>
+	
+	<!-- 设备配置action -->
+	<bean name="deviceConfAction" class="cn.gov.zyczs.cspt.action.DeviceConfAction" scope="prototype">
+		<property name="deviceConfDao" ref="deviceConfDao" />
+	</bean>
+	
+	<!-- 设备action -->
+	<bean name="deviceAction" class="cn.gov.zyczs.cspt.action.DeviceAction" scope="prototype">
+		<property name="deviceDao" ref="deviceDao" />
+		<property name="deviceRecDao" ref="deviceRecDao" />
+		<property name="deviceConfDao" ref="deviceConfDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	<!-- 设备回收action -->
+	<bean name="deviceRecAction" class="cn.gov.zyczs.cspt.action.DeviceRecAction" scope="prototype">
+		<property name="deviceRecDao" ref="deviceRecDao" />
+		<property name="deviceConfDao" ref="deviceConfDao" />
+		<property name="chengConfDao" ref="chengConfDao" />
+		<property name="orgDao" ref="orgDao" />
+	</bean>
+	
+	<bean name="examineAction" class="cn.gov.zyczs.cspt.action.ExamineAction" scope="prototype">
+		<property name="examineDao" ref="examineDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	<!-- 市场区域图action -->
+	<bean name="marketMapAction" class="cn.gov.zyczs.cspt.action.MarketMapAction" scope="prototype">
+		<property name="marketMapDao" ref="marketMapDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+	</bean>
+	
+	<!-- 诚信评价action -->
+	<bean name="scoreFinalAction" class="cn.gov.zyczs.cspt.action.ScoreFinalAction" scope="prototype">
+		<property name="scoreFinalDao" ref="scoreFinalDao" />
+		<property name="scoreDeductDao" ref="scoreDeductDao" />
+	</bean>
+	<bean name="scoreDeductAction" class="cn.gov.zyczs.cspt.action.ScoreDeductAction" scope="prototype">
+		<property name="scoreDeductDao" ref="scoreDeductDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+	</bean>
+	
+	<!-- 市场区域图action -->
+	<bean name="marketMapImageAction" class="cn.gov.zyczs.cspt.action.MarketMapImageAction" scope="prototype">
+		<property name="marketMapDao" ref="marketMapDao" />
+	</bean>
+	
+	<!-- 市场楼层图action -->
+	<bean name="marketFloorImageAction" class="cn.gov.zyczs.cspt.action.MarketFloorImageAction" scope="prototype">
+		<property name="marketMapDao" ref="marketMapDao" />
+	</bean>
+	
+	<!-- 手持机请求接口 -->
+	<bean name="receiveAction" class="cn.gov.zyczs.cspt.action.ReceiveAction" scope="prototype">
+		<property name="userDao" ref="userDao" />
+		<property name="orgDao" ref="orgDao" />
+		<property name="dailyCheckDao" ref="dailyCheckDao" />
+		<property name="scanCompanyDao" ref="scanCompanyDao" />
+		<property name="medStorageDao" ref="medStorageDao" />
+		
+		<property name="chengDao" ref="chengDao" />
+		<property name="chengDataDao" ref="chengDataDao" />
+		<property name="deviceDao" ref="deviceDao" />
+		
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="companyDao" ref="companyDao" />
+		<property name="opLogDao" ref="opLogDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+		<property name="orgUploadDao" ref="orgUploadDao" />
+	</bean>
+	
+	<!--手持机扫描企业action -->
+	<bean name="scanCompanyAction" class="cn.gov.zyczs.cspt.action.ScanCompanyAction" scope="prototype">
+		<property name="scanCompanyDao" ref="scanCompanyDao" />
+	</bean>
+	
+	<!--日常检查action -->
+	<bean name="dailyCheckAction" class="cn.gov.zyczs.cspt.action.DailyCheckAction" scope="prototype">
+		<property name="dailyCheckDao" ref="dailyCheckDao" />
+	</bean>
+	
+	<!-- 农药action配置 -->
+	<bean name="fieldCareAction" class="cn.gov.zyczs.cspt.action.FieldCareAction" scope="prototype">
+		<property name="plantDao" ref="plantDao" />
+		<property name="fieldCareDao" ref="fieldCareDao" />
+		<property name="zyczsXmlDao" ref="zyczsXmlDao" />
+		<property name="opLogDao" ref="opLogDao" />
+	</bean>
+	
+	<!-- 查询机 -->
+	<bean name="searchAction" class="cn.gov.zyczs.cspt.action.SearchAction" scope="prototype">
+		<property name="searchDao" ref="searchDao" />
+		<property name="tabletBaseDao" ref="tabletBaseDao" />
+		<property name="inOutStorDao" ref="inOutStorDao" />
+		<property name="codeAreaDao" ref="codeAreaDao" />
+	</bean>
+	
+	<!-- 标示打印 -->
+	<bean name="labelPrintAction" class="cn.gov.zyczs.cspt.action.LabelPrintAction" scope="prototype">
+		<property name="labelPrintDao" ref="labelPrintDao" />
+	</bean>
+	
+	<!-- 企业使用率 -->
+	<bean name="rp_RateAction" class="cn.gov.zyczs.cspt.action.Rp_RateAction" scope="prototype">
+		<property name="rp_RateDao" ref="rp_RateDao" />
+	</bean>
+	
+	
+	<!-- 监管平台报表统计 -->
+	<bean name="rp_StatAction" class="cn.gov.zyczs.cspt.action.Rp_StatAction" scope="prototype">
+		<property name="rp_StatDao" ref="rp_StatDao" />
+	</bean>
+	
+	
+	<!-- 平台建设率 -->
+	<bean name="rp_BuildAction" class="cn.gov.zyczs.cspt.action.Rp_BuildAction" scope="prototype">
+		<property name="rp_BuildDao" ref="rp_BuildDao" />
+	</bean>
+	
+</beans>
+

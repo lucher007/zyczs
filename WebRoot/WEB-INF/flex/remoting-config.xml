@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="remoting-service"
+	class="flex.messaging.services.RemotingService">
+
+	<adapters>
+		<adapter-definition id="java-object"
+			class="flex.messaging.services.remoting.adapters.JavaAdapter"
+			default="true" />
+
+		<!-- gilead blazeds 此项为Hibernate所需要的,这里使用ibatis
+		<adapter-definition id="persistent-adapter"
+			class="net.sf.gilead.blazeds.adapter.PersistentAdapter">
+			<properties>
+				<persistence-factory>
+					<class>
+						com.common.SpringApplicationContext
+					</class>
+					<singleton>true</singleton>
+					<method>getSessionFactory</method>
+				</persistence-factory>
+				<stateless>false</stateless>
+			</properties>
+		</adapter-definition>-->
+	</adapters>
+
+	<default-channels>
+		<channel ref="my-amf" />
+	</default-channels>
+	
+	<!-- Destination开始  -->
+	<destination id="indexUserDao">
+		<!--<adapter ref="persistent-adapter" />  此项为Hibernate所需要的,这里使用ibatis-->
+		<properties>
+			<factory>spring</factory>
+			<source>indexUserDao</source>
+			<scope>session</scope>
+		</properties>
+	</destination>
+	<!--  Destination结束  -->
+	
+	<!-- Destination开始  -->
+	<destination id="chengDao">
+		<!--<adapter ref="persistent-adapter" />  此项为Hibernate所需要的,这里使用ibatis-->
+		<properties>
+			<factory>spring</factory>
+			<source>chengDao</source>
+			<scope>session</scope>
+		</properties>
+	</destination>
+	<!--  Destination结束  -->
+	
+	
+</service>

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.i18n.encoding" value="UTF-8"/>
+<!-- 	<constant name="struts.locale" value="en_GB" /> 防止外部js导入中文乱码-->
+	<constant name="struts.configuration.xml.reload" value="true"/>
+	<constant name="struts.action.extension" value="shtml" />	
+   	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+   	<constant name="struts.multipart.maxSize" value="1000000000" />
+
+	<!-- 全局action -->
+    <include file="struts-global.xml"/> 
+	<!-- 饮片action -->
+    <include file="struts-tablet.xml"/>
+   	<!-- 植物action -->
+    <include file="struts-plant.xml"/>
+    <!-- 统计分析action -->
+    <include file="struts-stat.xml"/>
+    <!--药材经销action -->
+    <include file="struts-medsell.xml"/>
+    <!--饮片经销action -->
+    <include file="struts-tabletsell.xml"/>
+    <!--医院action -->
+    <include file="struts-hospital.xml"/>
+    <!--药材市场action -->
+    <include file="struts-medmarket.xml"/>
+    <!--药材监管统计action -->
+    <include file="struts-govmentMedStat.xml"/>
+     <!--饮片监管统计action -->
+    <include file="struts-govmentTabletStat.xml"/>
+     <!--监管应急处置action -->
+    <include file="struts-govmentFreeze.xml"/>
+    <!-- 溯源秤action -->
+    <include file="struts-scales.xml"/>
+    <!-- 溯源秤配置action -->
+    <include file="struts-cheng.xml"/>
+    
+    <!-- jFreeChart统计action -->
+    <include file="struts-jfreechart.xml"/>
+    
+    
+    <!-- 企业使用率_dwc -->
+    <include file="struts-rpRate.xml"/>
+     <!-- 监管平台报表_lb -->
+    <include file="struts-rpStat.xml"/>
+    
+    <!-- 安装建设率_dwc -->
+    <include file="struts-rpBuild.xml"/>
+    
+    <package name="initpage" extends="struts-default">    	
+    	<action name="companyRegister" class="companyAction">
+			<result name="regsuc">/regsuc.jsp</result>
+		</action>
+		
+		<action name="mapBase" class="companyAction">
+			<result name="mapBaseChoice">/manage/map/map.jsp</result>	
+		</action>
+		
+		<action name="checkMatImage" class="checkMatImageAction"> 
+			<result name="success" type="stream"> 
+				<param name="contentType">image/jpeg</param> 
+				<param name="inputName">inputStream</param> 
+				<param name="bufferSize">4096</param> 
+			</result> 
+        </action>
+        
+        <action name="orgUploadImage" class="orgUploadImageAction"> 
+			<result name="success" type="stream"> 
+				<param name="contentType">image/jpeg</param> 
+				<param name="inputName">inputStream</param> 
+				<param name="bufferSize">4096</param> 
+			</result> 
+        </action>
+        
+        <action name="marketMapImage" class="marketMapImageAction"> 
+			<result name="success" type="stream"> 
+				<param name="contentType">image/jpeg</param> 
+				<param name="inputName">inputStream</param> 
+				<param name="bufferSize">4096</param> 
+			</result> 
+        </action>
+        
+       <action name="marketFloorImage" class="marketFloorImageAction"> 
+			<result name="success" type="stream"> 
+				<param name="contentType">image/jpeg</param> 
+				<param name="inputName">inputStream</param> 
+				<param name="bufferSize">4096</param> 
+			</result> 
+        </action>
+        
+         <action name="receive" class="receiveAction">
+         	<!-- 局部 异常处理 -->  
+            <exception-mapping result="exception_scj" exception="cn.gov.zyczs.cspt.common.ExceptionHandler">             
+            </exception-mapping>  
+            <!-- 异常跳转的界面 -->  
+            <result name="exception_scj">/exception_scj.jsp</result>  
+			<result name="success"></result>
+		 </action>
+		 
+		 <!-- 查询机 -->
+		 <action name="search" class="searchAction">
+			<result name="success">/search/sourcecode.jsp</result>
+			<result name="error">/search/sourceerror.jsp</result>
+			<result name="searchOrg">/search/searchorg.jsp</result>
+			<result name="searchOrgname">/search/searchorgname.jsp</result>
+			<result name="searchOrgInOut">/search/searchorginout.jsp</result>
+		</action>
+		
+	</package>    
+    
+	<package name="simple" extends="strutsdefault">	
+		
+		<action name="logined" class="userAction">
+			<result name="med">/loginpage/medManage.jsp</result>
+			<result name="medsell">/loginpage/medSellManage.jsp</result>
+			<result name="tablet">/loginpage/tabletManage.jsp</result>
+			<result name="tabletsell">/loginpage/tabletSellManage.jsp</result>
+			<result name="market">/loginpage/marketManage.jsp</result>
+			<result name="hospital">/loginpage/hospitalManage.jsp</result>	
+			<result name="government">/loginpage/governmentManage.jsp</result>
+			<result name="error">/error.jsp</result>	
+			
+			
+			<result name="medlogout">/loginpage/medManage.jsp</result>
+			<result name="medselllogout">/loginpage/medSellManage.jsp</result>
+			<result name="tabletlogout">/loginpage/tabletManage.jsp</result>
+			<result name="tabletselllogout">/loginpage/tabletSellManage.jsp</result>
+			<result name="marketlogout">/loginpage/marketManage.jsp</result>
+			<result name="hospitallogout">/loginpage/hospitalManage.jsp</result>	
+			<result name="governmentlogout">/loginpage/governmentManage.jsp</result>	
+		</action>
+		
+		<action name="user" class="userAction">
+			<result name="success">/manage/user/findUser.jsp</result>
+			<result name="saveinit">/manage/user/addUser.jsp</result>
+			<result name="save">/manage/user/addUserFinish.jsp</result>
+			<result name="update">/manage/user/updateUser.jsp</result>
+			<result name="person">/manage/user/updatePerson.jsp</result>
+			<result name="findByList_sys">/manage/user/findUserSys.jsp</result>
+			<result name="update_sys">/manage/user/updateUserSys.jsp</result>
+			<result name="saveinit_sys">/manage/user/addUserSys.jsp</result>
+			<result name="save_sys">/manage/user/addUserSysFinish.jsp</result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		<action name="company" class="companyAction">
+			<result name="success">/manage/company/findCompany.jsp</result>
+			<result name="save">/manage/company/addCompanyFinish.jsp</result>	
+			<result name="update">/manage/company/updateCompany.jsp</result>
+			<result name="successverify">/manage/company/findCompanyVerify.jsp</result>	
+			<result name="updateverify">/manage/company/updateCompanyVerify.jsp</result>
+			<result name="addUserMarket">/manage/medMarket/addUser.jsp</result>
+			<result name="addUserMarketFinish">/manage/medMarket/addUserFinish.jsp</result>
+			<result name="updateUserMarketFinish">/manage/medMarket/updateMarketUserFinish.jsp</result>
+			<result name="updateInitRegVerify">/manage/company/updateInitRegVerify.jsp</result>
+			<result name="UpdateMarketUserInit">/manage/medMarket/updateMarketUserInit.jsp</result>
+			 <interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save,addUserMarket</param>
+		    </interceptor-ref>
+		</action>
+				
+		<action name="org" class="orgAction">
+			<result name="success">/manage/org/findOrg.jsp</result>
+			<result name="saveinit">/manage/org/addOrg.jsp</result>	
+			<result name="save">/manage/org/addOrgFinish.jsp</result>	
+			<result name="update">/manage/org/updateOrg.jsp</result>	
+			<result name="findByMedmarketUserStat">/manage/medMarket/findByMedmarketUserStat.jsp</result>
+			<result name="UpdateMarketUserInit">/manage/medMarket/updateMarketUserInit.jsp</result>
+			<result name="choice">/manage/org/findOrgChoice.jsp</result>
+			<result name="chooseOrg">/manage/org/orgChoiceOutStorage.jsp</result>
+			 <interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>	
+		
+		<action name="inOutStor" class="inOutStorAction">
+			<result name="saveoutstoragemed" >/manage/medInOutStorage/addOutStorageFinish.jsp</result>
+			<result name="saveoutstoragetablet" >/manage/tabletInOutStorage/addOutStorageFinish.jsp</result>
+			<result name="findMedInStorage_med" >/manage/medInOutStorage/findMedInStor.jsp</result>
+			<result name="findMedOutStorage_med" >/manage/medInOutStorage/findMedOutStor.jsp</result>
+			<result name="findTabletInStorage_tablet" >/manage/tabletInOutStorage/findTabletInStor.jsp</result>
+			<result name="findTabletOutStorage_tablet" >/manage/tabletInOutStorage/findTabletOutStor.jsp</result>
+			<result name="findMedOutStorage_tablet" >/manage/tabletmed/findMedOutStor.jsp</result>
+		    <result name="findMedInStorage_tablet" >/manage/tabletmed/findMedInStor.jsp</result>
+		    <result name="findMedInStorage_medSell" >/manage/medSellInOutStorage/findMedInStor.jsp</result>
+		    <result name="findMedOutStorage_medSell" >/manage/medSellInOutStorage/findMedOutStor.jsp</result>
+		    <result name="findMedInStorage_medMarket" >/manage/medMarketInOutStorage/findMedInStor.jsp</result>
+		    <result name="findMedOutStorage_medMarket" >/manage/medMarketInOutStorage/findMedOutStor.jsp</result>
+		    <result name="findTabletInStorage_tabletSell" >/manage/tabletSellInOutStorage/findTabletInStor.jsp</result>
+			<result name="findTabletOutStorage_tabletSell" >/manage/tabletSellInOutStorage/findTabletOutStor.jsp</result>
+		    <result name="findTabletInStorage_hospital" >/manage/hospitalInOutStorage/findTabletInStor.jsp</result>
+		    <interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">addOutStorageMed,addOutStorageTablet</param>
+		    </interceptor-ref>
+		</action>
+		
+		<action name="inOutStorBox" class="inOutStorBoxAction">
+			<result name="findMedInStorBox_med" >/manage/medInOutStorage/findMedInStorBox.jsp</result>
+			<result name="findMedOutStorBox_med" >/manage/medInOutStorage/findMedOutStorBox.jsp</result>
+		    <result name="findMedOutStorItem_med" >/manage/medInOutStorage/findMedOutStorItem.jsp</result>
+		    <result name="findTabletOutStorBox_tablet" >/manage/tabletInOutStorage/findTabletOutStorBox.jsp</result>
+		    <result name="findTabletOutStorItem_tablet" >/manage/tabletInOutStorage/findTabletOutStorItem.jsp</result>
+		    <result name="findTabletInStorBox_tablet" >/manage/tabletInOutStorage/findTabletInStorBox.jsp</result>
+		    <result name="findTabletInStorItem_tablet" >/manage/tabletInOutStorage/findTabletInStorItem.jsp</result>
+		    <result name="findMedInStorBox_tablet" >/manage/tabletmed/findMedInStorBox.jsp</result>
+		    <result name="findMedInStorItem_tablet" >/manage/tabletmed/findMedInStorItem.jsp</result>
+		    <result name="findMedOutStorBox_tablet" >/manage/tabletmed/findMedOutStorBox.jsp</result>
+		    <result name="findMedOutStorItem_tablet" >/manage/tabletmed/findMedOutStorItem.jsp</result>
+		    <result name="findMedInStorBox_medSell" >/manage/medSellInOutStorage/findMedInStorBox.jsp</result>
+		    <result name="findMedInStorItem_medSell" >/manage/medSellInOutStorage/findMedInStorItem.jsp</result>
+		    <result name="findMedOutStorBox_medSell" >/manage/medSellInOutStorage/findMedOutStorBox.jsp</result>
+		    <result name="findMedOutStorItem_medSell" >/manage/medSellInOutStorage/findMedOutStorItem.jsp</result>
+		    <result name="findMedInStorBox_medMarket" >/manage/medMarketInOutStorage/findMedInStorBox.jsp</result>
+		    <result name="findMedInStorItem_medMarket" >/manage/medMarketInOutStorage/findMedInStorItem.jsp</result>
+		    <result name="findMedOutStorBox_medMarket" >/manage/medMarketInOutStorage/findMedOutStorBox.jsp</result>
+		    <result name="findMedOutStorItem_medMarket" >/manage/medMarketInOutStorage/findMedOutStorItem.jsp</result>
+		     <result name="findTabletOutStorBox_tabletSell" >/manage/tabletSellInOutStorage/findTabletOutStorBox.jsp</result>
+		    <result name="findTabletOutStorItem_tabletSell" >/manage/tabletSellInOutStorage/findTabletOutStorItem.jsp</result>
+		    <result name="findTabletInStorBox_tabletSell" >/manage/tabletSellInOutStorage/findTabletInStorBox.jsp</result>
+		    <result name="findTabletInStorItem_tabletSell" >/manage/tabletSellInOutStorage/findTabletInStorItem.jsp</result>
+		    <result name="findTabletInStorBox_hospital" >/manage/hospitalInOutStorage/findTabletInStorBox.jsp</result>
+		    <result name="findTabletInStorItem_hospital" >/manage/hospitalInOutStorage/findTabletInStorItem.jsp</result>
+		</action>
+		
+		<action name="check" class="checkAction">
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+		        <param name="includeMethods">saveCheck</param>
+		    </interceptor-ref>	
+		    
+			<result name="finishMedCheckmed">/manage/medStorage/medCheckFinish.jsp</result>
+			<result name="finishTabletCheckmed">/manage/tabletmed/medCheckFinish.jsp</result>
+			<result name="finishMedsellCheckmed">/manage/medsell/medCheckFinish.jsp</result>
+			<result name="finishMedmarketCheckmed">/manage/medMarket/medCheckFinish.jsp</result>
+			<result name="finishChecktablet">/manage/tablet/tabletCheckFinish.jsp</result>
+			<result name="findByCheckDetail">/manage/check/medCheckDetail.jsp</result>
+			<result name="findTabletByCheckDetail">/manage/check/tabletCheckDetail.jsp</result>
+		</action>	
+		
+		<action name="printCode" class="printCodeAction">
+			<result name="successprintmed">/manage/print/printMed.jsp</result>
+			<result name="successprinttablet">/manage/print/printTablet.jsp</result>
+			<result name="successprinttablettwo">/manage/print/printTabletTwo.jsp</result>
+			<result name="viewbox">/manage/print/printViewBox.jsp</result>
+			<result name="successprinttablet8">/manage/print/printTablet8.jsp</result>
+			<result name="successprinttablettwo8">/manage/print/printTabletTwo8.jsp</result>
+		</action>
+		
+		<!-- 操作日志action配置-->
+		<action name="opLog" class="opLogAction">
+			<result name="success">/manage/opLog/findByList.jsp</result>
+		</action>
+		
+		<!-- 权限action配置-->
+		<action name="role" class="roleAction">
+			<result name="success">/manage/role/findRole.jsp</result>
+			<result name="save">/manage/role/addRole.jsp</result>
+			<result name="update">/manage/role/updateRole.jsp</result>			
+			<result name="updateRoleUser">/manage/role/updateRoleUser.jsp</result>
+			<result name="updateRoleMenu">/manage/role/updateRoleMenu.jsp</result>
+		</action>
+		
+		<action name="examine" class="examineAction">
+			<result name="calculate">/manage/examine/calculate.jsp</result>
+			<result name="save">/manage/examine/addexamine.jsp</result>
+			<result name="update">/manage/examine/editexamine.jsp</result>			
+			<result name="success">/manage/examine/findByList.jsp</result>
+			<result name="detail">/manage/examine/detail.jsp</result>
+			<result name="calculateFinish">/manage/examine/calculateFinish.jsp</result>
+			<result name="home">/manage/examine/home.jsp</result>
+		</action>
+		
+		<!-- 市场区域图action配置 -->
+		<action name="marketMap" class="marketMapAction">
+			<result name="findByList">/manage/marketmap/findByList.jsp</result>
+			<result name="findMarketAreaByCpc">/manage/marketmap/findMarket.jsp</result>
+			<result name="findMarketMapByCpc">/manage/marketmap/findMarketMapByCpc.jsp</result>
+			<result name="findFloorByCpc">/manage/marketmap/findFloorByCpc.jsp</result>
+		</action>
+		
+		<!-- 诚信评价action配置 -->
+		<action name="scoreFinal" class="scoreFinalAction">
+			<result name="success">/manage/scoreFinal/findByList.jsp</result>
+		</action>
+		<action name="scoreDeduct" class="scoreDeductAction">
+			<result name="success">/manage/scoreDeduct/findByList.jsp</result>
+			<result name="save">/manage/scoreDeduct/addScoreDeduct.jsp</result>
+			<result name="savechoose">/manage/scoreDeduct/addScoreDeductChoose.jsp</result>
+			<result name="companyChoice">/manage/scoreDeduct/companyChoice.jsp</result>
+			<result name="selectall">/manage/scoreDeduct/findByListSelectAll.jsp</result>
+			
+		</action>
+		
+		<!-- 日常检查action配置 -->
+		<action name="dailyCheck" class="dailyCheckAction">
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+		        <param name="includeMethods">save</param>
+		    </interceptor-ref>	
+			<result name="findByList">/manage/dailyCheck/findByList.jsp</result>
+			<result name="findById">/manage/dailyCheck/findById.jsp</result>
+		</action>
+		
+		
+		<!-- 日常检查action配置 -->
+		<action name="labelPrint" class="labelPrintAction">
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+		        <param name="includeMethods">save,update</param>
+		    </interceptor-ref>	
+			<result name="findByOrgId">/manage/labelprint/findByOrgId.jsp</result>
+		</action>
+		
+		<action name="indexUser" class="indexUserAction">
+			<result name="findPriceChart_medSell">/manage/medsell/findPriceChart.jsp</result>
+			<result name="findPriceChart_med">/manage/medStat/findPriceChart.jsp</result>
+			<result name="findPriceChart_medMarket">/manage/medMarket/findPriceChart.jsp</result>
+		</action>
+		
+	</package>
+	
+	<package name="json" extends="json-default">
+	
+		<action name="login" class="userAction">
+			<result type="json"></result>
+		</action>
+			
+		<action name="AuthImgAction" class="cn.gov.zyczs.cspt.action.AuthImgAction"> 
+			<result name="success" type="stream"> 
+				<param name="contentType">image/jpeg</param> 
+				<param name="inputName">inputStream</param> 
+				<param name="bufferSize">4096</param> 
+			</result> 
+        </action>
+        
+        <action name="checkAjax" class="checkAction">
+			<result type="json"></result>
+		</action>
+		
+		
+		<action name="printCodeAjax" class="printCodeAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="companyAjax" class="companyAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="codeAreaAjax" class="codeAreaAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="userAjax" class="userAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="roleAjax" class="roleAction">
+			<result type="json"></result>
+		</action>
+		
+		
+		<action name="orgUploadAjax" class="orgUploadAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="marketMapAjax" class="marketMapAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="orgAjax" class="orgAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="medStorAjax" class="medStorageAction">
+			<result type="json"></result>
+		</action>
+		
+		<action name="indexUserAjax" class="indexUserAction">
+			<result type="json"></result>
+		</action>
+		
+	</package>
+</struts>

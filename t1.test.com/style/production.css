@@ -1,0 +1,7 @@
+@import url(common.css);
+@import url(listform.css);
+
+body{ padding:20px; width:748px; overflow:hidden;}
+a.btn-xz{ display:block; margin-left:2px; background:url(../images/frame/frame-bg.png) no-repeat -100px -232px; width:60px; height:22px; line-height:22px; text-indent:60px; overflow:hidden;}
+.assist{ border:solid #DDD 1px; padding:5px; width:692px; margin-top:5px;}
+

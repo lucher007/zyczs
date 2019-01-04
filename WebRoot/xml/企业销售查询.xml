@@ -1,0 +1,64 @@
+
+<?xml version="1.0"?>
+-
+<cpc>
+	<respcode>0000</respcode>
+	<respmsg>成功</respmsg>
+	-
+	<data>
+		-
+		<corplist>
+<![CDATA[萨达_市场,10127300076267;测试企业01,10127300074487;中溯饮片经销公司,10127300074292;中溯饮片生产厂,10127300074289;正源华西医院_医院,10127300074250;正源中医药协会_管理机构,10127300074234;正源药材市场_市场,10127300074164;]]>
+		</corplist>
+		<zyctype>00111111</zyctype>
+		<areacode>510101</areacode>
+		<currentpage>1</currentpage>
+		<listcount>7</listcount>
+		
+	</data>
+</cpc>
+
+<!-- 
+
+接口请求地址：http://tjjg.zyczs.gov.cn/trans/zyccorpinfolistout.htm?userName=zyczs_cd&password=000000&zyctype=00111111&areacode=510101&page=1
+
+
+返回结果：
+- <cpc>
+  <respcode>0000</respcode> 
+  <respmsg>成功</respmsg> 
+- <data>
+- <corplist>
+- <![CDATA[ 萨达_市场,10127300076267;测试企业01,10127300074487;中溯饮片经销公司,10127300074292;中溯饮片生产厂,10127300074289;正源华西医院_医院,10127300074250;正源中医药协会_管理机构,10127300074234;正源药材市场_市场,10127300074164;
+  ]]> 
+  </corplist>
+  <zyctype>00111111</zyctype> 
+  <areacode>510101</areacode> 
+  <currentpage>1</currentpage> 
+  <listcount>7</listcount> 
+  </data>
+  </cpc>
+
+
+
+说明：
+
+请求参数说明：userName=zyczs_cd&password=000000&zyctype=00111111&areacode=510101&page=1
+     userName(用户名)、password(密码)、zyctype(企业类型,查所有企业类型，传11111111)，areacode(区域代码,全部区域数据该项为空即可)、page(分页请求用，表示第几页)
+
+
+
+返回结果说明：
+respcode：返回状态，有三种：0000表成功，1000表示用户名或密码为空，2000表求非正常接入，或用户名和密码错误
+respmsg：返回信息
+
+corplist:表求请求的列表，每条记录各项用逗号分开，每条记录用分号分开，每次最多返回10条
+         企业列表每条记录结构：企业名称，企业CPC码;
+         
+zyctype:请求值，原样返回，表企业类型
+areacode:请求值原样返回，表区域码
+currentpage：表当前第几页
+listcount：表总共多少条记录
+
+
+ -->

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Scale">
+	<typeAlias alias="Scale" type="cn.gov.zyczs.cspt.po.Scale"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="scaleconfid" prepend="and">
+			<![CDATA[
+					scaleconfid = #scaleconfid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="usercode" prepend="and">
+			<![CDATA[
+					usercode = #usercode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="scalecode" prepend="and">
+			<![CDATA[
+					m.scalecode = #scalecode#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   scaleid=#scaleid#
+	    ]]>
+	</sql>
+	<sql id="findWhereById">
+		<![CDATA[
+		   scalecode=#scalecode#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="Scale" resultClass="Scale">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select m.*,o.keyver,o.compluver,o.pluver,o.comkeyver,o.locked,o.comlocked,nvl((sysdate - o.hearttime) * 24 * 60,-1) as differtime 
+				from s_scale m left join s_scalestat o on o.scalecode = m.scalecode	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by addtime desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount" parameterClass="Scale" resultClass="Integer">
+		<![CDATA[
+			select count(1) from s_Scale m left join s_scalestat o on o.scalecode = m.scalecode
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	<insert id="save" parameterClass="Scale">
+		<![CDATA[
+			insert into s_Scale (scalecode,scalenorm,scaleconfid,scalestate,usercode,picurl,userName)
+			values (#scalecode#,#scalenorm#,#scaleconfid#,#scalestate#,#usercode#,#picurl#,#userName#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_Scale.CURRVAL as scaleid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="updateByObj" parameterClass="Scale">
+		<![CDATA[
+			update s_Scale
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="scalenorm" prepend=",">
+				<![CDATA[
+						scalenorm=#scalenorm#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="scaleconfid" prepend=",">
+				<![CDATA[
+						scaleconfid=#scaleconfid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="scalestate" prepend=",">
+				<![CDATA[
+						scalestate=#scalestate#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="Scale" resultClass="Scale">
+		<![CDATA[
+		 	select * from s_Scale
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	 
+	<select id="findObjById" parameterClass="Scale" resultClass="Scale">
+		<![CDATA[
+		 	select * from s_Scale
+		]]>
+		<dynamic prepend="where">
+			<include refid="findWhereById" />
+		</dynamic>
+	</select>	
+	
+	
+	<sql id="findScalesWhereCPC">
+		<isNotEmpty property="usercode" prepend="and">
+			<![CDATA[
+				usercode = #usercode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="userName" prepend="and">
+			<![CDATA[
+				lower(userName) like lower('%'||#userName#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="scalecode" prepend="and">
+			<![CDATA[
+				scalecode = #scalecode#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findScalesListByCPC" parameterClass="Scale" resultClass="Scale">
+		<![CDATA[
+		 	select b.* from (select a.*,rownum r from (select * from s_Scale where userName is not null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findScalesWhereCPC" />
+		</dynamic>
+		<![CDATA[
+			 	order by userName desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>	 
+	
+	<select id="findScalesListByCount" parameterClass="Scale" resultClass="Integer">
+		<![CDATA[
+		 	select count(1) from s_Scale where userName is not null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findScalesWhereCPC" />
+		</dynamic>
+	</select>	 
+	
+	<select id="findScalesCPC" parameterClass="Scale" resultClass="Scale">
+		<![CDATA[
+		 	select b.* from (select a.*,rownum r from (select distinct(t.usercode) usercode,t.username,count(t.scaleid) compluver from s_scale t where t.usercode is not null
+
+		]]>
+		<dynamic prepend="and">
+			<include refid="findScalesWhereCPC" />
+		</dynamic>
+		<![CDATA[
+			 	group by usercode,username)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>	 
+	
+	<select id="findScalesCPCCount" parameterClass="Scale" resultClass="Integer">
+		<![CDATA[
+		 	select count(*) from(
+			select distinct (t.usercode) usercode, t.username, count(t.scaleid)
+			  from s_scale t
+			 where t.usercode is not null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findScalesWhereCPC" />
+		</dynamic>
+		<![CDATA[
+			 	group by usercode, username)a
+		]]>		
+	</select>	
+	
+</sqlMap>

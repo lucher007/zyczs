@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Scalestat">
+	<typeAlias alias="Scalestat" type="cn.gov.zyczs.cspt.po.Scalestat"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="scalecode" prepend="and">
+			<![CDATA[
+					lower(scalecode) like lower('%'||#scalecode#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="comlocked" prepend="and">
+			<![CDATA[
+					comlocked = #comlocked#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="locked" prepend="and">
+			<![CDATA[
+					locked = #locked#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   scalecode=#scalecode#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="Scalestat" resultClass="Scalestat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from( 
+				select m.*,o.corpname from s_scalestat m left join zs_company o on o.cpccorp = m.usercode	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by scalecode desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount" parameterClass="Scalestat" resultClass="Integer">
+		<![CDATA[
+			select count(1) from s_scalestat m left join zs_company o on o.cpccorp = m.usercode
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	<insert id="save" parameterClass="Scalestat">
+		<![CDATA[
+			insert into s_scalestat (scalecode,usercode,cellid,comkeyver,comlocked,compluver,locked,hearttime,ip,keyver,plucnt,pluver,cpccorp)
+			values (#scalecode#,#usercode#,#cellid#,#comkeyver#,#comlocked#,#compluver#,#locked#,to_date('$hearttime$','YYYY-MM-DD HH24:MI:SS'),#ip#,#keyver#,#plucnt#,#pluver#,#cpccorp#)				
+		]]>	
+	</insert>
+	
+	<update id="updateByObj" parameterClass="Scalestat">
+		<![CDATA[
+			update s_scalestat
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="usercode" prepend=",">
+				<![CDATA[
+						usercode=#usercode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="cellid" prepend=",">
+				<![CDATA[
+						cellid=#cellid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="comkeyver" prepend=",">
+				<![CDATA[
+						comkeyver=#comkeyver#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="comlocked" prepend=",">
+				<![CDATA[
+						comlocked=#comlocked#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="compluver" prepend=",">
+				<![CDATA[
+						compluver=#compluver#
+				]]>
+			</isNotEmpty>
+			
+			<isNotEmpty property="locked" prepend=",">
+				<![CDATA[
+						locked=#locked#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="keyver" prepend=",">
+				<![CDATA[
+						keyver=#keyver#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="plucnt" prepend=",">
+				<![CDATA[
+						plucnt=#plucnt#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="pluver" prepend=",">
+				<![CDATA[
+						pluver=#pluver#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="hearttime" prepend=",">
+				<![CDATA[
+						hearttime=to_date('$hearttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="cpccorp" prepend=",">
+				<![CDATA[
+						cpccorp=#cpccorp#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="Scalestat" resultClass="Scalestat">
+		<![CDATA[
+		 	select * from s_scalestat
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	
+	
+	<update id="updateByComsta" parameterClass="String">
+		<![CDATA[
+		update s_scalestat set comsta=1 where usercode=#cpccorp#
+		]]>
+	</update>
+</sqlMap>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TabletPackLog">
+	<typeAlias alias="TabletPackLog" type="cn.gov.zyczs.cspt.po.TabletPackLog"/>	
+	
+	
+	<insert id="save" parameterClass="TabletPackLog">
+		<![CDATA[
+			insert into ZS_TABLETPACKLOG(tabletid,tabletstorid,cpctablet,tabletname,prodcode,tabletweight,tabletnum,tabletnumweight,
+			        tabletboxnum,tabletboxitemnum,province,city,area,areacode,userid,orgid)		
+			values (#tabletid#,#tabletstorid#,#cpctablet#,#tabletname#,#prodcode#,#tabletweight#,#tabletnum#,#tabletnumweight#,			
+			       #tabletboxnum#,#tabletboxitemnum#,#province#,#city#,#area#,#areacode#,#userid#,#orgid#) 			
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_TABLETPACKLOG.CURRVAL as ID FROM dual				
+			]]>
+		</selectKey>
+	</insert>
+	
+	
+	
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="tabletname" prepend="and" open="(">
+			<![CDATA[
+					lower(tabletname) like lower('%'||#tabletname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="tabletname" prepend="or" close=")">
+			<![CDATA[
+					lower(cpctablet) like lower('%'||#tabletname#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="cpctablet" prepend="and">			
+			<![CDATA[
+					cpctablet=#cpctablet#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="tabletid" prepend="and">			
+			<![CDATA[
+					tabletid=#tabletid#
+			]]>			
+		</isNotEmpty>
+		
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+					orgid=#orgid#
+			]]>			
+		</isNotEmpty>		
+		
+		
+	</sql>
+	
+	
+	<select id="findByList" parameterClass="TabletPackLog" resultClass="TabletPackLog">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from ZS_TABLETPACKLOG where logid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by logid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="TabletPackLog" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_TABLETPACKLOG
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	
+</sqlMap>

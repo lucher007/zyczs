@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Rp_Build">
+	<typeAlias alias="Rp_Build" type="cn.gov.zyczs.cspt.po.Rp_Build" />
+	
+	<!-- 平台建设统计 -->
+	<select id="findPlatformBuildStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    SELECT o.zyctype || (CASE WHEN o.marketcode is not null THEN '-' ELSE '' END) zyctype,
+                   count(*) num
+            FROM zs_org o
+		]]>
+		<dynamic prepend="WHERE">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<![CDATA[
+		    GROUP BY o.zyctype || (CASE WHEN o.marketcode is not null THEN '-' ELSE '' END)
+		]]>		
+	</select>
+	
+	<!-- 溯源秤分发统计 -->
+	<select id="findChengSendStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select count(*) as num from c_cheng
+		]]>
+		<dynamic prepend="WHERE">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+	</select>
+	
+	<!-- 溯源秤开机统计 -->
+	<select id="findChengStartStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select count(distinct c.chengcode) as num 
+		    from c_cheng c left join c_chengStateLog csl on c.chengcode=csl.chengcode 
+		    where (csl.state = 1 or csl.state = 2)
+		]]>
+		<dynamic prepend="AND">
+		     <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					csl.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					csl.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+	</select>
+	
+	<!-- 导出溯源秤开机统计EXCEL -->
+	<select id="findChengStartStat_excel"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select o.cpccorp, max(o.orgname) as orgname, max(o.mobile) as mobile, count(cl.chengcode) as num  
+			from c_cheng c left join c_chengStateLog  cl on c.chengcode = cl.chengcode 
+                           left join zs_org o on c.cpccorp  = o.cpccorp
+            where (cl.state = 1 or cl.state = 2) 
+		]]>
+		<dynamic prepend="AND">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					cl.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					cl.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    group by o.cpccorp 
+		    order by count(cl.chengcode) desc
+		]]>	
+	</select>
+	
+	<!-- 溯源秤使用统计 -->
+	<select id="findChengUserStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		     select count(distinct c.chengcode) as num 
+		     from c_cheng c left join c_chengStateLog csl on c.chengcode=csl.chengcode 
+             where csl.state = 2
+		]]>
+		<dynamic prepend="AND">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					csl.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					csl.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+	</select>
+	
+	<!-- 导出溯源秤使用统计EXCEL -->
+	<select id="findChengUserStat_excel"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select o.cpccorp, max(o.orgname) as orgname, max(o.mobile) as mobile, count(cl.chengcode) as num  
+			from c_cheng c left join c_chengStateLog  cl on c.chengcode = cl.chengcode 
+                           left join zs_org o on c.cpccorp  = o.cpccorp
+            where cl.state = 2  
+		]]>
+		<dynamic prepend="AND">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					cl.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					cl.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    group by o.cpccorp 
+		    order by count(cl.chengcode) desc
+		]]>	
+	</select>
+	
+	
+	<!-- 溯源药材统计 -->
+	<select id="findFormalMedStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    SELECT o.zyctype || (CASE WHEN o.marketcode is not null THEN '-' ELSE '' END) zyctype,
+		    round(nvl(DECODE(sum(m.medweight),0,0,sum(CASE WHEN m.medtype = 0  THEN m.medweight END)/sum(m.medweight)),0),4) as formalrate,
+		    round(nvl(DECODE(sum(m.medweight),0,0,sum(CASE WHEN m.medtype = 1  THEN m.medweight END)/sum(m.medweight)),0),4) as informalrate
+		    FROM zs_medstorage  ms left join zs_med m on ms.cpcmed = m.cpcmed left join zs_org o on ms.orgid = o.orgid
+		]]>
+		<dynamic prepend="WHERE">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					ms.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					ms.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    GROUP BY o.zyctype || (CASE WHEN o.marketcode is not null THEN '-' ELSE '' END)
+		    order by zyctype desc
+		]]>	
+	</select>
+	
+	<!-- 种子种苗来源所占比统计 -->
+	<select id="findPlantSourceStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		  select sum(p.plantweight) as totalweight,
+			     sum(CASE WHEN p.plantsource = '$plantsource_buy$'  THEN p.plantweight END) as buyweight,
+		         sum(CASE WHEN p.plantsource = '$plantsource_plant$'  THEN p.plantweight END) as plantweight,
+		         sum(CASE WHEN p.plantsource = '$plantsource_wild$'  THEN p.plantweight END) as wildweight,
+		         round(nvl(DECODE(sum(p.plantweight),0,0,
+		                        sum(CASE WHEN p.plantsource = '$plantsource_buy$'  THEN p.plantweight END)/sum(p.plantweight)
+		                       ),0),4) as buyrate,
+		         round(nvl(DECODE(sum(p.plantweight),0,0,
+		                        sum(CASE WHEN p.plantsource = '$plantsource_plant$'  THEN p.plantweight END)/sum(p.plantweight)
+		                       ),0),4) as plantrate,
+		         round(nvl(DECODE(sum(p.plantweight),0,0,
+		                        sum(CASE WHEN p.plantsource = '$plantsource_wild$'  THEN p.plantweight END)/sum(p.plantweight)
+		                       ),0),4) as wildrate
+		 from zs_plant p
+		]]>
+	    <dynamic prepend="WHERE">
+	        <isNotEmpty property="plantname" prepend="and">
+				<![CDATA[
+					p.plantname in ('$plantname$')
+				]]>
+			</isNotEmpty>
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					p.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					p.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>		
+	</select>
+	
+	<!-- 中药材流通追溯交易次数统计 -->
+	<select id="findTradeTimesStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select  to_char(i.opertime,'MM') as opertime,count(*) as tradetimes, sum(i.totalweight) as tradeweight
+		    from  zs_inoutstor i where i.STORTYPE = 1 
+		]]>
+		<dynamic prepend="AND">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(i.opertime,'YYYY') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    group by to_char(i.opertime,'MM')
+			order by to_char(i.opertime,'MM') asc
+		]]>	
+	</select>
+	
+	<!-- 中药材流通追溯交易次数按月统计 -->
+	<select id="findTradeTimesByMonthStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		   select count(i.inoutstorid) as tradetimes,
+		          count(CASE WHEN i.type = 0  THEN i.inoutstorid END) as medtradetimes,
+		          count(CASE WHEN i.type = 1  THEN i.inoutstorid END) as tablettradetimes,
+		          round(nvl(DECODE(count(i.inoutstorid),0,0,
+                            count(CASE WHEN i.type = 0  THEN i.inoutstorid END) /count(i.inoutstorid)),
+                        0),4) as medtraderate,
+                  round(nvl(DECODE(count(i.inoutstorid),0,0,
+                            count(CASE WHEN i.type = 1  THEN i.inoutstorid END) /count(i.inoutstorid)),
+                        0),4) as tablettraderate
+           from zs_inoutstor i where i.STORTYPE = 1
+		]]>
+		<dynamic prepend="and">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					 to_char(i.opertime,'YYYY-MM') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>		
+	</select>
+	
+	<!-- 中药材流通追溯打码数量统计 -->
+	<select id="findCodeNumStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select  to_char(b.addtime,'MM') as opertime,count(distinct i.sourcecode) as codenum  
+		    from zs_boxitem i left join zs_box b on i.boxcode = b.boxcode
+		]]>
+		<dynamic prepend="WHERE">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(b.addtime,'YYYY') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    group by to_char(b.addtime,'MM')
+			order by to_char(b.addtime,'MM') asc
+		]]>	
+	</select>
+	
+	<!-- 中药材流通追溯打码数量按月统计 -->
+	<select id="findCodeNumByMonthStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		   select count(distinct i.sourcecode) as codenum,
+		          count(distinct CASE WHEN b.stortype = 0  THEN i.sourcecode END) as medcodenum,
+		          count(distinct CASE WHEN b.stortype = 1  THEN i.sourcecode END) as tabletcodenum,
+		          round(nvl(DECODE(count(distinct i.sourcecode),0,0,
+		                     count(distinct CASE WHEN b.stortype = 0  THEN i.sourcecode END) /count(distinct i.sourcecode)),
+		                0),4) as medcoderate,
+		          round(nvl(DECODE(count(distinct i.sourcecode),0,0,    
+		                     count(distinct CASE WHEN b.stortype = 1  THEN i.sourcecode END) /count(distinct i.sourcecode)),
+		                0),4) as tabletcoderate
+		   from zs_boxitem i left join zs_box b on i.boxcode = b.boxcode            
+		]]>
+		<dynamic prepend="where">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					  to_char(b.addtime,'YYYY-MM') = '$opertime$' 
+				]]>
+			</isNotEmpty>
+		</dynamic>		
+	</select>
+	
+	
+	<!-- 中药材流通追溯检验率统计 -->
+	<select id="findMedCheckedStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		     select  to_char(ms.addtime,'MM') as opertime,sum(CASE WHEN ms.checkstate = 1  THEN ms.medweight END) as checkedweight,
+		     sum(CASE WHEN ms.checkstate = 0  THEN ms.medweight END) as uncheckedweight,
+		     sum(ms.medweight) as totalweight,
+		     round(nvl(DECODE(sum(ms.medweight),0,0,sum(CASE WHEN ms.checkstate = 1  THEN ms.medweight END)/sum(ms.medweight)),0),4) as checkedrate  
+		     from  zs_medstorage ms 
+		]]>
+		<dynamic prepend="WHERE">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(ms.addtime,'YYYY') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    group by to_char(ms.addtime,'MM')
+			order by to_char(ms.addtime,'MM') asc
+		]]>	
+	</select>
+	
+	<!-- 中药材流通追溯检验率按月统计 -->
+	<select id="findMedCheckedByMonthStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		   select sum(CASE WHEN ms.checkstate = 1  THEN ms.medweight END) as checkedweight,
+		          sum(CASE WHEN ms.checkstate = 0  THEN ms.medweight END) as uncheckedweight, 
+		          sum(ms.medweight) totalweight,
+		          round(nvl(DECODE(sum(ms.medweight),0,0,sum(CASE WHEN ms.checkstate = 1  THEN ms.medweight END)/sum(ms.medweight)),0),4) as checkedrate,
+		          round(nvl(DECODE(sum(ms.medweight),0,0,sum(CASE WHEN ms.checkstate = 0  THEN ms.medweight END)/sum(ms.medweight)),0),4) as uncheckedrate 
+		   from  zs_medstorage ms 
+		]]>
+		<dynamic prepend="where">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(ms.addtime,'YYYY-MM') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+	</select>
+	
+	<!-- 中药材上传检验报告(合格)率统计 -->
+	<select id="findMedMattedStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		     select to_char(ms.addtime,'MM') as opertime,
+		            sum(ms.medweight) as  totalweight,
+		            sum(CASE
+			             WHEN cm.matid is not  null and cm.mattype = 1 and cm.type=0 THEN ms.medweight
+			            END) as mattedweight,
+		            round(nvl(DECODE(sum(ms.medweight),0,0,
+                              sum(CASE
+                                    WHEN cm.matid is not  null and cm.mattype = 1 and cm.type=0 THEN ms.medweight 
+                                  END) / sum(ms.medweight)),
+                          0), 4) as mattedrate 
+		     from zs_medstorage ms left join zs_checkmat cm on ms.medstorid = cm.prodid 
+		]]>
+		<dynamic prepend="WHERE">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(ms.addtime,'YYYY') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    group by to_char(ms.addtime,'MM')
+			order by to_char(ms.addtime,'MM') asc
+		]]>	
+	</select>
+	
+	<!-- 中药材上传检验报告(合格)率按月统计 -->
+	<select id="findMedMattedByMonthStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select  sum(ms.medweight) as  totalweight,
+		            sum(CASE
+			             WHEN cm.matid is not  null and cm.mattype = 1 and cm.type=0 THEN ms.medweight
+			            END) as mattedweight,
+		            round(nvl(DECODE(sum(ms.medweight),0,0,
+                              sum(CASE
+                                    WHEN cm.matid is not  null and cm.mattype = 1 and cm.type=0 THEN ms.medweight 
+                                  END) / sum(ms.medweight)),
+                          0), 4) as mattedrate 
+		     from zs_medstorage ms left join zs_checkmat cm on ms.medstorid = cm.prodid 
+		]]>
+		<dynamic prepend="where">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(ms.addtime,'YYYY-MM') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+	</select>
+	
+	<!-- 中药饮片上传检验报告(合格)率统计 -->
+	<select id="findTabletMattedStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		     select to_char(t.addtime,'MM') as opertime,
+		            sum(t.tabletweight) as  totalweight,
+		            sum(CASE
+			             WHEN cm.matid is not null and cm.mattype = 2 and cm.type = 1 THEN t.tabletweight
+			            END) as mattedweight,
+		            round(nvl(DECODE(sum(t.tabletweight),0,0,
+                              sum(CASE
+                                    WHEN cm.matid is not null and cm.mattype = 2 and cm.type = 1 THEN t.tabletweight 
+                                  END) / sum(t.tabletweight)),
+                          0), 4) as mattedrate 
+		     from zs_tablet t left join zs_checkmat cm on t.tabletid = cm.prodid 
+		]]>
+		<dynamic prepend="WHERE">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(t.addtime,'YYYY') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		    group by to_char(t.addtime,'MM')
+			order by to_char(t.addtime,'MM') asc
+		]]>	
+	</select>
+	
+	<!-- 中药饮片上传检验报告(合格)率按月统计 -->
+	<select id="findTabletMattedByMonthStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select  sum(t.tabletweight) as  totalweight,
+		            sum(CASE
+			             WHEN cm.matid is not null and cm.mattype = 2 and cm.type = 1 THEN t.tabletweight
+			            END) as mattedweight,
+		            round(nvl(DECODE(sum(t.tabletweight),0,0,
+                              sum(CASE
+                                    WHEN cm.matid is not null and cm.mattype = 2 and cm.type = 1 THEN t.tabletweight 
+                                  END) / sum(t.tabletweight)),
+                          0), 4) as mattedrate 
+		     from zs_tablet t left join zs_checkmat cm on t.tabletid = cm.prodid  
+		]]>
+		<dynamic prepend="where">
+		    <isNotEmpty property="opertime" prepend="and">
+				<![CDATA[
+					to_char(t.addtime,'YYYY-MM') = '$opertime$'
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+	</select>
+	
+	
+	<!-- 库存量和交易量 导出-->
+	<select id="findStorAndTradeStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select a.*,b.*,c.* from 
+		       (select rtrim(rtrim(to_char(sum(ms.medweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as medstorweight
+                from zs_medstorage ms where ms.state = 0 
+		]]>   
+		<dynamic prepend="AND">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					ms.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					ms.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>		
+		<![CDATA[    
+		       ) a,
+		       ( select rtrim(rtrim(to_char(sum(ts.tabletweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as tabletstorweight
+                 from zs_tabletstorage ts where ts.state = 0
+		]]>
+		<dynamic prepend="AND">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					ts.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					ts.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[    
+		       ) b,
+		       ( select  rtrim(rtrim(to_char(sum(CASE WHEN i.type = 0 THEN
+                              i.totalweight END / 10000) ,'fm999999999999999999999999999990.0000'),'0'),'.') as medtradeweight,
+              
+                         rtrim(rtrim(to_char(sum(CASE WHEN i.type = 1 THEN
+                              i.totalweight END  / 10000),'fm999999999999999999999999999990.0000'),'0'),'.') as tablettradeweight,
+              
+                         rtrim(rtrim(to_char( sum(i.totalweight/ 10000) ,'fm999999999999999999999999999990.0000'),'0'),'.') as totaltradeweight
+               from zs_inoutstor i where i.STORTYPE = 1
+		]]>
+		<dynamic prepend="AND">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					i.OPERSYSTIME >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					i.OPERSYSTIME <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[    
+		       ) c
+		]]>
+	</select>
+	
+	<!-- 市场发秤用户统计 -->
+	<select id="findMarketUserByChengStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		   select distinct o.cpccorp,
+                  o.orgname,
+                  o.registeraddress,
+                  o.businessnumber,
+                  o.mobile,
+                  o.telephone,
+                  o.linkman,
+                  o.masterman
+		   from zs_org o
+		   left join c_cheng c on c.cpccorp = o.cpccorp
+		  where o.marketcode is not null
+		]]>
+		<isEqual property="chengflag" compareValue="0" prepend="and">
+			<![CDATA[
+				c.chengid is null 
+			]]>
+		</isEqual>
+		<isEqual property="chengflag" compareValue="1" prepend="and">
+			<![CDATA[
+				c.chengid is not null
+			]]>
+		</isEqual>	
+	</select>
+	
+	<select id="findMarketUserByChengStat_page" parameterClass="Rp_Build" resultClass="Rp_Build">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from ( 
+			  select distinct o.cpccorp,
+                  o.orgname,
+                  o.registeraddress,
+                  o.businessnumber,
+                  o.mobile,
+                  o.telephone,
+                  o.linkman,
+                  o.masterman
+		     from zs_org o
+		     left join c_cheng c on c.cpccorp = o.cpccorp
+		    where o.marketcode is not null
+			]]>
+			<isEqual property="chengflag" compareValue="0" prepend="and">
+				<![CDATA[
+					c.chengid is null 
+				]]>
+			</isEqual>
+			<isEqual property="chengflag" compareValue="1" prepend="and">
+				<![CDATA[
+					c.chengid is not null
+				]]>
+			</isEqual>
+			<![CDATA[
+			 	order by o.cpccorp desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findMarketUserByChengStat_count" parameterClass="Rp_Build" resultClass="Integer">
+		<![CDATA[
+			select count(distinct o.cpccorp) 
+			  from zs_org o left join c_cheng c on c.cpccorp = o.cpccorp
+		     where o.marketcode is not null 
+		]]>
+		<isEqual property="chengflag" compareValue="0" prepend="and">
+			<![CDATA[
+				c.chengid is null 
+			]]>
+		</isEqual>
+		<isEqual property="chengflag" compareValue="1" prepend="and">
+			<![CDATA[
+				c.chengid is not null
+			]]>
+		</isEqual>
+	</select>
+	
+	<!-- 企业打码溯源码数量统计 -->
+	<select id="findOrgCodeNumStat" parameterClass="Rp_Build" resultClass="Rp_Build">
+		<![CDATA[
+			select o.orgname,min(o.mobile) as mobile,min(o.telephone) as telephone,min(o.linkman) as linkman,
+			   rtrim(rtrim(to_char( count(distinct bi.sourcecode) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strcodenum
+			   from zs_box t
+			 inner join zs_boxitem bi on bi.boxcode = t.boxcode
+			 inner join zs_org o on t.orgid = o.orgid
+			]]>
+			<dynamic prepend="where">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					t.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					t.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+			 	group by orgname order by count(distinct bi.sourcecode) desc
+		]]>		
+	</select>
+	
+	<select id="findOrgCodeNumStat_page" parameterClass="Rp_Build" resultClass="Rp_Build">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from ( 
+			  select o.orgname,min(o.mobile) as mobile,min(o.telephone) as telephone,min(o.linkman) as linkman,
+			  rtrim(rtrim(to_char( count(distinct bi.sourcecode) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strcodenum
+			  from zs_box t
+			 inner join zs_boxitem bi on bi.boxcode = t.boxcode
+			 inner join zs_org o on t.orgid = o.orgid
+			]]>
+			<dynamic prepend="where">
+				<isNotEmpty property="operstarttime" prepend="and">
+					<![CDATA[
+						t.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="operendtime" prepend="and">
+					<![CDATA[
+						t.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+			</dynamic>	
+			<![CDATA[
+			 	group by orgname order by count(distinct bi.sourcecode) desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findOrgCodeNumStat_count" parameterClass="Rp_Build" resultClass="Integer">
+		<![CDATA[
+			select count(1) from (
+			  select o.orgname
+			  from zs_box t
+			  inner join zs_boxitem bi on bi.boxcode = t.boxcode
+			  inner join zs_org o on t.orgid = o.orgid 
+		]]>
+		<dynamic prepend="where">
+			<isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					t.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					t.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+			 	group by orgname )
+		]]>	
+	</select>
+	
+	<!-- 企业溯源秤交易统计 -->
+	<select id="findOrgChengTradeStat" parameterClass="Rp_Build" resultClass="Rp_Build">
+		<![CDATA[
+			select cd.sellcpccorp,
+                   min(o.orgname) as orgname,
+                   min(o.mobile) as mobile,
+                   min(o.telephone) as telephone,
+			       rtrim(rtrim(to_char(count(cd.sourcecode) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strtradetimes,
+			       rtrim(rtrim(to_char(sum(cd.weight) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strtradeweight
+			  FROM c_chengdata cd left join zs_org o on cd.sellcpccorp = o.cpccorp
+			]]>
+			<dynamic prepend="where">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					cd.tradetime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					cd.tradetime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		        group by cd.sellcpccorp
+			 	order by count(cd.sourcecode) desc, sum(cd.weight) desc
+		]]>		
+	</select>
+	
+	<!-- 企业溯源秤交易统计-分页显示 -->
+	<select id="findOrgChengTradeStat_page" parameterClass="Rp_Build" resultClass="Rp_Build">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from ( 
+			    select cd.sellcpccorp,
+                   min(o.orgname) as orgname,
+                   min(o.mobile) as mobile,
+                   min(o.telephone) as telephone,
+			       rtrim(rtrim(to_char(count(cd.sourcecode) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strtradetimes,
+			       rtrim(rtrim(to_char(sum(cd.weight) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strtradeweight
+			  FROM c_chengdata cd left join zs_org o on cd.sellcpccorp = o.cpccorp
+		]]>
+		<dynamic prepend="where">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					cd.tradetime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					cd.tradetime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		 	group by cd.sellcpccorp
+		 	order by count(cd.sourcecode) desc, sum(cd.weight) desc
+		 )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+	    ]]>		
+	</select>
+	
+	<!-- 企业溯源秤交易统计-分页显示 -->
+	<select id="findOrgChengTradeStat_count" parameterClass="Rp_Build" resultClass="Integer">
+		<![CDATA[
+			select count(1) from (
+			  select cd.sellcpccorp as cpccorp
+			    FROM c_chengdata cd left join zs_org o on cd.sellcpccorp = o.cpccorp 
+		]]>
+		<dynamic prepend="where">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					cd.tradetime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					cd.tradetime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+		 	 group by cd.sellcpccorp )
+	    ]]>		
+	</select>
+	
+	<!-- 药材、饮片、溯源秤打码量统计导出-->
+	<select id="findMedTabletChengCodeNumStat"  resultClass="Rp_Build" parameterClass="Rp_Build">
+		<![CDATA[
+		    select a.*,b.* from 
+		       ( select rtrim(rtrim(to_char(count(distinct CASE WHEN t.stortype = 0 THEN bi.sourcecode END ) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strmedcodenum,
+                        rtrim(rtrim(to_char(count(distinct CASE WHEN t.stortype = 1 THEN bi.sourcecode END ) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strtabletcodenum
+                        from zs_box t inner join zs_boxitem bi on bi.boxcode = t.boxcode
+		]]>   
+		<dynamic prepend="where">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					t.addtime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					t.addtime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>		
+		<![CDATA[    
+		       ) a,
+		       ( select  rtrim(rtrim(to_char(count(distinct c.sourcecode) ,'fm999999999999999999999999999990.0000'),'0'),'.') as strchengcodenum
+				 from c_chengdata c 
+		]]>
+		<dynamic prepend="where">
+		    <isNotEmpty property="operstarttime" prepend="and">
+				<![CDATA[
+					c.tradetime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="operendtime" prepend="and">
+				<![CDATA[
+					c.tradetime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[    
+		       ) b
+		]]>
+	</select>
+	
+	
+</sqlMap>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="medMarket" extends="strutsdefault">
+    	
+    	<!-- 药材经销action配置 -->
+		<action name="medMarket" class="medMarketAction">
+		    <result name="findByList">/manage/medMarket/findByList.jsp</result>
+		   	<result name="addNotSourceMed">/manage/medMarket/addNotSourceMed.jsp</result>
+		   	<result name="addNotSourceMedFinish">/manage/medMarket/addNotSourceMedFinish.jsp</result>
+		   	<result name="findNotPackList">/manage/medMarket/findNotPackList.jsp</result>
+		   	 <result name="findPackByCpcMed">/manage/medMarket/findPackByCpcMed.jsp</result>
+		   	 <result name="updateMedPackFinish">/manage/medMarket/updateMedPackFinish.jsp</result>
+		   	<result name="findPrintCode">/manage/medMarket/findPrintCode.jsp</result>
+		   	<result name="findMedGroupStorage">/manage/medMarket/findMedGroupStorage.jsp</result>
+		   	<result name="findMedStorage">/manage/medMarket/findMedStorage.jsp</result>
+		   	<result name="findByMedmarketMedStat">/manage/medMarket/findByMedmarketMedStat.jsp</result>
+		   	<result name="marketPriceChart">/manage/medMarket/marketPriceChart.jsp</result>
+		   	<result name="findMedOutStorage">/manage/medMarket/findMedOutStorage.jsp</result>
+		   	<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">add,notSourceMedSave,updateMedPack</param>
+		    </interceptor-ref>
+		</action>
+		
+		<!-- 药材经销出入库扫码操作 action配置 -->
+		<action name="medMarketInOut" class="medMarketInOutAction">
+			<!--入库-->
+		    <result name="findInStorage">/manage/medMarketInOutStorage/findInStorage.jsp</result>
+		    <result name="addInStorage">/manage/medMarketInOutStorage/addInStorage.jsp</result>
+		    <result name="addInStorageFinish">/manage/medMarketInOutStorage/addInStorageFinish.jsp</result>
+		    <!--出库、销售-->
+		    <result name="findOutStorage">/manage/medMarketInOutStorage/findOutStorage.jsp</result>
+		    <result name="addOutStorage">/manage/medMarketInOutStorage/addOutStorage.jsp</result>
+		    <result name="addOutStorageFinish">/manage/medMarketInOutStorage/addOutStorageFinish.jsp</result>
+		  	<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">addInStorage,addOutStorage</param>
+		    </interceptor-ref>
+		</action>
+		
+    </package>
+</struts>

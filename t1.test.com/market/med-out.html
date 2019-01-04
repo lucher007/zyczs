@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>药材出库</title>
+<link type="text/css" rel="stylesheet" href="/style/market.css">
+</head>
+
+<body>
+<div id="body">
+	<div class="cur-pos"><cite>商户ID：10127300005078</cite>当前位置：库存销售 > 药材出库</div>
+	<div class="form-box">
+    	<form action="med-out2.html">
+    	<div class="fb-tit">待出库药材</div>
+        <div class="fb-con">
+        	<textarea class="outarea">请使用扫描抢进行扫码或者请输入出库药材溯源码</textarea>
+        </div>
+        <div class="fb-bom">
+        	<cite class="gray"><input type="submit" value="下一步" class="sbt"></cite>
+            <input type="button" value="取 消" class="sbt">
+        </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="/js/form.js"></script>
+<script type="text/javascript">
+	inp(".outarea","请使用扫描抢进行扫码或者请输入出库饮片溯源码箱码");
+</script>
+</body>
+</html>

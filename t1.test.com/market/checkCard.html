@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>刷卡页面</title>
+<link type="text/css" rel="stylesheet" href="/style/market.css">
+</head>
+
+<body id="cardbg">
+	<div class="cardimg"></div>
+    <script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="/js/form.js"></script>
+    <script type="text/javascript">
+	forbg();
+	$(window).resize(function() {
+		forbg();
+	});
+
+	function forbg(){
+		var t = (($(window).width()-1044)/2)%18;
+		if(t!=0){$("body").css("background-position","-"+(t)+"px top")};
+		$(".cardimg").height($(window).height());
+		if($(window).height()<816){
+			$(".cardimg").css("background-position","center "+($(window).height()-816)/2+"px");
+			$(".cardimg a").css("top",(580+($(window).height()-816)/2));
+		}
+		$(".cardimg a").css("left",($(window).width()-206)/2+8);
+	}
+    </script>
+</body>
+</html>

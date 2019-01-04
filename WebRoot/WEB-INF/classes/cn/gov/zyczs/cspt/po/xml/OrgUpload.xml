@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="OrgUpload">
+	<typeAlias alias="OrgUpload" type="cn.gov.zyczs.cspt.po.OrgUpload" />
+	
+	<sql id="findByWhere">
+    	<isNotEmpty property="uploadid" prepend="and">
+			<![CDATA[
+				uploadid in (#uploadid#)
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="uploadtype" prepend="and">
+			<![CDATA[
+				uploadtype = #uploadtype#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="id" prepend="and">
+			<![CDATA[
+				id = #id#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+				type = #type#
+			]]>	
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+			 uploadid=#uploadid#
+		]]>			
+	</sql>
+	
+	<insert id="save" parameterClass="OrgUpload">
+		<![CDATA[
+			insert into zs_orgupload
+  			(uploadname, uploadcontent, uploadtype, id, uploadimage, type, tempuuid,tokenid)
+			values
+  			(#uploadname#, #uploadcontent#, #uploadtype#, #id#, #uploadimage#, #type#, #tempuuid#,#tokenid#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_OrgUpload.CURRVAL as uploadid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<delete id="deleteObj" parameterClass="OrgUpload">
+		<![CDATA[
+			delete from zs_orgupload
+		]]>		
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</delete>
+	
+	
+	<resultMap id="matDataResult" class="OrgUpload">   
+       <result property="uploadid" column="uploadid"/>   
+       <result property="uploadname" column="uploadname"/>
+       <result property="uploadcontent" column="uploadcontent"/>
+       <result property="uploadtype" column="uploadtype"/>
+       <result property="uploadaddtime" column="uploadaddtime"/>
+       <result property="id" column="id"/>
+       <result property="type" column="type"/>
+       <result property="uploadimage" column="uploadimage" jdbcType="BLOB"/>
+       <result property="tempuuid" column="tempuuid" jdbcType="VARCHAR" javaType="java.lang.String"/>
+       <result property="tokenid" column="tokenid" jdbcType="VARCHAR" javaType="java.lang.String"/>
+   </resultMap>  
+	 
+    
+    
+	<select id="findByCondtion" parameterClass="OrgUpload" resultClass="OrgUpload">
+		<![CDATA[
+		 	select uploadid,uploadcontent,uploadtype,id,type,uploadname from zs_orgupload
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+    
+   
+   <select id="findByIdUploadImage" parameterClass="String" resultMap="matDataResult">
+		<![CDATA[
+			select * from zs_orgupload where uploadcontent=#uploadcontent# and rownum<2
+		]]>
+	</select>
+	
+	
+	<update id="updateByIds" parameterClass="OrgUpload">
+		<![CDATA[
+			update zs_orgupload set id = #id# where uploadid in ($uploadids$)
+		]]>	
+	</update>
+	
+	<select id="findUploadContent" parameterClass="OrgUpload" resultClass="OrgUpload">
+		<![CDATA[
+		 	select uploadcontent,uploadtype  from zs_orgupload
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	
+	<select id="findByUploadids" parameterClass="OrgUpload" resultClass="OrgUpload">
+		<![CDATA[
+		 	select uploadcontent,uploadtype  from zs_orgupload where uploadid in ($uploadids$)
+		]]>
+	</select>
+	
+	
+	<update id="updateByTokenIdAndType" parameterClass="OrgUpload">
+		<![CDATA[
+			update zs_orgupload set id=#id# where type=#type# and tokenid=#tokenid#
+		]]>	
+	</update>
+	
+	<select id="findByTokenIdAndType" parameterClass="OrgUpload" resultClass="OrgUpload">
+		<![CDATA[
+		 	select uploadcontent,uploadtype  from zs_orgupload where tokenid=#tokenid# and type=#type#
+		]]>
+	</select>
+	
+	<update id="updateByUploadId" parameterClass="OrgUpload">
+		<![CDATA[
+			update zs_orgupload
+		]]>
+		<dynamic prepend="SET">
+			<isNotEmpty property="uploadcontent" prepend=",">
+				<![CDATA[
+						uploadcontent=#uploadcontent#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="uploadname" prepend=",">
+				<![CDATA[
+						uploadname=#uploadname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="uploadimage" prepend=",">
+				<![CDATA[
+						uploadimage=#uploadimage#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+ </update>
+	
+	
+</sqlMap>

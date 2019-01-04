@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CheckMat">
+	<typeAlias alias="CheckMat" type="cn.gov.zyczs.cspt.po.CheckMat" />
+	<typeAlias alias="Check" type="cn.gov.zyczs.cspt.po.Check" />
+	
+	<resultMap id="matDataResult" class="CheckMat">   
+       <result property="matid" column="matid"/>   
+       <result property="matname" column="matname"/>
+       <result property="matcontent" column="matcontent"/>
+       <result property="mattype" column="mattype"/>
+       <result property="mataddtime" column="mataddtime"/>
+       <result property="orgid" column="orgid"/>
+       <result property="prodid" column="prodid"/>
+       <result property="type" column="type"/>
+       <result property="matimage" column="matimage" jdbcType="BLOB"/>
+   </resultMap>  
+	
+	<insert id="save" parameterClass="CheckMat">
+		<![CDATA[
+			insert into zs_checkmat(matname,matcontent,mattype,orgid,prodid,type,matimage)
+			values(#matname#,#matcontent#,#mattype#,#orgid#,#prodid#,#type#,#matimage#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_CHECKMAT.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+    
+    
+    <sql id="findByWhere">
+		<isNotEmpty property="medstorid" prepend="and">
+			<![CDATA[
+				prodid = #medstorid#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="tabletid" prepend="and">
+			<![CDATA[
+				prodid = #tabletid#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+				type = #type#
+			]]>	
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+				orgid = #orgid#
+			]]>		
+		</isNotEmpty>
+	</sql>
+    
+	<select id="findById" parameterClass="Check" resultClass="CheckMat">
+		<![CDATA[
+		 	select matid,matname,matcontent,mattype,orgid,prodid,type from zs_checkmat
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	<select id="findByIdMatImage" parameterClass="String" resultMap="matDataResult">
+		<![CDATA[
+			select * from zs_checkmat where matcontent=#matcontent# and rownum<2
+		]]>
+	</select>
+	
+	<delete id="deleteById" parameterClass="Integer">
+		<![CDATA[
+			delete from zs_checkmat where matid = #matid:NUMBER#
+		]]>		
+	</delete>
+    
+</sqlMap>

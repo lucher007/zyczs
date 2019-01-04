@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="TabletBase">
+	<typeAlias alias="TabletBase" type="cn.gov.zyczs.cspt.po.TabletBase"/>
+	<typeAlias alias="TabletBaseOrg" type="cn.gov.zyczs.cspt.po.TabletBaseOrg"/>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   id = #id#
+	    ]]>
+	</sql>
+	
+	<insert id="save" parameterClass="TabletBaseOrg">
+		<![CDATA[
+			insert into zs_tabletbaseORG(baseid,orgid) 
+			values(#baseid#,#orgid#)
+		]]>
+		
+	</insert>		
+			
+	<delete id="deleteByBaseOrg" parameterClass="TabletBaseOrg">
+		<![CDATA[
+			delete from zs_tabletbaseORG where baseid=#baseid# and orgid=#orgid# 
+		]]>	
+		
+	</delete>
+
+	<select id="findById" parameterClass="int" resultClass="TabletBase">
+		<![CDATA[
+		 	select * from ZS_TABLETBASE
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<select id="checkExsit" parameterClass="TabletBase" resultClass="TabletBase">
+		<![CDATA[
+		 	select * from ZS_TABLETBASE where 1=1
+		]]>
+		<isNotEmpty property="name" prepend="and">
+			<![CDATA[
+					name=#name#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="id" prepend="and">
+			<![CDATA[
+					id<>#id#
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	
+	<update id="updateById" parameterClass="TabletBase">
+		<![CDATA[
+			update ZS_TABLETBASE set name=#name#,keyword=#keyword#
+		]]>		
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>		
+	</update>
+	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="name" prepend="and">
+			<![CDATA[
+					lower(name) like lower('%'||#name#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="keyword" prepend="and">
+			<![CDATA[
+					lower(keyword) like lower('%'||#keyword#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(name) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(keyword) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="sourceid" prepend="and">
+			<![CDATA[
+					lower(sourceid) like lower('%'||#sourceid#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="enabled" prepend="and">
+			<![CDATA[
+					enabled =#enabled#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid_in" prepend="and">
+			<![CDATA[
+					 id  in (select baseid from zs_tabletbaseORG where orgid=#orgid_in#)
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid_un" prepend="and">
+			<![CDATA[
+					 id not  in (select baseid from zs_tabletbaseORG where orgid=#orgid_un#)
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="TabletBase" resultClass="TabletBase">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from ZS_TABLETBASE p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="TabletBase" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_TABLETBASE
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+		
+	<select id="findByList_Kiosks"  resultClass="TabletBase">
+		<![CDATA[
+			select t.name,t.keyword from ZS_TABLETBASE t order by t.keyword asc
+		]]>
+	</select>
+	
+</sqlMap>

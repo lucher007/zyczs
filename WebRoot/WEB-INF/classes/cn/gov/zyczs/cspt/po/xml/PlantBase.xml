@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PlantBase">
+	<typeAlias alias="PlantBase" type="cn.gov.zyczs.cspt.po.PlantBase"/>	
+	
+	<select id="findByName" parameterClass="PlantBase" resultClass="PlantBase">
+			<![CDATA[
+			select * from zs_plantbase pb where pb.name=#name#
+		]]>
+	</select>
+	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="name" prepend="and">
+			<![CDATA[
+					lower(name) like lower('%'||#name#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="keyword" prepend="and">
+			<![CDATA[
+					lower(keyword) like lower('%'||#keyword#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(name) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(keyword) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="sourceid" prepend="and">
+			<![CDATA[
+					lower(sourceid) like lower('%'||#sourceid#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="enabled" prepend="and">
+			<![CDATA[
+					enabled =#enabled#
+			]]>
+		</isNotEmpty>
+		
+	</sql>
+	
+	<select id="findByList" parameterClass="PlantBase" resultClass="PlantBase">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from zs_plantbase p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="PlantBase" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_plantBase
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+</sqlMap>

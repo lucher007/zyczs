@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	<sqlMap namespace="GoodsCode">
+	<typeAlias alias="GoodsCode" type="cn.gov.zyczs.cspt.po.GoodsCode"/>	
+	
+	<sql id="findByCondtion">
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+				 type = #type#
+			 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="basecode" prepend="and">
+			<![CDATA[
+				 basecode = #basecode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="prodcode" prepend="and">
+			<![CDATA[
+			 	prodcode = #prodcode#
+		 	 ]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+			 	cpccorp = #cpccorp#
+		 	 ]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="findByList" parameterClass="GoodsCode" resultClass="GoodsCode">
+		<![CDATA[
+			select * from zs_goodscode
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByCondtion"/>
+		</dynamic>
+	</select>
+	
+	
+	<insert id="save" parameterClass="GoodsCode">
+		<![CDATA[
+			insert into zs_goodscode (type,basecode,prodcode,cpccorp)
+			values (#type#,#basecode#,#prodcode#,#cpccorp#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_GOODSCODE.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+</sqlMap>

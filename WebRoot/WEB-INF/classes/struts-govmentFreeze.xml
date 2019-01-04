@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="govmentFreeze" extends="strutsdefault">
+		
+		<!-- 应急处置action配置-->
+		<action name="freeze" class="freezeAction">
+			<result name="success">/manage/govStat/findGovFreezeList.jsp</result>
+			<result name="saveInit">/manage/govStat/addGovFreeze.jsp</result>
+			<result name="save">/manage/govStat/addGovFreezeFinish.jsp</result>
+		</action>
+    </package>
+</struts>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+   <package name="rp_Build" extends="strutsdefault">
+    	<!-- 平台建设action配置 -->
+		<action name="rp_Build" class="rp_BuildAction">		
+			<result name="platformBuildStat">manage/report/build/platformBuildStat.jsp</result>
+			<result name="platformBuildQuery">manage/report/build/platformBuildQuery.jsp</result>
+			<result name="platformBuildStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+			<result name="chengSendStat">manage/report/build/chengSendStat.jsp</result>
+			<result name="chengStartStat">manage/report/build/chengStartStat.jsp</result>
+			<result name="chengStartStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+			<result name="chengUserStat">manage/report/build/chengUserStat.jsp</result>
+			<result name="chengUserStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+			<result name="formalMedStat">manage/report/build/formalMedStat.jsp</result>
+			<result name="plantSourceStat">manage/report/build/plantSourceStat.jsp</result>
+			<result name="tradeTimesStat">manage/report/build/tradeTimesStat.jsp</result>
+			<result name="tradeTimesContrastStat">manage/report/build/tradeTimesContrastStat.jsp</result>
+			<result name="tradeTimesByMonthStat">manage/report/build/tradeTimesByMonthStat.jsp</result>
+			<result name="tradeWeightStat">manage/report/build/tradeWeightStat.jsp</result>
+			<result name="tradeWeightContrastStat">manage/report/build/tradeWeightContrastStat.jsp</result>
+			<result name="codeNumStat">manage/report/build/codeNumStat.jsp</result>
+			<result name="codeNumContrastStat">manage/report/build/codeNumContrastStat.jsp</result>
+			<result name="codeNumByMonthStat">manage/report/build/codeNumByMonthStat.jsp</result>
+			<result name="medCheckedStat">manage/report/build/medCheckedStat.jsp</result>
+			<result name="medCheckedContrastStat">manage/report/build/medCheckedContrastStat.jsp</result>
+			<result name="medCheckedByMonthStat">manage/report/build/medCheckedByMonthStat.jsp</result>
+			<result name="mattedStat">manage/report/build/mattedStat.jsp</result>
+			<result name="mattedContrastStat">manage/report/build/mattedContrastStat.jsp</result>
+			<result name="mattedByMonthStat">manage/report/build/mattedByMonthStat.jsp</result>
+			
+			<!-- 库存量和交易量导出-->
+			<result name="storAndTradeQuery">manage/report/build/storAndTradeQuery.jsp</result>
+			<result name="storAndTradeStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+   		    
+   		    <!-- 市场发秤用户导出-->
+			<result name="marketUserByChengQuery">manage/report/build/marketUserByChengQuery.jsp</result>
+			<result name="marketUserByChengStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+   		    
+   		    <!-- 企业打印溯源码数量统计导出-->
+			<result name="orgCodeNumQuery">manage/report/build/orgCodeNumQuery.jsp</result>
+			<result name="orgCodeNumStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+   		    
+   		     <!-- 企业溯源秤交易统计导出-->
+			<result name="orgChengTradeQuery">manage/report/build/orgChengTradeQuery.jsp</result>
+			<result name="orgChengTradeStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+   		    
+   		     <!-- 药材饮片和溯源秤打码量统计导出-->
+			<result name="medTabletChengCodeNumQuery">manage/report/build/medTabletChengCodeNumQuery.jsp</result>
+			<result name="medTabletChengCodeNumStat_excel" type="stream">
+		     	<param name="contentType">application/vnd.ms-excel</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+   		    </result>
+   		    
+		</action>
+		
+    </package>
+</struts>

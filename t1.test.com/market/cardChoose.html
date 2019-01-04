@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>刷卡选择页面</title>
+<link type="text/css" rel="stylesheet" href="/style/market.css">
+</head>
+
+<body id="cch-bg">
+	<div class="cch-img">
+    	<div class="cch-link">
+        	<div class="cch-check">
+            	<a class="cardnum" href="javascript:void(0);">直接输入卡号</a>
+            	<a class="cardcheck" href="checkCard.html">刷卡</a>
+            </div>
+            <a class="cch-back" href="javascript:void(0);">返回系统</a>
+        </div>
+    </div>
+    <script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="/js/form.js"></script>
+    <script type="text/javascript">
+	forbg();
+	$(window).resize(function() {
+		forbg();
+	});
+	function forbg(){
+		var t = (($(window).width()-1044)/2)%18;
+		if(t!=0){$("body").css("background-position","-"+(t)+"px top")};
+		$(".cch-img").height($(window).height());
+		if($(window).height()<816){
+			$(".cch-img").css("background-position","center "+($(window).height()-816)/2+"px");
+			$(".cch-link").css("top",(408+($(window).height()-816)/2));
+		}
+		$(".cch-link").css("left",($(window).width()-475)/2+8);
+	}
+    </script>
+</body>
+</html>

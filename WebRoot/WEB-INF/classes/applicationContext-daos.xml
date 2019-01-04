@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+	<!-- 用户表 -->
+	<bean id="userDao" class="cn.gov.zyczs.cspt.dao.impl.UserDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+
+	<!-- 植物dao配置 -->
+	<bean id="plantDao" class="cn.gov.zyczs.cspt.dao.impl.PlantDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+
+	<!-- 植物基础dao配置 -->
+	<bean id="plantBaseDao" class="cn.gov.zyczs.cspt.dao.impl.PlantBaseDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 药材基础dao配置 -->
+	<bean id="medBaseDao" class="cn.gov.zyczs.cspt.dao.impl.MedBaseDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!--肥料dao配置 -->
+	<bean id="fertilizerDao" class="cn.gov.zyczs.cspt.dao.impl.FertilizerDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 农药dao配置 -->
+	<bean id="pesticideDao" class="cn.gov.zyczs.cspt.dao.impl.PesticideDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 药材植物dao配置 -->
+	<bean id="medDao" class="cn.gov.zyczs.cspt.dao.impl.MedDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 组织表 -->
+	<bean id="orgDao" class="cn.gov.zyczs.cspt.dao.impl.OrgDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 饮片生产dao配置 -->
+	<bean id="tabletDao" class="cn.gov.zyczs.cspt.dao.impl.TabletDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 饮片生产-饮片基础表dao配置 -->
+	<bean id="tabletBaseDao" class="cn.gov.zyczs.cspt.dao.impl.TabletBaseDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 饮片生产-辅料dao配置 -->
+	<bean id="tabletAssistDao" class="cn.gov.zyczs.cspt.dao.impl.TabletAssistDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 饮片库存dao配置 -->
+	<bean id="tabletStorageDao" class="cn.gov.zyczs.cspt.dao.impl.TabletStorageDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 企业表 -->
+	<bean id="companyDao" class="cn.gov.zyczs.cspt.dao.impl.CompanyDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 药材库存表dao配置 -->
+	<bean id="medStorageDao" class="cn.gov.zyczs.cspt.dao.impl.MedStorageDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 商品编码表dao配置 -->
+	<bean id="goodsCodeDao" class="cn.gov.zyczs.cspt.dao.impl.GoodsCodeDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 地区国标Dao -->
+	<bean id="codeRegionDao" class="cn.gov.zyczs.cspt.dao.impl.CodeRegionDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 检验报告Dao -->
+	<bean id="checkMatDao" class="cn.gov.zyczs.cspt.dao.impl.CheckMatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 检验Dao -->
+	<bean id="checkDao" class="cn.gov.zyczs.cspt.dao.impl.CheckDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 获取批次 -->
+	<bean id="regionDao" class="cn.gov.zyczs.cspt.dao.impl.RegionDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 出入库记录 -->
+	<bean id="inOutStorDao" class="cn.gov.zyczs.cspt.dao.impl.InOutStorDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 出入库详细记录 -->
+	<bean id="inOutStorBoxDao" class="cn.gov.zyczs.cspt.dao.impl.InOutStorBoxDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 箱码Dao -->
+	<bean id="boxDao" class="cn.gov.zyczs.cspt.dao.impl.BoxDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 小包溯源码Dao -->
+	<bean id="boxItemDao" class="cn.gov.zyczs.cspt.dao.impl.BoxItemDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 药材种植平台统计 -->
+	<bean id="medStatDao" class="cn.gov.zyczs.cspt.dao.impl.MedStatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 生产平台 统计分析 -->
+	<bean id="tabletStatDao" class="cn.gov.zyczs.cspt.dao.impl.TabletStatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 非溯源企业 -->
+	<bean id="companyOtherDao" class="cn.gov.zyczs.cspt.dao.impl.CompanyOtherDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- IndexUserDao -->
+	<bean id="indexUserDao" class="cn.gov.zyczs.cspt.dao.impl.IndexUserDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- IndexWeekDao -->
+	<bean id="indexWeekDao" class="cn.gov.zyczs.cspt.dao.impl.IndexWeekDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="tempBoxDao" class="cn.gov.zyczs.cspt.dao.impl.TempBoxDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	
+	<bean id="zyczsXmlDao" class="cn.gov.zyczs.cspt.dao.impl.ZyczsXmlDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 监管平台 统计分析 -->
+	<bean id="govmentStatDao" class="cn.gov.zyczs.cspt.dao.impl.GovmentStatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	
+	<!-- 监管平台 饮片统计 -->
+	<bean id="govmentTabletStatDao" class="cn.gov.zyczs.cspt.dao.impl.GovmentTabletStatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 药材监管平台 统计分析 -->
+	<bean id="govmentMedStatDao" class="cn.gov.zyczs.cspt.dao.impl.GovmentMedStatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 药材监管平台应急处置 -->
+	<bean id="freezeDao" class="cn.gov.zyczs.cspt.dao.impl.FreezeDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 日志管理 -->
+	<bean id="opLogDao" class="cn.gov.zyczs.cspt.dao.impl.OpLogDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 权限管理 -->
+	<bean id="roleDao" class="cn.gov.zyczs.cspt.dao.impl.RoleDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 溯源秤配置Dao -->
+	<bean id="scaleConfDao" class="cn.gov.zyczs.cspt.dao.impl.ScaleConfDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 溯源秤键配置Dao -->
+	<bean id="scaleKeyConfDao" class="cn.gov.zyczs.cspt.dao.impl.ScaleKeyConfDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 溯源秤开始 -->
+	<bean id="mappdataDao" class="cn.gov.zyczs.cspt.dao.impl.MappdataDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="scalestatDao" class="cn.gov.zyczs.cspt.dao.impl.ScalestatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="scalefckDao" class="cn.gov.zyczs.cspt.dao.impl.ScalefckDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="scaleDao" class="cn.gov.zyczs.cspt.dao.impl.ScaleDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="scalepluDao" class="cn.gov.zyczs.cspt.dao.impl.ScalepluDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 溯源秤结束 -->
+	
+	<bean id="codeAreaDao" class="cn.gov.zyczs.cspt.dao.impl.CodeAreaDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	
+	<!-- 溯源秤配置Dao -->
+	<bean id="chengConfDao" class="cn.gov.zyczs.cspt.dao.impl.ChengConfDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 溯源秤键配置Dao -->
+	<bean id="chengKeyDao" class="cn.gov.zyczs.cspt.dao.impl.ChengKeyDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 溯源秤Dao -->
+	<bean id="chengDao" class="cn.gov.zyczs.cspt.dao.impl.ChengDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="chengFckDao" class="cn.gov.zyczs.cspt.dao.impl.ChengFckDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="chengSqlDao" class="cn.gov.zyczs.cspt.dao.impl.ChengSqlDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="chengDataDao" class="cn.gov.zyczs.cspt.dao.impl.ChengDataDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="chengTmpDao" class="cn.gov.zyczs.cspt.dao.impl.ChengTmpDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="chengFckTmpDao" class="cn.gov.zyczs.cspt.dao.impl.ChengFckTmpDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!--企业组织上传附件dao  -->
+	<bean id="orgUploadDao" class="cn.gov.zyczs.cspt.dao.impl.OrgUploadDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 设备配置Dao -->
+	<bean id="deviceConfDao" class="cn.gov.zyczs.cspt.dao.impl.DeviceConfDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<!-- 设备Dao -->
+	<bean id="deviceDao" class="cn.gov.zyczs.cspt.dao.impl.DeviceDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 设备Dao -->
+	<bean id="examineDao" class="cn.gov.zyczs.cspt.dao.impl.ExamineDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 设备回收Dao -->
+	<bean id="deviceRecDao" class="cn.gov.zyczs.cspt.dao.impl.DeviceRecDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 市场区域图Dao -->
+	<bean id="marketMapDao" class="cn.gov.zyczs.cspt.dao.impl.MarketMapDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!-- 诚信评价Dao -->
+	<bean id="scoreFinalDao" class="cn.gov.zyczs.cspt.dao.impl.ScoreFinalDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="scoreDeductDao" class="cn.gov.zyczs.cspt.dao.impl.ScoreDeductDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!--手持机扫描企业Dao -->
+	<bean id="scanCompanyDao" class="cn.gov.zyczs.cspt.dao.impl.ScanCompanyDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!--日常检查Dao -->
+	<bean id="dailyCheckDao" class="cn.gov.zyczs.cspt.dao.impl.DailyCheckDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!--田间管理dao配置 -->
+	<bean id="fieldCareDao" class="cn.gov.zyczs.cspt.dao.impl.FieldCareDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+
+	<bean id="tabletPackLogDao" class="cn.gov.zyczs.cspt.dao.impl.TabletPackLogDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	
+	<!--查询机企业信息dao配置 -->
+	<bean id="searchDao" class="cn.gov.zyczs.cspt.dao.impl.SearchDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!--标示打印dao配置 -->
+	<bean id="labelPrintDao" class="cn.gov.zyczs.cspt.dao.impl.LabelPrintDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!--企业使用率dao配置 -->
+	<bean id="rp_RateDao" class="cn.gov.zyczs.cspt.dao.impl.Rp_RateDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	
+	<!--监管平台报表dao配置 -->
+	<bean id="rp_StatDao" class="cn.gov.zyczs.cspt.dao.impl.Rp_StatDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<!--平台建设率dao配置 -->
+	<bean id="rp_BuildDao" class="cn.gov.zyczs.cspt.dao.impl.Rp_BuildDao">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+</beans>

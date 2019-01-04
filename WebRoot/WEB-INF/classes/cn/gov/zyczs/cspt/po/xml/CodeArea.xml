@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CodeArea">
+	<typeAlias alias="CodeArea" type="cn.gov.zyczs.cspt.po.CodeArea" />
+
+	<sql id="findByWhere">
+		<isNotEmpty property="pcode" prepend="and">
+			<![CDATA[
+				pcode = #pcode#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findCodeAreaByPcode" parameterClass="CodeArea" resultClass="CodeArea">
+		<![CDATA[
+			select * from zs_codearea ca 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+		<![CDATA[
+			order by ca.code
+		]]>
+	</select>
+    
+    <select id="findByName" parameterClass="CodeArea" resultClass="String">
+		<![CDATA[
+			select code  from zs_codearea where name=#area# and pcode =
+			(
+				  select code from zs_codearea where name=#city# and pcode=
+				  (
+				   select code from zs_codearea where name=#province#  and rownum = 1 
+				  )
+			)
+		]]>			
+	</select>
+	
+	
+	<select id="findShortName" parameterClass="String" resultClass="String">
+		<![CDATA[
+			select p.shortname
+			||(select c.shortname from zs_codearea c where c.code in( select a.pcode from zs_codearea a where a.code=#code# )) 
+			from zs_codearea p where p.code in
+			(
+			(select c.pcode from zs_codearea c where c.code in( select a.pcode from zs_codearea a where a.code=#code# ))
+			)
+		]]>			
+	</select>
+	
+	
+	<select id="findNameByCode" parameterClass="String" resultClass="String">
+		<![CDATA[
+		select p.shortname || ',' ||
+	       (select c.shortname
+	          from zs_codearea c
+	          where c.code in
+	               (select a.pcode from zs_codearea a where a.code =#code#)) || ',' ||
+	       ((select a.shortname from zs_codearea a where a.code = #code#))
+  		from zs_codearea p
+ 		where p.code in
+     	  ((select c.pcode
+           from zs_codearea c
+           where c.code in
+                (select a.pcode from zs_codearea a where a.code =#code#)))
+		]]>			
+	</select>
+	
+</sqlMap>

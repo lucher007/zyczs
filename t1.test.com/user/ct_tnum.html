@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>交易数量</title>
+<link type="text/css" rel="stylesheet" href="/style/user.css">
+</head>
+
+<body>
+<div id="body">
+	<div class="cur-pos">当前位置：统计分析 > 交易统计</div>
+    <div class="form-box">
+    	<div class="fb-tit">
+    	     交易价格统计
+        </div>
+        <div class="fb-con">
+        	<div class="fb-tip">
+	        <form action="" method="post" name="searchform" id="searchform">
+	          <table width="100%">
+                  <tr>
+                    <td height="26" width="70" align="right">查询对象：</td>
+                    <td >
+                    	<select id="type" name="type">
+                    		<option value="0" selected>药材</option>
+                    		<option value="1" >饮片</option>
+                    	</select>
+                    </td>
+                    <td height="26"  align="right">时间范围：</td>
+                    <td><input type="text" name="querybegintime" id="querybegintime" value="" class="Wdate inp w150" 
+						onfocus="WdatePicker({skin:'blueFresh',isShowWeek:true,isShowClear:true,maxDate:'#F{$dp.$D(\'queryendtime\');}'});">
+                        -
+                        <input type="text" name="queryendtime" id="queryendtime" value="" class="Wdate inp w150" 
+						onfocus="WdatePicker({skin:'blueFresh',isShowWeek:true,isShowClear:true,minDate:'#F{$dp.$D(\'querybegintime\');}'});">
+						<input type="button" value="查询" class="sch" onclick="return checkForm();"></td>
+                  </tr>
+                </table>     
+	        </form>
+            </div>
+            <table width="726" border="0" cellspacing="0" cellpadding="0" class="fbc-box ml10">
+              <tr class="fbc-tit">
+	            <td align="center">按照时间交易量变化图、曲线图</td>
+	          </tr>
+		  	  <tr>
+				<td style="padding:0"><img src="../images/user/quxian.jpg"></td>
+              </tr>
+            </table>
+            <table width="726" border="0" cellspacing="0" cellpadding="0" class="fbc-box ml10 mt10">
+              <tr class="fbc-tit">
+	            <td align="center">各环节交易总量 饼图</td>
+	          </tr>
+		  	  <tr>
+				<td style="padding:0"><img src="../images/user/bingtu.jpg"></td>
+              </tr>
+            </table>
+		</div>
+    </div>
+</div>
+<script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="/js/common/area.js"></script>
+<script type="text/javascript" language="javascript" src="/js/form.js"></script>
+<script type="text/javascript">
+//控制搜索词效果
+inp(".seh-box .inp",'输入企业名称、法人');
+</script>
+</body>
+</html>

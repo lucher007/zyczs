@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="GovmentStat">
+	<typeAlias alias="GovmentStat" type="cn.gov.zyczs.cspt.po.GovmentStat" />
+	<typeAlias alias="Org" type="cn.gov.zyczs.cspt.po.Org" />
+	
+	<sql id="findGovmentSellStatByWhere">
+	    <isNotEmpty property="type" prepend="and">			
+			<![CDATA[
+					s.type = #type#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="stortype" prepend="and">			
+			<![CDATA[
+					s.stortype = #stortype#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="prodname" prepend="and">
+			<![CDATA[
+					b.prodname = #prodname#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="querybegintime" prepend="and">
+			<![CDATA[
+					s.opertime >= to_date('$querybegintime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="queryendtime" prepend="and">
+			<![CDATA[
+					s.opertime <= to_date('$queryendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="zyctype" prepend="and">
+			<![CDATA[
+					o.zyctype = #zyctype#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					o.province = #province#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="city" prepend="and">
+			<![CDATA[
+					o.city = #city#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+					o.area = #area#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getTotalWeightJFreeChartStat" parameterClass="GovmentStat" resultClass="GovmentStat">
+		<![CDATA[
+		    select to_char(s.opertime,'$datestattype$') as datestattype, 
+		           sum(s.totalweight/10000) as totalweight  
+		]]>
+		<![CDATA[
+		    from zs_inoutstor s inner join zs_inoutstorbox b on s.inoutstorid = b.inoutstorid
+		        inner join zs_org o on s.orgid = o.orgid 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findGovmentSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		    group  by to_char(s.opertime,'$datestattype$')
+		]]>		
+	</select>
+	
+	<select id="getAreaWeightJFreeChartStat" parameterClass="GovmentStat" resultClass="GovmentStat">
+		<![CDATA[
+		    select o.zyctype, sum(s.totalweight/10000) as totalweight 
+		]]>
+		<![CDATA[
+		    from zs_inoutstor s inner join zs_inoutstorbox b on s.inoutstorid = b.inoutstorid
+		        inner join zs_org o on s.orgid = o.orgid 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findGovmentSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		    group  by o.zyctype 
+		]]>		
+	</select>
+	
+	<select id="getSellTotalWeightStatList" parameterClass="GovmentStat" resultClass="GovmentStat">
+		<![CDATA[
+		    select b.* from (select a.*,rownum r from (
+		    	select b.prodname, 
+		    	rtrim(rtrim(to_char(sum(s.totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight 
+		    
+		]]>
+		<![CDATA[
+		    from zs_inoutstor s inner join zs_inoutstorbox b on s.inoutstorid = b.inoutstorid
+		        inner join zs_org o on s.orgid = o.orgid 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findGovmentSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		    group  by b.prodname ) a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="getSellTotalWeightStatCount" parameterClass="GovmentStat" resultClass="Integer">
+		<![CDATA[
+		    select count(1) from (
+		          select b.prodname, 
+		          rtrim(rtrim(to_char(sum(s.totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight  
+		]]>
+		<![CDATA[
+		    from zs_inoutstor s inner join zs_inoutstorbox b on s.inoutstorid = b.inoutstorid
+		        inner join zs_org o on s.orgid = o.orgid 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findGovmentSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	group  by b.prodname )
+		]]>		
+	</select>
+	
+	<select id="getSellAveragePriceStatList" parameterClass="GovmentStat" resultClass="GovmentStat">
+		<![CDATA[
+		    select b.* from (select a.*,rownum r from (
+		    	select b.prodname,o.zyctype,o.province||o.city||o.area area, to_char(round(AVG(b.price))/10000) as straverageprice
+		    
+		]]>
+		<![CDATA[
+		    from zs_inoutstor s inner join zs_inoutstorbox b on s.inoutstorid = b.inoutstorid
+		        inner join zs_org o on s.orgid = o.orgid 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findGovmentSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		    group  by b.prodname,o.zyctype,o.province||o.city||o.area) a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="getSellAveragePriceStatCount" parameterClass="GovmentStat" resultClass="Integer">
+		<![CDATA[
+		    select count(1) from (select b.prodname,o.zyctype,o.zyctype,o.province||o.city||o.area area, to_char(round(AVG(b.price))/10000) as straverageprice
+		]]>
+		<![CDATA[
+		    from zs_inoutstor s inner join zs_inoutstorbox b on s.inoutstorid = b.inoutstorid
+		        inner join zs_org o on s.orgid = o.orgid 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findGovmentSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	group  by b.prodname,o.zyctype,o.zyctype,o.province||o.city||o.area)
+		]]>		
+	</select>
+	
+	<select id="getOrgCount" resultClass="Org">
+		<![CDATA[
+	  		select city,zyctype,count(*) as linkman from zs_org group by city,zyctype
+	  	]]>		
+	</select>
+	
+	
+	
+	<sql id="findGovmentScaleStatByWhere">
+	    <isNotEmpty property="province" prepend="and">			
+			<![CDATA[
+					lower(c.province) like lower(#province#||'%')
+			]]>			
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getScaleStatList" parameterClass="GovmentStat" resultClass="GovmentStat">
+		<![CDATA[
+		    select b.* from (select a.*,rownum r from (
+		]]>
+		<![CDATA[
+		    select t.*,c.corpname from s_scale t,zs_company c where t.usercode = c.cpccorp 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findGovmentScaleStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		    order by t.addtime desc ) a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="getScaleStatCount" parameterClass="GovmentStat" resultClass="Integer">
+		<![CDATA[
+		    select count(1) from (
+		]]>
+		<![CDATA[
+		    select t.*,c.corpname from s_scale t,zs_company c where t.usercode = c.cpccorp
+		]]>
+		<dynamic prepend="and">
+			<include refid="findGovmentScaleStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by t.addtime desc )
+		]]>		
+	</select>
+</sqlMap>

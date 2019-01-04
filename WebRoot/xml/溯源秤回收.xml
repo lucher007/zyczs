@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs guid="100101200120102023">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="scalerecover">
+		<scale desc="溯源秤回收">
+				<scalecode desc="溯源秤编码">00000000000000000000000123123</scalecode>
+				<cpccode desc="企业cpccode">101201212</cpccode>
+		</scale>
+	</msgbody>
+</zyczs>

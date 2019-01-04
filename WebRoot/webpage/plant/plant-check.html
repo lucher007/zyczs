@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>药材检验</title>
+<link type="text/css" rel="stylesheet" href="/style/plant.css">
+</head>
+
+<body>
+	<div class="cur-pos">当前位置：检验管理 > 药材检验</div>
+	<div class="form-box">
+    	<form action="?">
+    	<div class="fb-tit">药材检验　<span>品名：麦冬　　待检重量：50000kg　　采收批次号：1101273000049981209060012</span></div>
+        <div class="fb-con">
+        	<ul class="fb-ul">
+              <li class="fb-cbox">
+                <div class="fb-ctit"><img src="../images/frame/st.png" class="fl"> &nbsp;粗加工方法</div>
+                <div class="fb-tab">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="50">&nbsp;</td>
+                    <td width="30"><input type="checkbox"></td>
+                    <td width="57">清洗</td>
+                    <td width="30"><input type="checkbox"></td>
+                    <td width="61">修整</td>
+                    <td width="30"><input type="checkbox"></td>
+                    <td width="61">发汗</td>
+                    <td width="30"><input type="checkbox"></td>
+                    <td width="75">蒸</td>
+                    <td width="30"><input type="checkbox"></td>
+                    <td width="61">煮</td>
+                    <td width="30"><input type="checkbox"></td>
+                    <td width="75">汤</td>
+                    <td width="30">&nbsp;</td>
+                    <td width="59">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td class="b">净选：</td>
+                    <td><input type="checkbox"></td>
+                    <td>去皮</td>
+                    <td><input type="checkbox"></td>
+                    <td>去壳</td>
+                    <td><input type="checkbox"></td>
+                    <td>去瓤</td>
+                    <td><input type="checkbox"></td>
+                    <td>去芦头</td>
+                    <td><input type="checkbox"></td>
+                    <td>去核</td>
+                    <td><input type="checkbox"></td>
+                    <td>去须根</td>
+                    <td><input type="checkbox"></td>
+                    <td>去心</td>
+                  </tr>
+                  <tr>
+                    <td class="b">切制：</td>
+                    <td><input type="checkbox"></td>
+                    <td>切片</td>
+                    <td><input type="checkbox"></td>
+                    <td>切块</td>
+                    <td><input type="checkbox"></td>
+                    <td>切段</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td class="b">干燥：</td>
+                    <td><input type="checkbox"></td>
+                    <td>烘干</td>
+                    <td><input type="checkbox"></td>
+                    <td>阴干</td>
+                    <td><input type="checkbox"></td>
+                    <td>晒干</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td class="b">其它：</td>
+                    <td colspan="14"><input type="text" name="othervalue" id="othervalue" class="inp" value="输入其他方法">（多种方法用”,”隔开）</td>
+                  </tr>
+                </table>
+                </div>
+              </li>
+              <li class="fb-line">执行标准：<select class="w150"><option value="企业标准">企业标准</option>
+				  					<option value="中国药典2010版">中国药典2010版</option>
+				  					<option value="中国药典2005版">中国药典2005版</option></select></li>
+              <li class="fb-cbox">
+              	<div class="fb-ctit"><img src="../images/frame/upload.gif" class="fl"> &nbsp;检验报告/产地证明</div>
+                <div class="fb-tab">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><a href="#" class="blue">检验报告201208号文件.jpg</a></td>
+                    <td>检验报告</td>
+                    <td width="270"><a href="#" class="btn-del">删除</a> <a href="#" class="btn-up">继续上传检验报告</a> <a href="#" class="btn-up">继续上产地证明</a></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" align="center" height="40"><div class="tip-warning">提示：检验报告/产地证明从未上传 <input type="button" value="上传检验报告" class="sbt"> <input type="button" value="上传产地证明" class="sbt"></div></td>
+                  </tr>
+                </table>
+                </div>
+              </li>
+              <li class="fb-line">
+              	贮藏：<select class="w150"><option value="企业标准">企业标准</option>
+				  					<option value="中国药典2010版">中国药典2010版</option>
+				  					<option value="中国药典2005版">中国药典2005版</option></select>
+                检验时间：<input type="text" class="inp">
+                检验人员：<input type="text" class="inp">
+              </li>
+            </ul>
+    	</div>
+        <div class="fb-bom">
+        	<cite><input type="submit" value="下一步" class="sbt"></cite>
+        </div>
+        </form>
+    </div>
+	<script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+    <script type="text/javascript" language="javascript" src="/js/form.js"></script>
+    <script type="text/javascript">
+		inp("#othervalue","输入其他方法");
+	</script>
+</body>
+</html>

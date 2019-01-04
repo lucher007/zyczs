@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="plant" extends="strutsdefault">
+    	
+    	<!-- 植物action配置 -->
+		<action name="plant" class="plantAction">
+		    <result name="addPlant">/manage/plant/addPlant.jsp</result>
+			<result name="saveFinish">/manage/plant/addPlantFinish.jsp</result>
+			<result name="findByList">/manage/plant/findPlant.jsp</result>	
+			<result name="initHarverstMed">/manage/med/addMed.jsp</result>	
+			<result name="findPlantHistory">/manage/plant/findPlantHistory.jsp</result>	
+			<result name="findDetails">/manage/plant/findDetails.jsp</result>				
+			<result name="updateInit">/manage/plant/updateInit.jsp</result>	
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">savePlant</param>
+		    </interceptor-ref>
+		    
+		</action>
+		
+		<!--肥料action配置 -->
+		<action name="fertilizer" class="fertilizerAction">
+			<result name="findByList">/manage/plantfp/findByFertilizer.jsp</result>
+			<result name="saveInit">/manage/plantfp/addFertilizer.jsp</result>
+			<result name="save">/manage/plantfp/findByFertilizer.jsp</result>
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+		        <param name="includeMethods">save</param>
+		    </interceptor-ref>	
+		</action>
+		
+        <!--农药action配置 -->
+		<action name="pesticide" class="pesticideAction">
+			<result name="findByList">/manage/plantfp/findByPesticide.jsp</result>
+			<result name="saveInit">/manage/plantfp/addPesticide.jsp</result>			
+			<result name="save">/manage/plantfp/findByPesticide.jsp</result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+        
+		 <!--药材action配置 -->
+		<action name="med" class="medAction">
+			<result name="findByCpcPlant">/manage/med/findByMed.jsp</result>
+		    <result name="findByListInStore">/manage/medInOutStorage/findMedInstore.jsp</result>
+		    <result name="findMedInstoreDetail">/manage/medInOutStorage/findMedInstoreDetail.jsp</result>
+		    <interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+		        <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+        <!-- 药材库存action配置 -->
+		<action name="medStorage" class="medStorageAction">		
+			<result name="medStorageChoice">/manage/medStorage/medStorageChoice.jsp</result>	
+			<result name="findMedCheckList">/manage/medStorage/findCheckList.jsp</result>	
+			<result name="findTabletCheckList">/manage/tabletmed/findCheckList.jsp</result>	
+			<result name="findMedCheckedList">/manage/medStorage/findCheckedList.jsp</result>
+			<result name="findTabletCheckedList">/manage/tabletmed/findCheckedList.jsp</result>
+			<result name="findMedsellCheckList">/manage/medsell/findCheckList.jsp</result>
+			<result name="findMedsellCheckedList">/manage/medsell/findCheckedList.jsp</result>
+			<result name="findMedmarketCheckList">/manage/medMarket/findCheckList.jsp</result>
+			<result name="findMedmarketCheckedList">/manage/medMarket/findCheckedList.jsp</result>
+			<result name="findMedGroupStorage">/manage/medStorage/findMedGroupStorage.jsp</result>
+			<result name="findMedStorage">/manage/medStorage/findMedStorage.jsp</result>
+			<result name="findNotPackList">/manage/medStorage/findNotPackList.jsp</result>
+			<result name="findPackByCpcMed">/manage/medStorage/findPackByCpcMed.jsp</result>
+			<result name="updateMedPackFinish" >/manage/medStorage/updateMedPackFinish.jsp</result>
+			
+			<result name="findOutStorage" >/manage/medInOutStorage/findOutStorage.jsp</result>
+			<result name="addOutStorage" >/manage/medInOutStorage/addOutStorage.jsp</result>
+			<result name="findPrintCode" >/manage/medStorage/findPrintCode.jsp</result>
+			<result name="findPackedList">/manage/medStorage/findPackedList.jsp</result>
+			<result name="findPackedByCpcMed">/manage/medStorage/findPackedByCpcMed.jsp</result>
+			<result name="findMedOutStorage">/manage/medStorage/findMedOutStorage.jsp</result>
+			<result name="findChangeMedStorage">/manage/medStorage/findChangeMedStorage.jsp</result>
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">updateMedPack</param>
+		    </interceptor-ref>	
+		</action>
+		<!-- 药材基础表 -->
+		<action name="medBase" class="medBaseAction">			
+			<result name="medBaseChoice">/manage/medBase/medBaseChoice.jsp</result>	
+		</action>
+		
+		<!--植物基础表 -->
+		<action name="plantBase" class="plantBaseAction">			
+			<result name="plantBaseChoice">/manage/plantBase/plantBaseChoice.jsp</result>	
+		</action>
+		
+		 <!--田间管理action配置 -->
+		<action name="fieldCare" class="fieldCareAction">
+			<result name="findByList">/manage/fieldcare/findByFieldCare.jsp</result>
+			<result name="saveInit">/manage/fieldcare/addFieldCare.jsp</result>			
+			<result name="save">/manage/plantfp/findByFieldCare.jsp</result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		
+    </package>
+</struts>

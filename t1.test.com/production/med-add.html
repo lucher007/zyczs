@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>非溯源药材入库</title>
+<link type="text/css" rel="stylesheet" href="/style/production.css">
+</head>
+
+<body>
+<div id="body">
+	<div class="cur-pos">当前位置：库存管理 > 非溯源药材入库</div>
+	<div class="form-box">
+    	<form action="?">
+    	<div class="fb-tit">非溯源药材入库</div>
+        <div class="fb-con">
+        	<table width="100%" border="0" cellpadding="0" cellspacing="0">  				  				
+	  			<tr>
+	  				<td height="30"><label class="starcss"></label></td>
+	  				<td>药材产地：</td>	  				
+	  				<td colspan="4">
+	  				<select name="province" id="province" class="w150"><option>四川省</option></select>
+	  				<select name="city" id="city" class="w150"><option>成都市</option></select>
+	  				<select name="area" id="area" class="w150"><option>市辖区</option></select>
+	  				</td>
+  				</tr>
+	  			<tr>
+	  				<td width="2%" height="30"><label class="starcss"></label></td>
+	  				<td width="13%">药材品种：</td>
+	  				<td width="34%">
+	  					<input type="text" class="inp" id="plantName" name="plantName" />
+	  					<div id="auto"></div>
+	  				</td>
+	  				<td width="2%"><label class="starcss"></label></td>
+	  				<td width="15%">批次号(至少4位)：</td>
+	  				<td width="34%"><input type="text" class="inp" name="plantcode" id="plantcode" maxlength="15" /></td>
+	  			</tr>
+	  			<tr>
+	  				<td height="30"></td>
+	  				<td>收获时间：</td>
+					<td><input type="text" class="inp" name="harvestTime" id="harvestTime"></td>
+					<td></td>
+	  				<td>药材类型：</td>
+	  				<td>
+	  					<select name="planttype" id="planttype">
+	  						<option value="栽培">栽培</option>
+	  						<option value="野生">野生</option>
+	  						<option value="养殖">养殖</option>
+	  					</select>
+	  				</td>
+	  			</tr>
+	  			<tr>
+	  				<td height="30"></td>
+	  				<td>施肥状况：</td>
+	  				<td>
+	  					<select name="fertilizer" id="fertilizer">
+	  						<option value="有">有</option>
+	  						<option value="无">无</option>
+	  					</select>
+	  				</td>
+	  				<td></td>
+	  				<td>农药情况：</td>
+	  				<td>
+	  					<select name="pesticide" id="pesticide">
+	  						<option value="有">有</option>
+	  						<option value="无">无</option>
+	  					</select>
+	  				</td>
+	  			</tr>
+	  			<tr>
+	  				<td height="30"><label class="starcss"></label></td>
+	  				<td>入库重量(KG)：</td>
+	  				<td><input type="text" class="inp" name="harvestWeight" id="harvestWeight" maxlength="7" ></td>
+	  				<td><label class="starcss"></label></td>
+	  				<td>入库时间：</td>
+	  				<td><input type="text" class="inp" name="recordtime" id="recordtime" ></td>
+	  			</tr>
+	  		</table>
+        </div>
+        <div class="fb-bom">
+        	<cite class="gray"><input type="submit" value="下一步" class="sbt"></cite>
+        </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="/js/form.js"></script>
+<script type="text/javascript">
+	
+</script>
+</body>
+</html>

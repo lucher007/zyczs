@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="govmentMedStat" extends="strutsdefault">
+    	
+    	<!-- 药材市场监管统计action配置 -->
+		<action name="govmentMedStat" class="govmentMedStatAction">
+			<result name="findMedByList">/manage/govStat/findGovMedList.jsp</result>
+			<result name="findMedmarketByList">/manage/govStat/findGovMedmarketList.jsp</result>
+			<result name="findMedSellByList">/manage/govStat/findGovMedSell.jsp</result>
+			<result name="findMedSellBase">/manage/govStat/findMedSellBase.jsp</result>
+			<result name="findMedSellSale">/manage/govStat/findMedSellSale.jsp</result>
+			<result name="findMedmarketSellByList">/manage/govStat/findGovMedmarketSellList.jsp</result>
+		</action>
+		
+    </package>
+</struts>

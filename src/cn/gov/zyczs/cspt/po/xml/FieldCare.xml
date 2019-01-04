@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FieldCare">
+	<typeAlias alias="FieldCare" type="cn.gov.zyczs.cspt.po.FieldCare"/>	
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   fieldcareid = #fieldcareid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="fieldcaretype" prepend="and">
+				<![CDATA[
+					fieldcaretype = #fieldcaretype#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpcplant" prepend="and">
+			<![CDATA[
+					cpcplant = #cpcplant#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="fieldcarename" prepend="and">
+			<![CDATA[
+					lower(fieldcarename) like lower('%'||#fieldcarename#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="FieldCare" resultClass="FieldCare">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from ZS_FieldCare where fieldcareid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by fieldcareid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<insert id="save" parameterClass="FieldCare">
+		<![CDATA[
+		insert into zs_fieldcare(fieldcaretype, fieldcarename, fieldcareweight,cpcplant, fieldcaretime, remark)
+		values(#fieldcaretype#, #fieldcarename#, #fieldcareweight#,#cpcplant#, to_date('$fieldcaretime$','YYYY-MM-DD HH24:MI:SS'), #remark#)
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_FieldCare.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	
+	
+	<select id="findByCount" parameterClass="FieldCare" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_FieldCare
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findById" parameterClass="FieldCare" resultClass="FieldCare">
+		<![CDATA[
+		 	select * from ZS_FieldCare
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	
+	
+		
+</sqlMap>

@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="GovmentMedStat">
+	<typeAlias alias="GovmentMedStat" type="cn.gov.zyczs.cspt.po.GovmentMedStat" />
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+					lower(ms.medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+					p.state = #state#
+			]]>
+		</isNotEmpty>
+		<!-- 
+		<isNotEmpty property="corpname" prepend="and">
+			<![CDATA[
+					c.corpname like '%'||#corpname#||'%'
+			]]>
+		</isNotEmpty>
+		 -->
+		 <isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					ms.province=#province#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="city" prepend="and">
+			<![CDATA[
+					ms.city=#city#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+					ms.area=#area#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="starttime" prepend="and">
+			<![CDATA[
+					ms.addtime >= to_date('$starttime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endtime" prepend="and">
+			<![CDATA[
+					ms.addtime <= add_months(to_date('$endtime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS'),1)
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+					ms.orgid=#orgid#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	
+	<sql id="findByCondition">				
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+					lower(ms.medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+					p.state = #state#
+			]]>
+		</isNotEmpty>
+		 <isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					o.province=#province#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="city" prepend="and">
+			<![CDATA[
+					o.city=#city#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+					o.area=#area#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="starttime" prepend="and">
+			<![CDATA[
+					ios.opertime >= to_date('$starttime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endtime" prepend="and">
+			<![CDATA[
+					ios.opertime <= add_months(to_date('$endtime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS'),1)
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+					ms.orgid=#orgid#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	
+	<select id="findMedByList" parameterClass="GovmentMedStat" resultClass="GovmentMedStat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+				select to_char(ms.addtime,'YYYY-MM') mon,ms.province||ms.city||ms.area area,count(o.orgname) orgcount,
+				count(ms.medname) medcount,count(m.medname) plantcount,to_char(sum(p.plantarea )) plantareasum
+				,to_char(m.predictweight /10000) predictweight ,to_char(m.medweight / 10000) medweight
+				from
+				zs_medstorage ms
+				left join zs_med m 
+				on m.cpcmed = ms.cpcmed
+				left join zs_org o
+				on o.orgid = ms.orgid 
+				left join zs_company c
+				on o.cpccorp = c.cpccorp
+				left join zs_plant p
+				on m.cpcplant = p.cpcplant
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 group by ms.province||ms.city||ms.area ,to_char(ms.addtime,'YYYY-MM'),m.predictweight,m.medweight)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findMedCountByList" parameterClass="GovmentMedStat" resultClass="Integer">
+		<![CDATA[
+			select count(*) from 
+			(
+			  select count(ms.medstorid),to_char(ms.addtime,'YYYY-MM') mon,ms.area,m.predictweight,m.medweight
+			  from
+			  zs_medstorage ms
+			  left join zs_med m 
+			  on m.cpcmed = ms.cpcmed
+			  left join zs_org o
+			  on o.orgid = ms.orgid
+			  left join zs_company c
+			  on o.cpccorp = c.cpccorp 
+			  left join zs_plant p
+			  on m.cpcplant = p.cpcplant
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 group by ms.area,to_char(ms.addtime,'YYYY-MM'),m.predictweight,m.medweight )
+		]]>		
+	</select>
+	
+	<sql id="findByMedmarketWhere">
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+				state = #state#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					province=#province#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="city" prepend="and">
+			<![CDATA[
+				city = #city#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+				area = #area#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+				lower(medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="stortype" prepend="and">
+			<![CDATA[
+				stortype = #stortype#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="starttime" prepend="and">
+			<![CDATA[
+					ms.addtime >= to_date('$starttime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endtime" prepend="and">
+			<![CDATA[
+					ms.addtime <= add_months(to_date('$endtime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS'),1)
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	
+	<select id="findMedmarketCountByList" parameterClass="GovmentMedStat" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ( 
+				select count(distinct to_char(ms.addtime,'yyyy-mm'))
+				from zs_medstorage ms where ms.orgid in (
+	      			select o.orgid from zs_org o where o.marketcode in (
+	                	select cpccorp from zs_org where zyctype = '00001000'))
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+		<![CDATA[	 
+ 			group by  to_char(ms.addtime,'yyyy-mm'))  
+		]]>
+	</select>
+	<select id="findMedmarketByList" parameterClass="GovmentMedStat" resultClass="GovmentMedStat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+				select to_char(ms.addtime,'yyyy-mm') mon,(select count(o.orgid) from zs_org o where o.marketcode in (select cpccorp from zs_org where zyctype = '00001000')) usernum, count(distinct ms.medname) mednamenum, sum(ms.medweight) medweight, count(distinct ms.cpcmed) cpcmednum, count(distinct ms.area) areanum, sum(ms.mednum) mednum
+				from zs_medstorage ms where ms.orgid in (
+	      			select o.orgid from zs_org o where o.marketcode in (
+	                	select cpccorp from zs_org where zyctype = '00001000'))
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+		<![CDATA[   
+	 			group by  to_char(ms.addtime,'yyyy-mm')  
+		]]>
+		<![CDATA[
+			 order by mon desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>	
+	</select>
+	
+	
+	<select id="findMedmarketSellCountByList" parameterClass="GovmentMedStat" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ( 
+				select count(distinct to_char(ios.opersystime,'yyyy-mm'))
+				from zs_inoutstor ios inner join zs_medstorage ms on ios.orgid = ms.orgid where ios.orgid in (
+       				select o.orgid from zs_org o where o.marketcode in (
+             			select cpccorp from zs_org where zyctype = '00001000'))     
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+		<![CDATA[	 
+ 			group by  to_char(ios.opersystime,'yyyy-mm'))  
+		]]>
+	</select>
+	<select id="findMedmarketSellByList" parameterClass="GovmentMedStat" resultClass="GovmentMedStat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+				select to_char(ios.opersystime,'yyyy-mm') mon, sum(ios.totalweight) totalweight, count(ios.inoutstorid) outnum, avg(ios.totalmoney) avgmoney
+				from zs_inoutstor ios inner join zs_medstorage ms on ios.orgid = ms.orgid where ios.orgid in (
+	      			select o.orgid from zs_org o where o.marketcode in (
+	                	select cpccorp from zs_org where zyctype = '00001000'))
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+		<![CDATA[   
+	 			group by  to_char(ios.opersystime,'yyyy-mm')  
+		]]>
+		<![CDATA[
+			 order by mon desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>	
+	</select>
+	
+	
+	
+	<select id="findMedSellByList" parameterClass="GovmentMedStat" resultClass="GovmentMedStat">
+		<![CDATA[
+				select b.* from (select a.*,rownum r from (
+					select to_char(ios.opertime,'YYYY-MM') mon,o.province||o.city||o.area area,
+					to_char(sum(ios.totalweight)) totalweight,trunc(to_char(avg(ios.totalmoney)),2) avgmoney,count(iosb.boxnum) boxnum  from zs_inoutstor ios
+					inner join zs_org o
+					on o.orgid = ios.orgid
+					 inner join zs_medstorage ms 
+    				 on ms.orgid = o.orgid 
+    				 inner join zs_company c
+					on o.cpccorp = c.cpccorp
+					inner join zs_inoutstorbox iosb
+					on ios.inoutstorid = iosb.inoutstorid
+					where ios.opertime is not null
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByCondition" />
+			</dynamic>
+			<![CDATA[
+		    	group by o.province||o.city||o.area, to_char(ios.opertime,'YYYY-MM') )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findMedSellCountByList" parameterClass="GovmentMedStat" resultClass="Integer">
+		<![CDATA[
+			select count(*) from 
+			(
+		 		select to_char(ios.opertime,'YYYY-MM') mon,o.province||o.city||o.area area,
+				to_char(sum(ios.totalweight)) totalweight,to_char(avg(ios.totalmoney)) avgmoney,count(iosb.boxnum) boxnum  from zs_inoutstor ios
+				inner join zs_org o
+				on o.orgid = ios.orgid
+				 inner join zs_medstorage ms 
+    			 on ms.orgid = o.orgid 
+    			 inner join zs_company c
+				on o.cpccorp = c.cpccorp
+				inner join zs_inoutstorbox iosb
+				on ios.inoutstorid = iosb.inoutstorid
+				where ios.opertime is not null
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByCondition" />
+			</dynamic>
+			<![CDATA[
+			group by o.province||o.city||o.area , to_char(ios.opertime,'YYYY-MM'))
+		]]>		
+	</select>
+	
+	
+	<select id="findMedSellBase" parameterClass="GovmentMedStat" resultClass="GovmentMedStat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+					select to_char(ms.addtime,'YYYY-MM') mon,ms.province||ms.city||ms.area area,count(c.orgcode) orgcount,
+					count(ms.medname) medcount,ms.medname
+					,to_char(m.medweight / 10000) medweight
+					from     zs_medstorage ms     inner join zs_med m      on m.cpcmed = ms.cpcmed 
+					inner join zs_org o     on o.orgid = ms.orgid  
+					inner join zs_company c 
+					on o.cpccorp = c.cpccorp    
+					where c.zyctype='01000000'
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+				group by to_char(ms.addtime,'YYYY-MM'),ms.province||ms.city||ms.area,ms.medname,m.medweight)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findMedSellCount" parameterClass="GovmentMedStat" resultClass="Integer">
+		<![CDATA[
+			select count(*) from 
+			(
+					select to_char(ms.addtime,'YYYY-MM') mon,ms.province||ms.city||ms.area area,count(c.orgcode) orgcount,
+					count(ms.medname) medcount,ms.medname
+					,to_char(m.medweight / 10000) medweight
+					from     zs_medstorage ms     inner join zs_med m      on m.cpcmed = ms.cpcmed 
+					inner join zs_org o     on o.orgid = ms.orgid  
+					inner join zs_company c 
+					on o.cpccorp = c.cpccorp    
+					where c.zyctype='01000000'
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			group by to_char(ms.addtime,'YYYY-MM'),ms.province||ms.city||ms.area,ms.medname,m.medweight )
+		]]>		
+	</select>
+
+	
+	<select id="findMedSellSale" parameterClass="GovmentMedStat" resultClass="GovmentMedStat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+					select * from(
+						select to_char(ios.opertime,'YYYY-MM') mon,o.area,   
+						to_char(sum(ios.totalweight)) totalweight,to_char(avg(ios.totalmoney))
+						avgmoney,count(iosb.boxnum) boxnum,ms.medname  from zs_inoutstor ios    
+						inner join zs_org o      on o.orgid = ios.orgid      
+						inner join zs_medstorage ms           on ms.orgid = o.orgid    
+						inner join zs_company c      on o.cpccorp = c.cpccorp 
+						inner join zs_inoutstorbox iosb     
+						on ios.inoutstorid = iosb.inoutstorid                                      
+						where c.zyctype='01000000' and   to_char(ios.opertime,'YYYY-MM') is not null
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+				group by o.area, to_char(ios.opertime,'YYYY-MM'),ms.medname )where avgmoney <>0)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findMedSellSaleCount" parameterClass="GovmentMedStat" resultClass="Integer">
+		<![CDATA[
+			select count(*) from 
+			(	
+					select * from(
+					select to_char(ios.opertime,'YYYY-MM') mon,o.area,   
+					to_char(sum(ios.totalweight)) totalweight,to_char(avg(ios.totalmoney))
+					avgmoney,count(iosb.boxnum) boxnum,ms.medname  from zs_inoutstor ios    
+					inner join zs_org o      on o.orgid = ios.orgid      
+					inner join zs_medstorage ms           on ms.orgid = o.orgid    
+					inner join zs_company c      on o.cpccorp = c.cpccorp 
+					inner join zs_inoutstorbox iosb     
+					on ios.inoutstorid = iosb.inoutstorid                                      
+					where c.zyctype='01000000' and   to_char(ios.opertime,'YYYY-MM') is not null
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			group by o.area, to_char(ios.opertime,'YYYY-MM'),ms.medname )where avgmoney <>0 )
+		]]>		
+	</select>
+</sqlMap>

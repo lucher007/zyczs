@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs guid="100101200120102023">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="credit-punish">
+		<credits>
+			<credit>
+				<cpccode desc="企业CPCCODE">23239232234234234</cpccode>
+				<areacode desc="地区编码">23239232</areacode>
+				<appraisecycle desc="评价时间">2012-12-13 15:35:35</appraisecycle>
+				<subscoreitems desc="处罚扣分">
+					<subscoreitem>
+						<punishtype desc="处罚类型 1-投诉 2-质量问题 3-诚信检查">1</punishtype>
+						<score desc="扣分">10</score>
+						<remark desc="备注">质量而召回</remark>
+					</subscoreitem>
+					<subscoreitem>
+						<punishtype desc="处罚类型 1-投诉 2-质量问题 3-诚信检查">1</punishtype>
+						<score desc="扣分">10</score>
+						<remark desc="备注">质量而召回</remark>
+					</subscoreitem>
+				</subscoreitems>
+			</credit>
+			<credit>
+				<cpccode desc="企业CPCCODE">23239232234234234</cpccode>
+				<areacode desc="地区编码">23239232</areacode>
+				<appraisecycle desc="评价时间">2012-12-13 15:35:35</appraisecycle>
+				<subscoreitems desc="处罚扣分">
+					<subscoreitem>
+						<punishtype desc="处罚类型 1-投诉 2-质量问题 3-诚信检查">1</punishtype>
+						<score desc="扣分">10</score>
+						<remark desc="备注">质量而召回</remark>
+					</subscoreitem>
+					<subscoreitem>
+						<punishtype desc="处罚类型 1-投诉 2-质量问题 3-诚信检查">1</punishtype>
+						<score desc="扣分">10</score>
+						<remark desc="备注">质量而召回</remark>
+					</subscoreitem>
+				</subscoreitems>
+			</credit>
+		</credits>
+	</msgbody>
+</zyczs>

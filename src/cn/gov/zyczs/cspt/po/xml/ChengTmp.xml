@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChengTmp">
+	<typeAlias alias="ChengTmp" type="cn.gov.zyczs.cspt.po.ChengTmp"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="confid" prepend="and">
+			<![CDATA[
+					confid = #confid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="tmpname" prepend="and">
+			<![CDATA[
+					tmpname like '%'||#tmpname#||'%'
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findById">				
+		<isNotEmpty property="tmpid" prepend="and">
+			<![CDATA[
+					tmpid = #tmpid#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByCount" parameterClass="ChengTmp" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_chengtmp
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="ChengTmp" resultClass="ChengTmp">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from c_chengtmp p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by tmpid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="quryByList" parameterClass="ChengTmp" resultClass="ChengTmp">
+		<![CDATA[
+		 	select * from c_chengtmp
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>	
+	
+	<insert id="save" parameterClass="ChengTmp">
+		<![CDATA[
+			insert into c_chengtmp (confid,tmpname,remark)
+			values (#confid#,#tmpname#,#remark#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_C_Chengtmp.CURRVAL as tmpid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<delete id="delete" parameterClass="ChengTmp">
+		<![CDATA[
+			delete from c_chengtmp 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findById" />
+		</dynamic>	
+	</delete>
+	
+	<update id="update" parameterClass="ChengTmp">
+		<![CDATA[
+			update c_chengtmp
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="tmpname" prepend=",">
+				<![CDATA[
+						tmpname=#tmpname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="confid" prepend=",">
+				<![CDATA[
+						confid=#confid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="remark" prepend=",">
+				<![CDATA[
+						remark=#remark#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findById" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="ChengTmp" resultClass="ChengTmp">
+		<![CDATA[
+		 	select * from c_chengtmp
+		]]>
+		<dynamic prepend="where">
+			<include refid="findById" />
+		</dynamic>
+	</select>	
+</sqlMap>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="LabelPrint">
+	<typeAlias alias="LabelPrint" type="cn.gov.zyczs.cspt.po.LabelPrint" />
+	
+	
+	<insert id="save" parameterClass="LabelPrint">
+		<![CDATA[
+		insert into zs_labelprint(orgid, printcol) values (#orgid#,#printcol#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_LabelPrint.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<sql id="findByWhere">				
+		<![CDATA[
+				orgid = #orgid#
+		]]>
+	</sql>
+	
+	<select id="findByOrgId" parameterClass="LabelPrint" resultClass="LabelPrint">
+		<![CDATA[
+			select * from zs_LabelPrint
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<update id="update" parameterClass="LabelPrint">
+		<![CDATA[
+			update zs_LabelPrint
+		]]>
+		<dynamic prepend="set">
+			<isNotEmpty property="printcol" prepend=",">
+				<![CDATA[
+						printcol=#printcol#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</update>
+</sqlMap>

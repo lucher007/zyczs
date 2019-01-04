@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Freeze">
+	<typeAlias alias="Freeze" type="cn.gov.zyczs.cspt.po.Freeze" />
+
+	<sql id="findByWhereId">
+		<![CDATA[
+		   freezeid= #freezeid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="cpccode" prepend="and">
+			<![CDATA[
+					lower(cpccode) like lower('%'||#cpccode#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpclevel">
+			<isNotEqual property="cpclevel" prepend="and" compareValue="-1">
+			<![CDATA[
+					cpclevel=#cpclevel#
+			]]>
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty property="addtime" prepend="and">
+			<![CDATA[					
+					addtime >=to_date('$addtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endtime" prepend="and">
+			<![CDATA[
+					addtime <=to_date('$endtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="findByList" parameterClass="Freeze" resultClass="Freeze">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_freeze where freezeid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by freezeid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="Freeze" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_freeze
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByExist" parameterClass="Freeze" resultClass="Freeze">
+		<![CDATA[
+			select * from zs_freeze where cpccode=#cpccode# and state=1
+		]]>	
+	</select>
+	
+</sqlMap>

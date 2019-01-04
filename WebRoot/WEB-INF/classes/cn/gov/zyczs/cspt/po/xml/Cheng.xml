@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Cheng">
+	<typeAlias alias="Cheng" type="cn.gov.zyczs.cspt.po.Cheng"/>	
+	<typeAlias alias="ChengState" type="cn.gov.zyczs.cspt.po.ChengState"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="confid" prepend="and">
+			<![CDATA[
+					confid = #confid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+					cpccorp = #cpccorp#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="corpname" prepend="and">
+			<![CDATA[
+					lower(corpname) like lower('%'||#corpname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="chengcode" prepend="and">
+			<![CDATA[
+					chengcode = #chengcode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+					type = #type#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="marketcode" prepend="and">
+			<![CDATA[
+					cpccorp in (  select o.cpccorp from zs_org o where o.marketcode = #marketcode# or o.cpccorp = #marketcode#)
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   chengid = #chengid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhereCode">
+		<![CDATA[
+		   chengcode=#chengcode#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="Cheng" resultClass="Cheng">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from ( select *  from c_cheng 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by chengid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount" parameterClass="Cheng" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_cheng 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="Cheng">
+		<![CDATA[
+			insert into c_cheng (chengcode,confid,normname,state,locked,overtime,cpccorp,corpname,ip,chengmode,type,remark,reason)
+			   values (#chengcode#,#confid#,#normname#,#state#,#locked#,#overtime#,#cpccorp#,#corpname#,#ip#,#chengmode#,#type#,#remark#,#reason#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_C_Cheng.CURRVAL as chengid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterClass="Cheng">
+		<![CDATA[
+			update c_cheng
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="normname" prepend=",">
+				<![CDATA[
+						normname = #normname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="confid" prepend=",">
+				<![CDATA[
+						confid = #confid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state = #state#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="locked" prepend=",">
+				<![CDATA[
+						locked = #locked#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="chengmode" prepend=",">
+				<![CDATA[
+						chengmode = #chengmode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="type" prepend=",">
+				<![CDATA[
+						type = #type#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<select id="findById" parameterClass="Cheng" resultClass="Cheng">
+		<![CDATA[
+		 	select * from c_cheng
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	 
+	
+	<select id="findByCode" parameterClass="Cheng" resultClass="Cheng">
+		<![CDATA[
+		 	select * from c_cheng
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereCode" />
+		</dynamic>
+	</select>	
+	
+	<select id="queryByList" parameterClass="Cheng" resultClass="Cheng">
+		<![CDATA[
+			select * from c_cheng 
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by chengcode desc
+		]]>		
+	</select> 
+	
+	<select id="findByList_statelog" parameterClass="Cheng" resultClass="Cheng">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from ( select *  from c_chengstatelog 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by chengcode,addtime desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount_statelog" parameterClass="Cheng" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_chengstatelog 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<delete id="delete" parameterClass="Cheng">
+		<![CDATA[
+			delete from c_cheng
+		]]>	
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</delete>
+	
+	<parameterMap id="chengModel" class="Cheng" >         		
+		<parameter property="state" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="chengcode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<procedure id="saveChengStatXml" parameterMap="chengModel">   
+    	<![CDATA[
+    	{call AAE_chengStatXml(?,?)}
+    	]]>  
+	</procedure>
+	
+	<select id="findWeekStateLog" parameterClass="ChengState" resultClass="ChengState">
+		<![CDATA[
+			select cls.chengcode ,to_char(addtime,'YYYY/MM/DD HH24:MI:SS')addtime,state
+			from c_chengstatelog cls where cls.chengcode=#chengcode# 
+			and to_char(addtime,'yyyy/mm/dd')  
+			between (select to_char(sysdate-7,'yyyy/mm/dd') from dual)   
+			and (select to_char(sysdate,'yyyy/mm/dd') from dual) 
+			and cls.state!=0 and cls.state!=3
+			order by addtime desc       
+		]]>		
+	</select>
+	
+	<select id="findByList_mobile" parameterClass="Cheng" resultClass="Cheng">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+			    select c.*,l.laststarttime,t.lasttradetime from c_cheng c
+				left join (
+				    select s.chengcode,max(s.addtime) laststarttime
+				    from c_chengstatelog s 
+				    where s.state = 1
+				    group by s.chengcode 
+				) l on c.chengcode = l.chengcode
+				left join (
+				    select d.chengcode,max(d.tradetime) lasttradetime
+				    from c_chengdata d 
+				    group by d.chengcode
+				) t on c.chengcode = t.chengcode
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by c.chengid desc) a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount_mobile" parameterClass="Cheng" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_cheng 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+</sqlMap>

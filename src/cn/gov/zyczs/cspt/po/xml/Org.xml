@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="Org">
+	<typeAlias alias="Org" type="cn.gov.zyczs.cspt.po.Org"/>
+	<typeAlias alias="OrgUpload" type="cn.gov.zyczs.cspt.po.OrgUpload"/>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   orgid = #orgid#
+	    ]]>
+	</sql>
+	
+	<sql id="findSuperCpcCode">
+		<![CDATA[
+		   supercpccode = #supercpccode#
+	    ]]>
+	</sql>
+	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="orgname" prepend="and">
+			<![CDATA[
+					lower(orgname) like lower('%'||#orgname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					province=#province#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="city" prepend="and">
+			<![CDATA[
+					city=#city#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+					area=#area#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+					cpccorp=#cpccorp#
+			]]>
+		</isNotEmpty>			
+		<isNotEmpty property="marketcode" prepend="and">
+			<![CDATA[
+					marketcode=#marketcode#
+			]]>
+		</isNotEmpty>	
+		
+		<isNotEmpty property="zyctype" prepend="and">
+			<![CDATA[
+					zyctype=#zyctype#
+			]]>
+		</isNotEmpty>	
+		<isNotEmpty property="supercpccode" prepend="and">
+			<![CDATA[
+					supercpccode=#supercpccode#
+			]]>
+		</isNotEmpty>		
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(orgname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(mobile) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>	
+	</sql>
+	
+	<insert id="save" parameterClass="Org">
+		<![CDATA[
+			insert into zs_org
+  			(orgname, cpccorp, zyctype, gapcode, gmpcode, gspcode, province, city, area, registeraddress, areacode, mobile, telephone, officephone, email, postcode, linkman, sendcard, businessnumber, marketcode,supercpccode,orgshortname,identitycard,businesscode,orgcode,masterman,longitude,latitude,ishospital)
+			values
+  			(#orgname#, #cpccorp#, #zyctype#, #gapcode#, #gmpcode#, #gspcode#, #province#, #city#, #area#, #registeraddress#, #areacode#, #mobile#, #telephone#, #officephone#, #email#, #postcode#, #linkman#, #sendcard#, #businessnumber#, #marketcode#, #supercpccode#,#orgshortname#,#identitycard#,#businesscode#,#orgcode#,#masterman#,#longitude#,#latitude#,#ishospital#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_ORG.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="updateById" parameterClass="Org">
+		<![CDATA[
+			update zs_org
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="orgname" prepend=",">
+				<![CDATA[
+						orgname=#orgname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="gapcode" prepend=",">
+				<![CDATA[
+						gapcode=#gapcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="gmpcode" prepend=",">
+				<![CDATA[
+						gmpcode=#gmpcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="gspcode" prepend=",">
+				<![CDATA[
+						gspcode=#gspcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="province" prepend=",">
+				<![CDATA[
+						province=#province#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="city" prepend=",">
+				<![CDATA[
+						city=#city#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="area" prepend=",">
+				<![CDATA[
+						area=#area#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="registeraddress" prepend=",">
+				<![CDATA[
+						registeraddress=#registeraddress#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="areacode" prepend=",">
+				<![CDATA[
+						areacode=#areacode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">
+				<![CDATA[
+						mobile=#mobile#
+				]]>
+			</isNotEmpty>	
+			<isNotEmpty property="telephone" prepend=",">
+				<![CDATA[
+						telephone=#telephone#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="officephone" prepend=",">
+				<![CDATA[
+						officephone=#officephone#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="email" prepend=",">
+				<![CDATA[
+						email=#email#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="postcode" prepend=",">
+				<![CDATA[
+						postcode=#postcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="linkman" prepend=",">
+				<![CDATA[
+						linkman=#linkman#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="businessnumber" prepend=",">
+				<![CDATA[
+						businessnumber=#businessnumber#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="sendcard" prepend=",">
+				<![CDATA[
+						sendcard=#sendcard#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="marketcode" prepend=",">
+				<![CDATA[
+						marketcode=#marketcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="zyctype" prepend=",">
+				<![CDATA[
+						zyctype=#zyctype#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="cpccorp" prepend=",">
+				<![CDATA[
+						cpccorp=#cpccorp#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="supercpccode" prepend=",">
+				<![CDATA[
+						supercpccode=#supercpccode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="orgshortname" prepend=",">
+				<![CDATA[
+						orgshortname=#orgshortname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="identitycard" prepend=",">
+				<![CDATA[
+						identitycard=#identitycard#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="businesscode" prepend=",">
+				<![CDATA[
+						businesscode=#businesscode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="orgcode" prepend=",">
+				<![CDATA[
+						orgcode=#orgcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="masterman" prepend=",">
+				<![CDATA[
+						masterman=#masterman#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="longitude" prepend=",">
+				<![CDATA[
+						longitude=#longitude#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="latitude" prepend=",">
+				<![CDATA[
+						latitude=#latitude#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<select id="findByCount" parameterClass="Org" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_org
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_org where orgid is not null		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by orgid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	
+	<sql id="findByWhere_companystate">				
+		<isNotEmpty property="orgname" prepend="and">
+			<![CDATA[
+					lower(orgname) like lower('%'||#orgname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+					cpccorp=#cpccorp#
+			]]>
+		</isNotEmpty>			
+		<isNotEmpty property="marketcode" prepend="and">
+			<![CDATA[
+					marketcode=#marketcode#
+			]]>
+		</isNotEmpty>	
+		
+		<isNotEmpty property="zyctype" prepend="and">
+			<![CDATA[
+					zyctype=#zyctype#
+			]]>
+		</isNotEmpty>	
+		<isNotEmpty property="supercpccode" prepend="and">
+			<![CDATA[
+					supercpccode=#supercpccode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+					zs_company.state=#state#
+			]]>
+		</isNotEmpty>	
+		<isEqual property="chengtype" compareValue="1" prepend="and">
+			<![CDATA[
+					zs_org.zyctype = '01000000' and zs_org.marketcode is not null 
+			]]>
+		</isEqual>
+		<isEqual property="chengtype" compareValue="2" prepend="and">
+			<![CDATA[
+					( zs_org.zyctype = '10000000' or zs_org.zyctype = '01000000'  or zs_org.zyctype = '00010000' or zs_org.zyctype = '00001000' )
+			]]>
+		</isEqual>	
+		<isEqual property="cardtype" compareValue="00001000" prepend="and">
+			<![CDATA[
+					zs_org.zyctype = '01000000' and zs_org.marketcode is not null 
+			]]>
+		</isEqual>
+		<isEqual property="cardtype" compareValue="10000000" prepend="and">
+			<![CDATA[
+					( zs_org.zyctype = '10000000' or zs_org.zyctype = '01000000' or zs_org.zyctype = '00100000'  or zs_org.zyctype = '00010000' )
+			]]>
+		</isEqual>		
+	</sql>
+	
+	<select id="findByCount_companystate" parameterClass="Org" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_org,zs_company where zs_org.supercpccode = zs_company.cpccorp
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere_companystate" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList_companystate" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select zs_org.* from zs_org,zs_company where zs_org.supercpccode = zs_company.cpccorp		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere_companystate" />
+		</dynamic>
+		<![CDATA[
+		 	order by orgid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findById" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+		 	select * from zs_org
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	
+	<sql id="findByMedmarketWhere">
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+				lower(o.businessnumber) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or">
+			<![CDATA[
+				lower(o.cpccorp) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+				lower(o.orgname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	<!-- 市场统计分析 -->
+	<select id="findByMedmarketUserStatCount" parameterClass="Org" resultClass="Integer">
+		<![CDATA[
+			select count(1)
+			from zs_org o where o.marketcode = (select cpccorp from zs_org where orgid = #orgid#)
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+	</select>
+	<select id="findByMedmarketUserStatList" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+				select o.*,(select rtrim(rtrim(to_char(sum(totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') from zs_inoutstor t where t.type = 0 and t.stortype = 0 and t.orgid = o.orgid) intotalweight,  
+				           (select rtrim(rtrim(to_char(sum(totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') from zs_inoutstor t where t.type = 0 and t.stortype = 1 and t.orgid = o.orgid) outtotalweight       
+				from zs_org o where o.marketcode = (select cpccorp from zs_org where orgid = #orgid#)
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+		<![CDATA[
+		 	order by o.orgid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>	
+	</select>
+	
+	<select id="findByCpccorp" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+			select * from zs_org
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	<select id="findByCpccorpObject" parameterClass="String" resultClass="Org">
+		<![CDATA[
+			select * from zs_org where cpccorp=#cpccorp# and rownum<2
+		]]>
+	</select>
+	
+	<update id="updateByMap" parameterClass="java.util.Map">
+		<![CDATA[
+			update zs_org o set o.sendcard = #sendcard# where o.orgid=#orgid#
+		]]>
+	</update>
+	
+	<select id="findByCompanyId" parameterClass="Integer" resultClass="Org">
+		<![CDATA[
+			select * from zs_org where cpccorp=#cpccorp#
+		]]>
+	</select>
+	
+	
+	<delete id="deleteByCompanyId" parameterClass="Integer">
+		<![CDATA[
+			delete from zs_org where cpccorp=#cpccorp#
+		]]>		
+	</delete>
+	
+	<select id="findOrgCheng" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+			select c.chengcode,c.state,c.locked,c.corpname,o.zyctype,o.longitude,o.latitude,o.cpccorp,o.orgname from c_cheng c inner join zs_org o
+			on c.cpccorp = o.cpccorp where o.cpccorp is not null and o.longitude is not null and o.zyctype<>'00001000'
+		]]>
+	</select>
+
+	<update id="updateLogLat" parameterClass="Org">
+		<![CDATA[
+			update zs_org o set o.longitude=#longitude# , o.latitude=#latitude# where o.supercpccode=#supercpccode#
+		]]>
+	</update>
+	
+	<select id="findMarket" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+			select * from zs_org  o where o.zyctype='00001000'and o.longitude is not null
+		]]>
+	</select>
+	
+	<select id="findByExist" parameterClass="String" resultClass="Org">
+		<![CDATA[
+			select * from zs_org where orgname=#orgname#
+		]]>	
+	</select>
+	
+	<select id="findByMarketcode" parameterClass="Org" resultClass="Org">
+		<![CDATA[
+			select * from zs_org where cpccorp=#cpccorp# and marketcode=#marketcode# and rownum<2
+		]]>	
+	</select>
+	
+	<select id="findExistByOrgnames" parameterClass="String" resultClass="Org">
+		<![CDATA[
+			select * from zs_org where orgname in ($orgnames$)
+		]]>	
+	</select>
+	
+	<update id="updateBySuperCpC" parameterClass="Org">
+		<![CDATA[
+			update zs_org
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="registeraddress" prepend=",">
+				<![CDATA[
+						registeraddress=#registeraddress#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">
+				<![CDATA[
+						mobile=#mobile#
+				]]>
+			</isNotEmpty>	
+			<isNotEmpty property="telephone" prepend=",">
+				<![CDATA[
+						telephone=#telephone#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="officephone" prepend=",">
+				<![CDATA[
+						officephone=#officephone#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="email" prepend=",">
+				<![CDATA[
+						email=#email#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="postcode" prepend=",">
+				<![CDATA[
+						postcode=#postcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="linkman" prepend=",">
+				<![CDATA[
+						linkman=#linkman#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="businessnumber" prepend=",">
+				<![CDATA[
+						businessnumber=#businessnumber#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="sendcard" prepend=",">
+				<![CDATA[
+						sendcard=#sendcard#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="marketcode" prepend=",">
+				<![CDATA[
+						marketcode=#marketcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="identitycard" prepend=",">
+				<![CDATA[
+						identitycard=#identitycard#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="businesscode" prepend=",">
+				<![CDATA[
+						businesscode=#businesscode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="orgcode" prepend=",">
+				<![CDATA[
+						orgcode=#orgcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="masterman" prepend=",">
+				<![CDATA[
+						masterman=#masterman#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="longitude" prepend=",">
+				<![CDATA[
+						longitude=#longitude#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="latitude" prepend=",">
+				<![CDATA[
+						latitude=#latitude#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findSuperCpcCode" />
+		</dynamic>
+	</update>
+	
+	<select id="findCardByCpc_JiLin" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_device t where t.cpccorp=#cpccorp# and t.devicetype=4
+		]]>	
+	</select>
+	
+	<select id="findPic_JiLin" parameterClass="org" resultClass="OrgUpload">
+		<![CDATA[
+			select o.uploadid,o.uploadcontent,o.uploadtype from zs_orgupload o where o.id=#orgid#
+		]]>	
+		<isNotEmpty property="uploadtype" prepend="and">
+			<![CDATA[
+			 o.uploadtype=#uploadtype#
+			]]>	
+		</isNotEmpty>
+	</select>
+	
+</sqlMap>

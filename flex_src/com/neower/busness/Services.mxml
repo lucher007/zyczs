@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cairngorm:ServiceLocator xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:cairngorm="com.adobe.cairngorm.business.*">
+	<mx:Script>
+		<![CDATA[
+			import com.neower.model.ModelLocator;
+			//import mx.core.ContextualClassFactory;
+		]]>
+	</mx:Script>
+	<!--indexUserDao-->
+	<mx:RemoteObject id="indexUserDao" destination="indexUserDao" makeObjectsBindable="true" showBusyCursor="true"
+		endpoint="{ ModelLocator.getInstance().endPoint }">
+	</mx:RemoteObject>
+	
+	<!--<mx:RemoteObject id="indexUserDao" destination="indexUserDao" makeObjectsBindable="true" showBusyCursor="true"
+		endpoint="http://localhost:8080/zycsy/messagebroker/amf">
+	</mx:RemoteObject>-->
+	
+	<!--chengDao-->
+	<mx:RemoteObject id="chengDao" destination="chengDao" makeObjectsBindable="true" showBusyCursor="true"
+		endpoint="{ ModelLocator.getInstance().endPoint }">
+	</mx:RemoteObject>
+	
+</cairngorm:ServiceLocator>
+

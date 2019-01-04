@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="TabletAssist">
+	<typeAlias alias="TabletAssist" type="cn.gov.zyczs.cspt.po.TabletAssist"/>
+			
+	<!--添加辅料	-->
+	<insert id="saveAssist" parameterClass="TabletAssist">
+		<![CDATA[
+			insert into ZS_TABLETASSIST(assistplantname,assistgpcode,assistweight,assistcity,assistusecount,assistmaterial,tabletid)		
+			values (#assistplantname#,#assistgpcode#,#assistweight#,#assistcity#,#assistusecount#,#assistmaterial#,#tabletid#) 			
+		]]>
+<!--		<selectKey resultClass="int">-->
+<!--			<![CDATA[-->
+<!--				SELECT SEQ_ZS_TABLETASSIST.CURRVAL as ID FROM dual				-->
+<!--			]]>-->
+<!--		</selectKey>-->
+	</insert>
+	
+
+	<select id="findByTablet" parameterClass="Integer" resultClass="TabletAssist">
+		<![CDATA[
+		 	select * from ZS_TABLETASSIST where tabletid=#tabletid#
+		]]>		
+	</select>
+	
+	
+	
+	
+	
+</sqlMap>

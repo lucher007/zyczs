@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChengConf">
+	<typeAlias alias="ChengConf" type="cn.gov.zyczs.cspt.po.ChengConf"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="keynum" prepend="and">
+			<![CDATA[
+					keynum = #keynum#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="companyname" prepend="and">
+			<![CDATA[
+					lower(companyname) like lower('%'||#companyname#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   confid = #confid#
+	    ]]>
+	</sql>
+	
+	<select id="queryByList" parameterClass="ChengConf" resultClass="ChengConf">
+		<![CDATA[
+			select * from c_chengconf 
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by confid desc
+		]]>		
+	</select>
+	
+	<select id="findByList" parameterClass="ChengConf" resultClass="ChengConf">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from c_chengconf 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by confid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="ChengConf" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_chengconf
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="ChengConf">
+		<![CDATA[
+			insert into c_chengconf (companyname,normname,rowsnum,columnnum,keynum)
+			values (#companyname#,#normname#,#rowsnum#,#columnnum#,#keynum#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_C_CHENGCONF.CURRVAL as chengid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterClass="ChengConf">
+		<![CDATA[
+			update c_chengconf
+		]]>	
+		<dynamic prepend="SET">
+		    <isNotEmpty property="companyname" prepend=",">
+				<![CDATA[
+						companyname=#companyname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="normname" prepend=",">
+				<![CDATA[
+						normname=#normname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="rowsnum" prepend=",">
+				<![CDATA[
+						rowsnum=#rowsnum#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="columnnum" prepend=",">
+				<![CDATA[
+						columnnum=#columnnum#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="keynum" prepend=",">
+				<![CDATA[
+						keynum=#keynum#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="ChengConf" resultClass="ChengConf">
+		<![CDATA[
+		 	select * from c_chengconf
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	 
+	
+	
+</sqlMap>

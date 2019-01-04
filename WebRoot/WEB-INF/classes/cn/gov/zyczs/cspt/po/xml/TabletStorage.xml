@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TabletStorage">
+	<typeAlias alias="TabletStorage" type="cn.gov.zyczs.cspt.po.TabletStorage"/>	
+	
+	<!--饮片入库	-->
+	<insert id="save" parameterClass="TabletStorage">
+		<![CDATA[
+			insert into ZS_TABLETSTORAGE(tabletid,cpctablet,tabletname,prodcode,tabletweight,tabletnum,tabletnumweight,
+			        tabletboxnum,tabletboxitemnum,province,city,area,areacode,userid,orgid,tablettype,printstate,downstate,packtype,state)		
+			values (#tabletid#,#cpctablet#,#tabletname#,#prodcode#,#tabletweight#,#tabletnum#,#tabletnumweight#,			
+			       #tabletboxnum#,#tabletboxitemnum#,#province#,#city#,#area#,#areacode#,#userid#,#orgid#,#tablettype#,NVL(#printstate#,0),NVL(#downstate#,0),#packtype#,#state#) 			
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_TABLETSTORAGE.CURRVAL as ID FROM dual				
+			]]>
+		</selectKey>
+	</insert>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   tabletstorid = #tabletstorid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="tabletname" prepend="and">
+			<![CDATA[
+					lower(tabletname) like lower('%'||#tabletname#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(tabletname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(cpctablet) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+					state = #state#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="tablettype" prepend="and">
+			<![CDATA[
+					tablettype = #tablettype#
+			]]>
+		</isNotEmpty>
+		
+		<isEqual property="flag" compareValue="1" prepend="and">
+			<![CDATA[
+					(printstate < #printstate# 
+			    	and (
+							    (downstate=2 and to_char(addtime,'yyyy/mm/dd') 
+							       between (select to_char(sysdate-2,'yyyy/mm/dd') from dual) 
+							       and (select to_char(sysdate,'yyyy/mm/dd') from dual))
+							       or   (downstate=1 or downstate=0)
+							    )
+				   		  )   
+			]]>
+		</isEqual>
+				
+		<isEqual property="flag" compareValue="2" prepend="and">
+			<![CDATA[
+					(printstate = #printstate# or downstate = #downstate#)
+			]]>
+		</isEqual>
+	</sql>
+	
+	<select id="findByList" parameterClass="TabletStorage" resultClass="TabletStorage">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from ZS_TABLETSTORAGE p where  p.orgid = #orgid#
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by p.addtime desc  )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="TabletStorage" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_TABLETSTORAGE  p where  p.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<sql id="findByWhereCodeType">				
+		<isNotEmpty property="tabletname" prepend="and">
+			<![CDATA[
+					lower(s.tabletname) like lower('%'||#tabletname#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(s.tabletname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(s.cpctablet) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="tablettype" prepend="and">
+			<![CDATA[
+					s.tablettype = #tablettype#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+					s.orgid = #orgid#
+			]]>
+		</isNotEmpty>
+		
+		<isEqual property="flag" compareValue="1" prepend="and">
+			<![CDATA[
+					(s.printstate < #printstate# 
+			    	and (
+							    (s.downstate=2 and to_char(s.addtime,'yyyy/mm/dd') 
+							       between (select to_char(sysdate-2,'yyyy/mm/dd') from dual) 
+							       and (select to_char(sysdate,'yyyy/mm/dd') from dual))
+							       or   (s.downstate=1 or s.downstate=0)
+							    )
+				   		  )   
+			]]>
+		</isEqual>
+				
+		<isEqual property="flag" compareValue="2" prepend="and">
+			<![CDATA[
+					(s.printstate = #printstate# or s.downstate = #downstate#)
+			]]>
+		</isEqual>
+	</sql>
+	
+	<select id="findByList_codeType" parameterClass="TabletStorage" resultClass="TabletStorage">
+		<![CDATA[
+		 	select b.* from (select a.*,rownum r from (
+		]]>
+		<isEqual  property="codetype" compareValue="0">
+			<![CDATA[
+					select s.*, t.tabletnumber 
+					from zs_tabletstorage s 
+					left join zs_tablet t on s.tabletid = t.tabletid where  s.state = #state#
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="5">
+			<![CDATA[
+					select s.*, t.tabletnumber 
+					from zs_tabletstorage s 
+					left join zs_tablet t on s.tabletid = t.tabletid where s.state = #state# 
+					and s.packtype = 5
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="6">
+			<![CDATA[
+					select s.*, t.tabletnumber 
+					from zs_tabletstorage s left join zs_tablet t on s.tabletid = t.tabletid 
+					where s.state = #state# 
+					and s.packtype = 6
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="7">
+			<![CDATA[
+					select s.tabletstorid, s.tabletid, s.cpctablet, s.tabletname, s.prodcode,
+						   s.tabletnum, s.tabletnumweight, s.province, s.city, s.area, s.areacode, s.userid, s.addtime, 
+						   s.orgid, s.state, s.tablettype, s.printstate, s.tabletboxitemnum, s.downstate, t.tabletnumber,
+					       b.boxweight tabletweight,b.boxitemnum tabletboxnum 
+					from zs_box b left join zs_tabletstorage s on b.storid = s.tabletstorid 
+					left join zs_tablet t on s.tabletid = t.tabletid
+					where b.packcode = 7 and b.state = #state#
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="8">
+			<![CDATA[
+					select s.tabletstorid, s.tabletid, s.cpctablet, s.tabletname, s.prodcode,
+						   s.tabletnum, s.tabletnumweight, s.province, s.city, s.area, s.areacode, s.userid, s.addtime, 
+						   s.orgid, s.state, s.tablettype, s.printstate, s.tabletboxitemnum, s.downstate, t.tabletnumber,
+					       b.boxweight tabletweight,b.boxitemnum tabletboxnum 	  
+					from zs_tabletstorage s left join zs_box b on s.tabletstorid = b.storid 
+					left join zs_tablet t on s.tabletid = t.tabletid
+					where b.packcode = 8 and b.state = #state#
+			]]>
+		</isEqual>
+		<dynamic prepend="and">
+			<include refid="findByWhereCodeType" />
+		</dynamic>
+		<![CDATA[
+			 	order by s.addtime desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount_codeType" parameterClass="TabletStorage" resultClass="Integer">
+		<isEqual  property="codetype" compareValue="0">
+			<![CDATA[
+					select count(1) 
+					from zs_tabletstorage s 
+					left join zs_tablet t on s.tabletid = t.tabletid where s.state = #state#
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="5">
+			<![CDATA[
+					select count(1) 
+					from zs_tabletstorage s 
+					left join zs_tablet t on s.tabletid = t.tabletid where s.state = #state# 
+					and s.packtype = 5
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="6">
+			<![CDATA[
+					select count(1) 
+					from zs_tabletstorage s 
+					left join zs_tablet t on s.tabletid = t.tabletid where s.state = #state# 
+					and s.packtype = 6
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="7">
+			<![CDATA[
+					select count(1)
+					from zs_box b left join zs_tabletstorage s on b.storid = s.tabletstorid 
+					left join zs_tablet t on s.tabletid = t.tabletid
+					where b.packcode = 7 and b.state = #state#
+			]]>
+		</isEqual>
+		<isEqual  property="codetype" compareValue="8">
+			<![CDATA[
+					select count(1)
+					from zs_box b left join zs_tabletstorage s on b.storid = s.tabletstorid 
+					left join zs_tablet t on s.tabletid = t.tabletid
+					where b.packcode = 8 and b.state = #state#
+			]]>
+		</isEqual>
+		<dynamic prepend="and">
+			<include refid="findByWhereCodeType" />
+		</dynamic>
+	</select>
+	
+	<!--8级饮片包装码查询-->
+	<select id="findByList_codeType_8" parameterClass="TabletStorage" resultClass="TabletStorage">
+		<![CDATA[
+		 	select b.* from (select a.*,rownum r from (
+		]]>
+		
+		<![CDATA[
+				select b.boxcode,b.boxweight tabletweight,b.boxitemnum tabletboxnum,b.addtime
+				from zs_box b 
+				where b.packcode = 8 and b.state = 0 and b.stortype = 1
+				and b.orgid = #orgid# 
+		]]>
+		<![CDATA[
+			 	order by b.addtime desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	<select id="findByCount_codeType_8" parameterClass="TabletStorage" resultClass="Integer">
+		<![CDATA[
+				select count(1)
+				from zs_box b
+				where b.packcode = 8 and b.state = 0 and b.stortype = 1
+				and b.orgid = #orgid# 
+		]]>
+	</select>
+	
+	<select id="findById" parameterClass="TabletStorage" resultClass="TabletStorage">
+		<![CDATA[
+		 	select * from ZS_TABLETSTORAGE
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<select id="findByBox" parameterClass="Map" resultClass="TabletStorage">
+		<![CDATA[
+		  select t.tabletstorid,t.tabletid,t.cpctablet,t.tabletname,t.prodcode,t.tabletweight,t.tabletnum,
+       			t.tabletnumweight,t.province,t.city,t.area,t.areacode,t.userid,t.addtime,t.orgid,t.state,
+       			t.tablettype,t.printstate,t.tabletboxnum,t.tabletboxitemnum,b.boxcode,b.boxweight,b.boxitemnum,b.packcode
+		from zs_tabletstorage t,zs_box b 
+		where t.tabletstorid=b.storid and b.boxcode in ($boxcodes$) and b.state=0 and b.STORTYPE=1  
+		and t.tablettype=1 and t.tabletnum is not null and t.orgid=#orgid#
+		]]>
+		<isEqual property="flag" compareValue="1" prepend="and">
+			<![CDATA[
+					(t.printstate<>0 or t.downstate<>0)
+			]]>
+		</isEqual>
+		
+	</select>
+	
+	<select id="findByBox_8" parameterClass="Map" resultClass="TabletStorage">
+		<![CDATA[
+		  select b.boxcode,b.boxweight,b.boxitemnum,b.packcode,b.state 
+		from zs_box b 
+		where  b.boxcode in ($boxcodes$)  and b.STORTYPE=1 and  b.orgid=#orgid#
+		]]>		
+		
+	</select>
+	
+	<!-- 
+	<select id="findByBoxPackCode" parameterClass="Map" resultClass="TabletStorage">
+		<![CDATA[
+		  select t.tabletstorid,t.tabletid,t.cpctablet,t.tabletname,t.prodcode,t.tabletweight,t.tabletnum,
+       			t.tabletnumweight,t.province,t.city,t.area,t.areacode,t.userid,t.addtime,t.orgid,t.state,
+       			t.tablettype,t.printstate,t.tabletboxnum,t.tabletboxitemnum,b.boxcode,b.boxweight,b.boxitemnum,b.packcode
+		from zs_tabletstorage t,zs_box b 
+		where t.tabletstorid=b.storid and b.boxcode in ($boxcodes$) and b.state=0 and b.STORTYPE=1  
+		and t.tablettype=1 and t.tabletnum is not null and t.orgid=#orgid#
+		]]>
+	</select>
+	-->
+	
+	<select id="findBoxListByList" parameterClass="TabletStorage" resultClass="TabletStorage">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+			
+			select t.tabletstorid,t.tabletid,t.cpctablet,t.tabletname,t.prodcode,t.tabletweight,t.tabletnum,
+       			t.tabletnumweight,t.province,t.city,t.area,t.areacode,t.userid,t.addtime,t.orgid,t.state,
+       			t.tablettype,t.printstate,t.tabletboxnum,t.tabletboxitemnum,b.boxcode,b.boxweight,b.boxitemnum,b.packcode
+				from zs_tabletstorage t,zs_box b 
+				where t.tabletstorid=b.storid and b.packcode=#packcode# and b.state=0 and b.STORTYPE=1  
+				and t.tablettype=1 and t.tabletnum is not null and t.orgid=#orgid#
+			]]>
+			
+			<![CDATA[
+			 	order by TABLETSTORID desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findBoxListByCount" parameterClass="TabletStorage" resultClass="Integer">
+		<![CDATA[
+			select count(1)
+				from zs_tabletstorage t,zs_box b 
+				where t.tabletstorid=b.storid and b.packcode=#packcode# and b.state=0 and b.STORTYPE=1  
+				and t.tablettype=1  and t.tabletnum is not null and t.orgid=#orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	
+	<select id="findBoxListByAll" parameterClass="Map" resultClass="TabletStorage">
+		<![CDATA[
+			
+			select t.tabletstorid,t.tabletid,t.cpctablet,t.tabletname,t.prodcode,t.tabletweight,t.tabletnum,
+       			t.tabletnumweight,t.province,t.city,t.area,t.areacode,t.userid,t.addtime,t.orgid,t.state,
+       			t.tablettype,t.printstate,t.tabletboxnum,t.tabletboxitemnum,b.boxcode,b.boxweight,b.boxitemnum,b.packcode
+				from zs_tabletstorage t,zs_box b 
+				where t.tabletstorid=b.storid and b.packcode=#packcode# and b.state=0 and b.STORTYPE=1  
+				and t.tablettype=1 and t.tabletnum is not null and t.orgid=#orgid#
+			]]>
+					
+	</select>
+	
+
+	<!--	分包更新原库存重量、状态-->
+	<update id="updateWeightById" parameterClass="Map">
+		<![CDATA[
+			update ZS_TABLETSTORAGE
+		]]>	
+		<dynamic prepend="SET">		
+			<isNotEmpty property="currTotal" prepend=",">
+				<![CDATA[
+						tabletweight=#currTotal#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state=#state#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<!--饮片出库、更新	-->
+	<update id="update" parameterClass="TabletStorage">
+		<![CDATA[
+			update ZS_TABLETSTORAGE
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="tabletboxnum" prepend=",">
+				<![CDATA[
+						tabletboxnum=#tabletboxnum#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="tabletweight" prepend=",">
+				<![CDATA[
+						tabletweight=#tabletweight#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state=#state#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="tabletnum" prepend=",">
+				<![CDATA[
+						tabletnum=#tabletnum#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="downstate" prepend=",">
+				<![CDATA[
+						downstate=#downstate#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="printstate" prepend=",">
+				<![CDATA[
+						printstate=#printstate#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="userid" prepend=",">
+				<![CDATA[
+						userid=#userid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="packtype" prepend=",">
+				<![CDATA[
+						packtype=#packtype#
+				]]>
+			</isNotEmpty>
+			
+		</dynamic>	
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	
+	<select id="findDownCodeByList" parameterClass="TabletStorage" resultClass="TabletStorage">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select tabletname,prodcode from zs_tabletstorage p where  p.orgid = #orgid#  
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			
+			<![CDATA[
+			 group by tabletname,prodcode order by nlssort(p.tabletname,'NLS_SORT=SCHINESE_PINYIN_M') desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	
+	
+
+		
+	<select id="findDownCodeByCount" parameterClass="TabletStorage" resultClass="Integer">
+		<![CDATA[
+			select count(*) from (select tabletname,prodcode from zs_tabletstorage p where  p.orgid = #orgid# 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			 group by tabletname,prodcode ) a
+		]]>	
+		
+	</select>
+	
+	
+</sqlMap>

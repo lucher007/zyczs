@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="BoxItem">
+	<typeAlias alias="BoxItem" type="cn.gov.zyczs.cspt.po.BoxItem" />
+	
+	<insert id="save" parameterClass="BoxItem">
+		<![CDATA[
+			insert into zs_boxitem(boxcode,sourcecode,weight)
+			values(#boxcode#,#sourcecode#,#weight#)
+		]]>
+	</insert>
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="boxcode" prepend="and" >
+			<![CDATA[
+					boxcode = #boxcode#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+    <select id="findByList" parameterClass="BoxItem" resultClass="BoxItem">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_boxitem where sourcecode is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by sourcecode desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="BoxItem" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_boxitem
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	
+	<update id="update" parameterClass="BoxItem">
+		<![CDATA[
+			update zs_boxitem
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="weight" prepend=",">
+				<![CDATA[
+						weight=#weight#
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</update>
+	
+</sqlMap>

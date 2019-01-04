@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs guid="100101200120102023">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="performance">
+		<checkcycle desc="考核周期">201301</checkcycle>
+		<compfgls desc="企业覆盖率">
+			<compfgl>
+				<areacode desc="地区编码">402022</areacode>
+				<zzjd desc="种植基地">200,2000</zzjd>
+				<zycjyqy desc="中药材经销企业">200,2000</zycjyqy>
+				<zyscjyqy desc="专业市场经营企业">200,2000</zyscjyqy>
+				<ypscqy desc="饮片生产企业">200,2000</ypscqy>
+				<ypjyqy desc="饮片经销企业">200,2000</ypjyqy>
+				<ypsydw desc="饮片使用单位">200,2000</ypsydw>
+				<total desc="综合">200,2000</total>
+			</compfgl>
+			<compfgl>
+				<areacode desc="地区编码">402022</areacode>
+				<zzjd desc="种植基地">200,2000</zzjd>
+				<zycjyqy desc="中药材经销企业">200,2000</zycjyqy>
+				<zyscjyqy desc="专业市场经营企业">200,2000</zyscjyqy>
+				<ypscqy desc="饮片生产企业">200,2000</ypscqy>
+				<ypjyqy desc="饮片经销企业">200,2000</ypjyqy>
+				<ypsydw desc="饮片使用单位">200,2000</ypsydw>
+				<total desc="综合">200,2000</total>
+			</compfgl>
+        </compfgls>
+		<zssyls desc="追溯环节使用率">
+			<zssyl desc="追溯环节使用率">
+				<areacode desc="地区编码">402022</areacode>
+				<zzjd desc="种植基地">200,2000</zzjd>
+				<zycjyqy desc="中药材经销企业">200,2000</zycjyqy>
+				<zyscjyqy desc="专业市场经营企业">200,2000</zyscjyqy>
+				<ypscqy desc="饮片生产企业">200,2000</ypscqy>
+				<ypjyqy desc="饮片经销企业">200,2000</ypjyqy>
+				<ypsydw desc="饮片使用单位">200,2000</ypsydw>
+				<total desc="综合">200,2000</total>
+			</zssyl>
+			<zssyl desc="追溯环节使用率">
+				<areacode desc="地区编码">402022</areacode>
+				<zzjd desc="种植基地">200,2000</zzjd>
+				<zycjyqy desc="中药材经销企业">200,2000</zycjyqy>
+				<zyscjyqy desc="专业市场经营企业">200,2000</zyscjyqy>
+				<ypscqy desc="饮片生产企业">200,2000</ypscqy>
+				<ypjyqy desc="饮片经销企业">200,2000</ypjyqy>
+				<ypsydw desc="饮片使用单位">200,2000</ypsydw>
+				<total desc="综合">200,2000</total>
+			</zssyl>
+        </zssyls>
+		<sycsyls desc="溯源秤使用率">
+			<sycsyl desc="溯源秤使用率">
+				<areacode desc="地区编码">402022</areacode>
+				<aczyscjyqy desc="案秤-专业市场经营企业">200,2000</aczyscjyqy>
+				<tczzjd desc="台秤-种植基地">200,2000</tczzjd>
+				<tczycjyqy desc="台秤-中药材经销企业">200,2000</tczycjyqy>
+				<tczyscjyqy desc="台秤-专业市场经营企业">200,2000</tczyscjyqy>
+			</sycsyl>
+			<sycsyl desc="溯源秤使用率">
+				<areacode desc="地区编码">402022</areacode>
+				<aczyscjyqy desc="案秤-专业市场经营企业">200,2000</aczyscjyqy>
+				<tczzjd desc="台秤-种植基地">200,2000</tczzjd>
+				<tczycjyqy desc="台秤-中药材经销企业">200,2000</tczycjyqy>
+				<tczyscjyqy desc="台秤-专业市场经营企业">200,2000</tczyscjyqy>
+			</sycsyl>
+        </sycsyls>
+	</msgbody>
+</zyczs>

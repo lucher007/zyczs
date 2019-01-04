@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Med">
+	<typeAlias alias="Med" type="cn.gov.zyczs.cspt.po.Med"/>	
+
+	 <sql id="findByCondtion">
+	    <isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(m.cpcmed) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(m.medname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+					orgid=#orgid#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="cpcplant" prepend="and">
+			<![CDATA[
+					m.cpcplant=#cpcplant#
+			]]>
+		</isNotEmpty>
+	</sql>
+    
+    <sql id="findByWhere">
+	    <isNotEmpty property="cpcmed" prepend="and">
+			<![CDATA[
+					m.cpcmed = #cpcmed#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+					orgid=#orgid#
+			]]>			
+		</isNotEmpty>
+	</sql>
+    
+	<insert id="save" parameterClass="Med">
+		<![CDATA[
+			insert into zs_med(medname,cpcplant,predictweight,harvesttime,medweight,source,pesticide,fertilizer,medtype,mednumber,cpcmed,prodcode)
+			values(#medname#,#cpcplant#,#predictweight#,to_date('$harvesttime$','YYYY-MM-DD HH24:MI:SS'),#medweight#,#source#,#pesticide#,#fertilizer#,NVL(#medtype#,0),#mednumber#,#cpcmed#,#prodcode#)
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_MED.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>	
+
+	<select id="findByCount" parameterClass="Med" resultClass="Integer">
+		<![CDATA[
+		 		select count(1) from (select distinct m.medid
+                from zs_med m,zs_medstorage s where m.cpcmed = s.cpcmed  
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCondtion"/>
+		</dynamic>
+		<![CDATA[
+		 	order by m.medid desc)
+		]]>	
+  </select>	
+	
+	<select id="findByCpcPlant" parameterClass="Med" resultClass="Med">
+		<![CDATA[
+				select p.plantname,p.cpcplant,p.plantaddtime,m.medname,m.harvesttime,m.predictweight,m.medweight,m.cpcmed  from zs_med m
+				inner join
+				zs_plant p
+				on m.cpcplant = p.cpcplant
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByCondtion"/>
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="Med" resultClass="Med">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select distinct m.*,s.checkstate from zs_med m,zs_medstorage s
+			where m.cpcmed = s.cpcmed 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCondtion" />
+		</dynamic>
+		<![CDATA[
+		 	order by m.medid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCpc" parameterClass="Med" resultClass="Med">
+		<![CDATA[
+				select distinct m.*,s.checkstate from zs_med m,zs_medstorage s
+			    where m.cpcmed = s.cpcmed
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+</sqlMap>

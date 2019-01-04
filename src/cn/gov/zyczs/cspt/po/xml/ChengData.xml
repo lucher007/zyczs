@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChengData">
+	<typeAlias alias="ChengData" type="cn.gov.zyczs.cspt.po.ChengData"/>	
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   tradeid = #tradeid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="chengcode" prepend="and" >
+			<![CDATA[
+				chengcode = #chengcode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="operstarttime" prepend="and">
+			<![CDATA[
+				tradetime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="operendtime" prepend="and">
+			<![CDATA[
+				tradetime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="marketcode" prepend="and">
+			<![CDATA[
+				sellcpccorp in (  select o.cpccorp from zs_org o where o.marketcode = #marketcode# )
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+				sellcpccorp = #cpccorp#
+			]]>
+		</isNotEmpty>
+		
+		<isEqual  property="querytype" compareValue="1" prepend="and">
+			<![CDATA[
+					TO_CHAR(tradetime,'YYYY-MM-DD') = TO_CHAR(sysdate,'YYYY-MM-DD')
+			]]>
+		</isEqual>
+		<isEqual  property="querytype" compareValue="2" prepend="and">
+			<![CDATA[
+					TO_CHAR(tradetime,'YYYY-MM') = TO_CHAR(sysdate,'YYYY-MM')
+			]]>
+		</isEqual>
+		<isEqual  property="querytype" compareValue="3" prepend="and">
+			<![CDATA[
+					TO_CHAR(tradetime,'YYYY') = TO_CHAR(sysdate,'YYYY')
+			]]>
+		</isEqual>
+	</sql>
+	
+	<select id="queryByList" parameterClass="ChengData" resultClass="ChengData">
+		<![CDATA[
+			select * from c_chengdata 
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by tradeid desc
+		]]>		
+	</select>
+	
+	<select id="findByList" parameterClass="ChengData" resultClass="ChengData">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+			             select c_chengdata.*  from c_chengdata 
+			             
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by tradetime desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="ChengData" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_chengdata
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="ChengData">
+		<![CDATA[
+			insert into c_chengdata (chengcode, sellcpccorp, buycpccorp, prodcode, cpcmed, unitprice, weight, totalprice, sourcecode, medname, sellcorpname, buycorpname)
+			values (#chengcode#,#sellcpccorp#,#buycpccorp#,#prodcode#,#cpcmed#,#unitprice#,#weight#,#totalprice#,#sourcecode#,#medname#,#sellcorpname#,#buycorpname#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_C_CHENGDATA.CURRVAL as tradeid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<select id="findById" parameterClass="ChengData" resultClass="ChengData">
+		<![CDATA[
+		 	select * from c_chengdata
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	 
+	
+	
+</sqlMap>

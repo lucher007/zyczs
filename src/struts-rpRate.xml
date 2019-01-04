@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+   <package name="rp_Rate" extends="strutsdefault">
+    	<!-- 种植平台统计分析action配置 -->
+		<action name="rp_Rate" class="rp_RateAction">		
+			<result name="compUseRate">manage/report/rate/compUseRate.jsp</result>
+			<result name="compUseRate_double">manage/report/rate/compUseRate_double.jsp</result>
+			<result name="compUseRate_month">manage/report/rate/compUseRate_month.jsp</result>
+			<result name="medTypeRate">manage/report/rate/medTypeRate.jsp</result>
+			<result name="chengData">manage/report/rate/chengData.jsp</result>
+			<result name="chengCount">manage/report/rate/chengCount.jsp</result>
+			<result name="shopsData">manage/report/rate/shopsData.jsp</result>
+			<result name="medSellData">manage/report/rate/medSellData.jsp</result>
+			<result name="medContrast">manage/report/rate/medContrast.jsp</result>
+			
+		</action>
+		
+    </package>
+</struts>

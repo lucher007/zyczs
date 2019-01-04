@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="Examine">
+	<typeAlias alias="Examine" type="cn.gov.zyczs.cspt.po.Examine"/>
+	<typeAlias alias="CompanyRate" type="cn.gov.zyczs.cspt.po.CompanyRate"/>
+	<typeAlias alias="ChengRate" type="cn.gov.zyczs.cspt.po.ChengRate"/>
+	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="areas" prepend="and">
+			<![CDATA[
+					lower(areas) like lower('%'||#areas#||'%')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="flag">
+	    	<isEqual property="flag" compareValue="1" >
+		<isNotEmpty property="year" prepend="and">
+			<![CDATA[
+					year = #year#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="quarter" prepend="and">
+			<![CDATA[
+					quarter = #quarter#
+			]]>
+		</isNotEmpty>
+		</isEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="flag">
+	    	<isEqual property="flag" compareValue="0" prepend="and">
+			<![CDATA[
+					year is null and quarter is null
+			]]>
+			</isEqual>
+		</isNotEmpty>
+		
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   id = #id#
+	    ]]>
+	</sql>
+	
+	<select id="findByCount" parameterClass="Examine" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_examine
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="Examine" resultClass="Examine">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_examine where id is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="calculateList" parameterClass="Examine" resultClass="Examine">
+		<![CDATA[
+		select * from zs_examine where id is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		
+	</select>
+	
+	<select id="findById" parameterClass="Integer" resultClass="Examine">
+		<![CDATA[
+		 	select * from zs_examine where id=#id#
+		]]>
+		
+	</select>
+	
+	<delete id="deleteById" parameterClass="Integer">
+		<![CDATA[
+		 	delete  from zs_examine where id=#id#
+		]]>
+		
+	</delete>
+	
+	
+	<select id="findByExist" parameterClass="Examine" resultClass="Integer">
+		<![CDATA[
+			select  count(1) from zs_examine where areas=#areas#
+		]]>	
+		<isNotEmpty property="id" prepend="and">
+			<![CDATA[
+				id<>#id#
+			]]>	
+		</isNotEmpty>
+	</select>
+	
+	<update id="updateById" parameterClass="Examine">
+		<![CDATA[
+			update zs_examine
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="medcount" prepend=",">
+				<![CDATA[
+						medcount=#medcount#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="medsellcount" prepend=",">
+				<![CDATA[
+						medsellcount=#medsellcount#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="medmarketcount" prepend=",">
+				<![CDATA[
+						medmarketcount=#medmarketcount#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="tabletcount" prepend=",">
+				<![CDATA[
+						tabletcount=#tabletcount#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="tabletsellcount" prepend=",">
+				<![CDATA[
+						tabletsellcount=#tabletsellcount#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="tablethospcount" prepend=",">
+				<![CDATA[
+						tablethospcount=#tablethospcount#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<insert id="saveRate" parameterClass="CompanyRate">
+		<![CDATA[	
+  			insert into zs_companyrate
+			  (areacode, areas, medrate, medsellrate, medmarketrate, tabletrate, tabletsellrate, tablethosprate, avgrate, ratetype, year, quarter)
+			values
+			  (#areacode#,#areas#,#medrate#,#medsellrate#,#medmarketrate#,#tabletrate#,#tabletsellrate#,#tablethosprate#,#avgrate#,#ratetype#,#year#,#quarter#)	  
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_COMPANYRATE.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<delete id="deleteRateByYQ" parameterClass="Map" >
+		<![CDATA[
+		 	delete  from zs_companyrate where  year=#year# and quarter=#quarter#
+		]]>
+		
+	</delete>
+	
+	
+	
+	<!-- 考核计算 -->
+    <parameterMap id="calculateMap" class="Map" >    		
+        <parameter property="year" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN " />  
+        <parameter property="quarter" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN " />  
+        <parameter property="cur" jdbcType="ORACLECURSOR"  javaType="java.sql.ResultSet" mode="OUT" />
+	</parameterMap>	   
+     
+    <procedure id="companyrateList" parameterMap="calculateMap" resultClass="CompanyRate">
+    	<![CDATA[
+				{call PROC_COMPANYRATE(?,?,?)}	 
+		]]>	
+    </procedure>
+    
+	
+	
+	<select id="chengrateList" parameterClass="ChengRate" resultClass="ChengRate">
+		<![CDATA[
+		select * from zs_chengrate where id is not null 		
+		]]>
+		
+		<dynamic prepend="and">
+			<isNotEmpty property="year" prepend="and">
+			<![CDATA[
+					year = #year#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="quarter" prepend="and">
+			<![CDATA[
+					quarter = #quarter#
+			]]>
+		</isNotEmpty>
+		</dynamic>
+		
+	</select>
+	
+	
+	
+	<!-- 查询考核企业 -->
+    <parameterMap id="calculateListMap" class="Map" >    		
+        <parameter property="year" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN " />  
+        <parameter property="quarter" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN " />  
+        <parameter property="cur" jdbcType="ORACLECURSOR"  javaType="java.sql.ResultSet" mode="OUT" />
+	</parameterMap>	   
+     
+    <procedure id="findByCalculateList" parameterMap="calculateListMap" resultClass="Examine">
+    	<![CDATA[
+				{call PROC_COMPANYCHOOSE(?,?,?)}	 
+		]]>	
+    </procedure>
+	
+	
+	<insert id="save" parameterClass="Examine">
+		<![CDATA[
+			insert into zs_examine
+  			(areacode,areas, medcount, medsellcount, medmarketcount, tabletcount, tabletsellcount, tablethospcount,year,quarter)
+				values
+  			(#areacode#,#areas#,#medcount#,#medsellcount#,#medmarketcount#,#tabletcount#,#tabletsellcount#,#tablethospcount#,#year#,#quarter#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_EXAMINE.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+</sqlMap>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs>
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="adjust_stock">
+		<code desc="药材批次码">1101273000049981208210031</code>
+		<codeinfo desc="调整信息">
+			<name desc="药材名称">麦冬</name>
+			<oldweight desc="原药材重量">50</oldweight>
+			<newweight desc="新调整药材重量">50</newweight>
+			<adjusttime desc="调整时间">2012-06-03 00:00:00</adjusttime>
+			<operator desc="操作员"></operator>
+		</codeinfo>
+		<sourcecode><!--批量调整-->
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+		</sourcecode>
+	</msgbody>
+</zyczs>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="tabletSell" extends="strutsdefault">
+    	
+    	<!-- 药材经销action配置 -->
+		<action name="tabletSellInOut" class="tabletSellInOutAction">
+			<!--入库-->
+		    <result name="findInStorage">/manage/tabletSellInOutStorage/findInStorage.jsp</result>
+		    <result name="addInStorage">/manage/tabletSellInOutStorage/addInStorage.jsp</result>
+		    <result name="addInStorageFinish">/manage/tabletSellInOutStorage/addInStorageFinish.jsp</result>
+		    
+		    <result name="forInCode">/manage/tabletSellInOutStorage/findInCode.jsp</result>
+		    
+		    <!--出库、销售-->
+		    <result name="findOutStorage">/manage/tabletSellInOutStorage/findOutStorage.jsp</result>
+		    <result name="addOutStorage">/manage/tabletSellInOutStorage/addOutStorage.jsp</result>
+		    <result name="addOutStorageFinish">/manage/tabletSellInOutStorage/addOutStorageFinish.jsp</result>
+		  	
+		  	<result name="addBagFinish">/manage/tabletSellInOutStorage/addBagFinish.jsp</result>
+		  	<result name="addBagFinish8">/manage/tabletSellInOutStorage/addBagFinish8.jsp</result>
+		  	<result name="addOpenBagFinish">/manage/tabletSellInOutStorage/addOpenBagFinish.jsp</result>
+			
+			
+			<!--出库企业历史列表-->
+		  	<result name="companyChoice">/manage/tabletSellInOutStorage/companyChoice.jsp</result>
+		  	
+		  	<!--出库非溯源企业历史列表-->
+		  	<result name="companyOtherChoice">/manage/tabletSellInOutStorage/companyOtherChoice.jsp</result>
+		  	<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">addInStorage,addOutStorage</param>
+		    </interceptor-ref>
+		</action>
+		
+    </package>
+</struts>

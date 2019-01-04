@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DeviceRec">
+	<typeAlias alias="DeviceRec" type="cn.gov.zyczs.cspt.po.DeviceRec"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="confid" prepend="and">
+			<![CDATA[
+					confid = #confid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+					cpccorp = #cpccorp#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="corpname" prepend="and">
+			<![CDATA[
+					lower(corpname) like lower('%'||#corpname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="devicecode" prepend="and">
+			<![CDATA[
+					devicecode = #devicecode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="devicetype" prepend="and">
+			<![CDATA[
+					devicetype = #devicetype#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="marketcode" prepend="and">
+			<![CDATA[
+					cpccorp in (  select o.cpccorp from zs_org o where o.marketcode = #marketcode# )
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   devicerecid = #devicerecid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhereCode">
+		<isNotEmpty property="devicecode" prepend="and">
+			<![CDATA[
+					devicecode = #devicecode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="devicetype" prepend="and">
+			<![CDATA[
+					devicetype = #devicetype#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="DeviceRec" resultClass="DeviceRec">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from ( select *  from zs_devicerec where devicetype <> 0	
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by devicerecid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount" parameterClass="DeviceRec" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_devicerec where devicetype <> 0
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList_cheng" parameterClass="DeviceRec" resultClass="DeviceRec">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from ( select *  from zs_devicerec 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by devicerecid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount_cheng" parameterClass="DeviceRec" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_devicerec 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="DeviceRec">
+		<![CDATA[
+			insert into zs_devicerec (devicecode,confid,cpccorp,corpname,devicetype,remark,reason,cardtype,chengtype,chengcode)
+			   values (#devicecode#,#confid#,#cpccorp#,#corpname#,#devicetype#,#remark#,#reason#,#cardtype#,#chengtype#,#chengcode#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_DEVICEREC.CURRVAL as devicerecid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterClass="DeviceRec">
+		<![CDATA[
+			update zs_devicerec
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="confid" prepend=",">
+				<![CDATA[
+						confid = #confid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="reason" prepend=",">
+				<![CDATA[
+						reason = #reason#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="remark" prepend=",">
+				<![CDATA[
+						remark = #remark#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<select id="findById" parameterClass="DeviceRec" resultClass="DeviceRec">
+		<![CDATA[
+		 	select * from zs_devicerec
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	 
+	
+	<select id="findByCode" parameterClass="DeviceRec" resultClass="DeviceRec">
+		<![CDATA[
+		 	select * from zs_devicerec
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereCode" />
+		</dynamic>
+	</select>	
+	
+	<select id="queryByList" parameterClass="DeviceRec" resultClass="DeviceRec">
+		<![CDATA[
+			select * from zs_devicerec 
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by devicecode desc
+		]]>		
+	</select> 
+</sqlMap>

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MedStat">
+	<typeAlias alias="MedStat" type="cn.gov.zyczs.cspt.po.MedStat" />
+	
+	<!-- 种植平台 种植任务统计 -->
+	<sql id="findByWhere">
+		<isNotEmpty property="plantname" prepend="and">
+			<![CDATA[
+					lower(plantname) like lower('%'||#plantname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and" >
+			<![CDATA[
+					state = #state#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="plantaddtime" prepend="and">
+			<![CDATA[
+					plantaddtime >= to_date('$plantaddtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="plantendtime" prepend="and">
+			<![CDATA[
+					plantendtime <= to_date('$plantendtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+					orgid = #orgid#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="medstate" prepend="and">
+			<![CDATA[
+				state = #medstate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+				lower(medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medaddtime" prepend="and">
+			<![CDATA[
+				addtime >= to_date('$medaddtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medendtime" prepend="and">
+			<![CDATA[
+				addtime <= to_date('$medendtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+    <select id="getGrowTaskByStatList" parameterClass="MedStat" resultClass="MedStat">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (
+			select * from zs_plant where plantid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by plantid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="getGrowTaskByStatCount" parameterClass="MedStat" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_plant
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<!-- 种植平台 药材库存统计数量 -->
+	<sql id="findMedStorageStatByWhere">
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+				ms.orgid = #orgid#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="medstate" prepend="and">
+			<![CDATA[
+				ms.state = #medstate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+				lower(ms.medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medaddtime" prepend="and">
+			<![CDATA[
+				ms.addtime >= to_date('$medaddtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medendtime" prepend="and">
+			<![CDATA[
+				ms.addtime <= to_date('$medendtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+	</sql>
+	<select id="getMedStorageByStatCount" parameterClass="MedStat" resultClass="Integer">
+		<![CDATA[
+			select count(1) from (
+				select ms.medname,ms.cpcmed,ms.mednumweight,sum(ms.medweight) medweight,min(ms.addtime) medaddtime,min(m.mednumber) as mednumber
+				from zs_medstorage ms
+				left join zs_med m on m.cpcmed = ms.cpcmed
+		]]>
+		<dynamic prepend="where">
+			<include refid="findMedStorageStatByWhere"/>
+		</dynamic>
+		<![CDATA[
+		 	group by ms.medname,ms.cpcmed,ms.mednumweight )
+		]]>		
+	</select>
+	<!-- 种植平台 药材库存统计List -->
+	<select id="getMedStorageByStatList" parameterClass="MedStat" resultClass="MedStat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+				select ms.medname,ms.cpcmed,ms.mednumweight,sum(ms.medweight) medweight,min(ms.addtime) medaddtime,min(m.mednumber) as mednumber
+				from zs_medstorage ms
+				left join zs_med m on m.cpcmed = ms.cpcmed
+		]]>
+		<dynamic prepend="where">
+			<include refid="findMedStorageStatByWhere"/>
+		</dynamic>
+		<![CDATA[
+		 	group by ms.medname,ms.cpcmed,ms.mednumweight order by min(ms.addtime) desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	<!-- 种植平台 药材库存总重量 -->
+	<select id="getMedStorageByTotalWeight" parameterClass="MedStat" resultClass="String">
+		<![CDATA[
+			select sum(medweight) / 10000 totalweight from zs_medstorage ms
+		]]>
+		<dynamic prepend="where">
+			<include refid="findMedStorageStatByWhere"/>
+		</dynamic>
+	</select>
+	
+	
+	<!--种植平台  药材销售统计 -->
+	<sql id="findMedSellStatByWhere">
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+					lower(box.prodname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="querybegintime" prepend="and">
+			<![CDATA[
+					stor.opertime >= to_date('$querybegintime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="queryendtime" prepend="and">
+			<![CDATA[
+					stor.opertime <= to_date('$queryendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+					stor.orgid = #orgid#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">			
+			<![CDATA[
+					stor.type = #type#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="stortype" prepend="and">			
+			<![CDATA[
+					stor.stortype = #stortype#
+			]]>			
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getMedSellStatList" parameterClass="MedStat" resultClass="MedStat">
+		<![CDATA[
+		    select b.* from (select a.*,rownum r from (
+		    select box.prodname, box.batchcpc, box.boxnumweight, min(m.mednumber) as mednumber,
+		    sum(box.boxnum) as boxnum, rtrim(rtrim(to_char(sum(box.totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight, rtrim(rtrim(to_char(sum(box.totalmoney/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalmoney
+        
+		]]>
+		<![CDATA[
+		    from zs_inoutstorbox box
+		    left join zs_inoutstor stor on box.inoutstorid = stor.inoutstorid 
+		    left join zs_med m on m.cpcmed = box.batchcpc
+		]]>
+		<dynamic prepend="where">
+			<include refid="findMedSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	group by box.prodname, box.batchcpc,box.boxnumweight order by min(stor.opertime) desc ) a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="getMedSellStatCount" parameterClass="MedStat" resultClass="Integer">
+		<![CDATA[
+		    select count(1) from (
+		    select box.prodname from zs_inoutstorbox box
+		    left join zs_inoutstor stor on box.inoutstorid = stor.inoutstorid 
+		    left join zs_med m on m.cpcmed = box.batchcpc 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findMedSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	group by box.prodname, box.batchcpc,box.boxnumweight)
+		]]>		
+	</select>
+	
+	<select id="getMedSellStatWeight" parameterClass="MedStat" resultClass="String">
+		<![CDATA[
+		    select rtrim(rtrim(to_char(sum(box.totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strsumweight from zs_inoutstorbox box,zs_inoutstor stor where box.inoutstorid = stor.inoutstorid 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findMedSellStatByWhere" />
+		</dynamic>
+	</select>
+	
+	<!-- 药材市场销售统计 -->
+	<sql id="findMarketMedSellStatByWhere">
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+					lower(box.prodname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="querybegintime" prepend="and">
+			<![CDATA[
+					stor.opertime >= to_date('$querybegintime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="queryendtime" prepend="and">
+			<![CDATA[
+					stor.opertime <= to_date('$queryendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">			
+			<![CDATA[
+					stor.orgid in (  select o.orgid from zs_org o where o.marketcode = ( select cpccorp from zs_org where orgid = #orgid#))
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">			
+			<![CDATA[
+					stor.type = #type#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="stortype" prepend="and">			
+			<![CDATA[
+					stor.stortype = #stortype#
+			]]>			
+		</isNotEmpty>
+	</sql>
+	
+	<select id="getMarketMedSellStatList" parameterClass="MedStat" resultClass="MedStat">
+		<![CDATA[
+		    select b.* from (select a.*,rownum r from (
+		    select box.prodname, box.batchcpc, box.boxnumweight, min(m.mednumber) as mednumber,
+		    sum(box.boxnum) as boxnum, rtrim(rtrim(to_char(sum(box.totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight, rtrim(rtrim(to_char(sum(box.totalmoney/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalmoney
+		]]>
+		<![CDATA[
+		    from zs_inoutstorbox box
+		    left join zs_inoutstor stor on box.inoutstorid = stor.inoutstorid 
+		    left join zs_med m on m.cpcmed = box.batchcpc  
+		]]>
+		<dynamic prepend="where">
+			<include refid="findMarketMedSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	group by box.prodname, box.batchcpc,box.boxnumweight order by min(stor.opertime) desc ) a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="getMarketMedSellStatCount" parameterClass="MedStat" resultClass="Integer">
+		<![CDATA[
+		    select count(1) from (select box.prodname 
+		    from zs_inoutstorbox box
+		    left join zs_inoutstor stor on box.inoutstorid = stor.inoutstorid 
+		    left join zs_med m on m.cpcmed = box.batchcpc 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findMarketMedSellStatByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	group by box.prodname, box.batchcpc,box.boxnumweight)
+		]]>		
+	</select>
+	
+	<select id="getMarketMedSellStatWeight" parameterClass="MedStat" resultClass="String">
+		<![CDATA[
+		    select rtrim(rtrim(to_char(sum(box.totalweight/10000),'fm999999999999999999999999999990.0000'),'0'),'.') as strsumweight from zs_inoutstorbox box,zs_inoutstor stor where box.inoutstorid = stor.inoutstorid 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findMarketMedSellStatByWhere" />
+		</dynamic>
+	</select>
+	
+	
+	<!-- 查询该种植基地下产出的主要药材 -->
+	<select id="findMainMeds" parameterClass="MedStat" resultClass="MedStat">
+		<![CDATA[
+			select t.medname from
+			(
+				select count(m.medname) c ,m.medname from zs_plant p
+				inner join zs_med m
+				on p.cpcplant = m.cpcplant
+				where p.orgid=#orgid#
+				group by m.medname order by c desc
+			)  t      
+		]]>
+	</select>
+	
+</sqlMap>

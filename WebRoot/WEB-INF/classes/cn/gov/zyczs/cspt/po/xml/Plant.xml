@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Plant">
+	<typeAlias alias="Plant" type="cn.gov.zyczs.cspt.po.Plant"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="plantname" prepend="and">
+			<![CDATA[
+					lower(plantname) like lower('%'||#plantname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpcplant" prepend="and">
+			<![CDATA[
+					lower(cpcplant) like lower('%'||#cpcplant#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+					state = #state#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   cpcplant=#cpcplant#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="Plant" resultClass="Plant">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from zs_plant where  orgid = #orgid#
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by plantid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount" parameterClass="Plant" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_plant where  orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	
+	<insert id="save" parameterClass="Plant">
+		<![CDATA[
+			insert into zs_plant (cpcplantimg,plantname,plantsource,plantarea,plantusername,plantnumber,plantweight,plantaddtime,state,province,city,area,plantaddress,cpcplant,harvestmedwei,userid,plantcycle,areacode,plantendtime,prodcode,orgid)
+			values (#cpcplantimg#,#plantname#,#plantsource#,#plantarea#,#plantusername#,#plantnumber#,#plantweight#,to_date('$plantaddtime$','YYYY-MM-DD HH24:MI:SS'),NVL(#state#,0),#province#,#city#,#area#,#plantaddress#,#cpcplant#,#harvestmedwei#,#userid#,#plantcycle#,#areacode#,to_date('$plantendtime$','YYYY-MM-DD HH24:MI:SS'),#prodcode#,#orgid#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_PLANT.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="updateByObj" parameterClass="Plant">
+		<![CDATA[
+			update zs_plant
+		]]>	
+		<dynamic prepend="SET">
+			<isNotNull property="plantcycle" prepend=",">
+				<![CDATA[
+						plantcycle=#plantcycle#
+				]]>
+			</isNotNull>
+			<isNotNull property="plantnumber" prepend=",">
+				<![CDATA[
+						plantnumber=#plantnumber#
+				]]>
+			</isNotNull>
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state=#state#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="plantendtime" prepend=",">
+				<![CDATA[
+						plantendtime=to_date('$plantendtime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="Plant" resultClass="Plant">
+		<![CDATA[
+		 	select * from zs_plant
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>	
+	
+	
+</sqlMap>

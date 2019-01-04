@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+   <package name="rp_Stat" extends="strutsdefault">
+    	<!-- 种植平台统计分析action配置 -->
+		<action name="rp_Stat" class="rp_StatAction">		
+			<result name="findPlantAreaSumByYear">manage/report/stat/findPlantAreaSumByYear.jsp</result>
+			<result name="findPlantAreaSumByYear_notAdmin">manage/report/stat/findPlantAreaSumByYear_notAdmin.jsp</result>
+			<result name="findSellWeightByYear">manage/report/stat/findSellWeightByYear.jsp</result>
+			<result name="findMedRateByYear">manage/report/stat/findMedRateByYear.jsp</result>
+			<result name="findSellWeightByYear_notAdmin">manage/report/stat/findSellWeightByYear_notAdmin.jsp</result>
+			<result name="findTabletProAndSellByYear">manage/report/stat/findTabletProAndSellByYear.jsp</result>
+		</action>
+		
+    </package>
+</struts>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Fertilizer">
+	<typeAlias alias="Fertilizer" type="cn.gov.zyczs.cspt.po.Fertilizer"/>	
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   fertilizerid = #fertilizerid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="cpcplant" prepend="and">
+			<![CDATA[
+					cpcplant= #cpcplant#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="fertilizername" prepend="and">
+			<![CDATA[
+					lower(fertilizername) like lower('%'||#fertilizername#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="Fertilizer" resultClass="Fertilizer">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from ZS_FERTILIZER where fertilizerid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by fertilizerid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<insert id="save" parameterClass="Fertilizer">
+		<![CDATA[
+			insert into ZS_FERTILIZER (fertilizername,fertilizerweight,cpcplant,fertilizertime)
+			values (#fertilizername#,#fertilizerweight#,#cpcplant#,to_date('$fertilizertime$','YYYY-MM-DD HH24:MI:SS'))				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_FERTILIZER.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	
+	
+	<select id="findByCount" parameterClass="Fertilizer" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_FERTILIZER
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findById" parameterClass="Fertilizer" resultClass="Fertilizer">
+		<![CDATA[
+		 	select * from ZS_FERTILIZER
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	
+	
+		
+</sqlMap>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChengFck">
+	<typeAlias alias="ChengFck" type="cn.gov.zyczs.cspt.po.ChengFck"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="chengcode" prepend="and">
+			<![CDATA[
+					chengcode = #chengcode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="keyvalue" prepend="and">
+			<![CDATA[
+					keyvalue = #keyvalue#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByCount" parameterClass="ChengFck" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_chengfck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="ChengFck" resultClass="ChengFck">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from c_chengfck p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by chengcode desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="quryListByChengid" parameterClass="ChengFck" resultClass="ChengFck">
+		<![CDATA[
+			select t.confid,
+			       t.keyvalue,
+			       t.rowsnum,
+			       t.columnnum,
+			       f.chengcode,
+			       f.plucodes,
+			       f.medname 
+            from (
+                   select c.chengcode, k.* from c_chengkey k,c_cheng c 
+                   where k.confid = c.confid  
+                   and k.keyvalue is not null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			 	  ) t left join c_chengfck f on t.keyvalue = f.keyvalue where t.chengcode = f.chengcode
+		]]>		
+	</select>	
+	
+	<select id="quryByList" parameterClass="ChengFck" resultClass="ChengFck">
+		<![CDATA[
+		 	select * from c_chengfck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>	
+	
+	<insert id="save" parameterClass="ChengFck">
+		<![CDATA[
+			insert into c_chengfck (chengcode,keyvalue,plucodes,medname)
+			values (#chengcode#,#keyvalue#,#plucodes#,#medname#)				
+		]]>	
+	</insert>
+	
+	<delete id="delete" parameterClass="ChengFck">
+		<![CDATA[
+			delete from c_chengfck 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>	
+	</delete>
+	
+	<update id="update" parameterClass="ChengFck">
+		<![CDATA[
+			update c_chengfck
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="plucodes" prepend=",">
+				<![CDATA[
+						plucodes=#plucodes#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhere" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="ChengFck" resultClass="ChengFck">
+		<![CDATA[
+		 	select * from c_chengfck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>	
+</sqlMap>

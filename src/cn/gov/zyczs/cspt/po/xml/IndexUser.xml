@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="IndexUser">
+	<typeAlias alias="IndexUser" type="cn.gov.zyczs.cspt.po.IndexUser" />
+	
+		<insert id="saveIndexUser" parameterClass="IndexUser">
+		<![CDATA[
+			insert into zs_indexUser(indexusercode,indexusername,inserttime) 
+			values(#indexusercode#,#indexusername#,#inserttime#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_INDEXUSER.NEXTVAL as indexuserid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	
+	<select id="getInsertTime" resultClass="int">
+		<![CDATA[
+			select distinct max(u.inserttime) inserttime from zs_indexuser u
+		]]>
+	</select>
+	
+	<!-- 
+	<select id="getPriceChartByPlantName" resultClass="IndexUser" parameterClass="IndexUser">
+		<![CDATA[
+			 select t.indexweekdate,max(t.indexweekvalue) indexweekvalue  from(
+			 select case 
+			 when wu.indexweekname=#monthpriceindex# then to_char(to_date(wu.indexweekdate,'YYYY-MM-DD'),'yyyy-mm')  
+			 when wu.indexweekname=#weekpriceindex# then to_char(to_date(wu.indexweekdate,'YYYY-MM-DD'),'yyyy-IW')   
+			 end indexweekdate,max(wu.indexweekvalue) indexweekvalue       
+			 from (select *  from zs_indexweek w inner join zs_Indexuser  u on w.indexweekcode = u.indexusercode   
+			 where w.indexweekname=#indexweekname# and u.indexusername=#indexusername#
+		]]>
+		<isNotEmpty property="startindexweekdate" prepend="and">
+			<![CDATA[
+					w.indexweekdate >= '$startindexweekdate$'
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endindexweekdate" prepend="and">
+			<![CDATA[
+					w.indexweekdate <= '$endindexweekdate$'
+			]]>
+		</isNotEmpty>
+		<![CDATA[
+			 )wu  group by indexweekname,indexweekdate  order by wu.indexweekdate     
+			 ) t  group by indexweekdate order by indexweekdate     
+		]]>	 
+	</select>
+	 -->
+	 
+	 
+	<select id="findPriceChart" resultClass="IndexUser" parameterClass="IndexUser">
+		<![CDATA[
+		select * from (
+				select 
+		]]>
+		<isEqual property="indexweekname" compareValue="month">
+			<![CDATA[
+					to_char(s.opertime,'yyyy-mm') indexweekdate
+			]]>
+		</isEqual>
+		<isEqual property="indexweekname" compareValue="week">
+			<![CDATA[
+					to_char(s.opertime,'yyyy-IW') indexweekdate
+			]]>
+		</isEqual>
+		<![CDATA[
+			,round(sum(b.totalmoney)/sum(s.totalweight),2) indexweekvalue
+			from zs_inoutstorbox b
+			left join zs_inoutstor s on b.inoutstorid = s.inoutstorid
+			
+		]]>
+		<isEqual property="corptype" compareValue="0">
+			inner join zs_org o on s.orgid = o.orgid
+		</isEqual>
+		<![CDATA[
+			where s.type = 0  and b.totalmoney <> 0 and s.stortype=1 
+		]]>
+		<isNotEmpty property="indexusername" prepend="and">
+			<![CDATA[
+					b.prodname = #indexusername# 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="startindexweekdate" prepend="and">
+				<![CDATA[
+						s.opertime >= to_date('$startindexweekdate$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+		</isNotEmpty>
+		<isNotEmpty property="endindexweekdate" prepend="and">
+			<![CDATA[
+					   s.opertime <=  to_date('$endindexweekdate$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isEqual property="orgid" compareValue="0" prepend="and">
+			<![CDATA[
+					  o.marketcode = #cpccorp#
+			]]>
+		</isEqual>
+		<isNotEqual property="orgid" compareValue="0" prepend="and">
+			<![CDATA[
+					  s.orgid = #orgid#
+			]]>
+		</isNotEqual>
+		<![CDATA[
+			group by  
+		]]>
+		<isEqual property="indexweekname" compareValue="month">
+			<![CDATA[
+					to_char(s.opertime,'yyyy-mm') 
+			]]>
+		</isEqual>
+		<isEqual property="indexweekname" compareValue="week">
+			<![CDATA[
+					to_char(s.opertime,'yyyy-IW')
+			]]>
+		</isEqual>
+		<![CDATA[		
+			order by 
+		]]>
+		<isEqual property="indexweekname" compareValue="month">
+			<![CDATA[
+					to_char(s.opertime,'yyyy-mm') 
+			]]>
+		</isEqual>
+		<isEqual property="indexweekname" compareValue="week">
+			<![CDATA[
+					to_char(s.opertime,'yyyy-IW') 
+			]]>
+		</isEqual>
+		<![CDATA[		
+			 asc ) t where t.indexweekvalue != 0
+		]]>
+		
+	</select>
+	
+</sqlMap>

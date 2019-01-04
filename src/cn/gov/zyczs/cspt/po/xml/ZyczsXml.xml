@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ZyczsXml">
+	<typeAlias alias="ZyczsXml" type="cn.gov.zyczs.cspt.po.ZyczsXml" />
+	
+	<parameterMap id="ZyczsXmlMap" class="ZyczsXml" >         		
+		<parameter property="guid" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="xmlcontent" jdbcType="CLOB" javaType="java.lang.String"/>
+		<parameter property="loginname" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<parameter property="state" jdbcType="NUMBER" javaType="java.lang.Integer"/>
+	</parameterMap>
+	
+	<insert id="save" parameterMap="ZyczsXmlMap">
+		<![CDATA[
+			 insert into zs_xml (guid, xmlcontent, loginname, state)
+			 values (?,?,?,?)
+		]]>
+	</insert>
+	
+	<select id="findByList"  resultClass="ZyczsXml">
+		<![CDATA[
+			select * from zs_xml where state=0
+		]]>
+		
+	</select>
+	
+	
+	<delete id="deleteById" parameterClass="String">
+		<![CDATA[
+			delete from zs_xml where guid=#guid#
+		]]>	
+		
+	</delete>
+	
+</sqlMap>

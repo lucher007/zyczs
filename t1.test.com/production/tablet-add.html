@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>新建饮片生产</title>
+<link type="text/css" rel="stylesheet" href="/style/production.css">
+</head>
+
+<body>
+<div id="body">
+	<div class="cur-pos">当前位置：饮片生产管理 > 新建饮片生产</div>
+	<div class="form-box">
+    	<form action="tablet-add2.html">
+    	<div class="fb-tit">新建饮片生产</div>
+        <div class="fb-con">
+        	<ul class="fb-ul">
+              <li class="fb-cbox">
+                <div class="fb-ctit">录入生产基本信息</div>
+                <div class="fb-tab">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>品名：</td><td><input type="text" class="inp" value=""></td><td>生产批次号：</td><td><input type="text" class="inp" value=""></td><td>生产规格：</td><td><input type="text" class="inp w100" value=""></td>
+                  </tr>
+                </table>
+                </div>
+              </li>
+              <li class="fb-cbox mt10">
+              	<div class="fb-ctit">录入饮片原药材信息</div>
+                <div class="fb-tab">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td height="30" class="b">主料：</td>
+                    <td>品名：</td>
+                    <td><input type="text" class="inp w80 fl" value=""><a href="javascript:void(0);" class="btn-xz fl">选择主料品名</a></td>
+                    <td>批次号：</td>
+                    <td><input type="text" class="inp" value=""></td>
+                    <td>产地：</td>
+                    <td><input type="text" class="inp" value=""></td>
+                  </tr>
+                  <tr>
+                    <td height="30">&nbsp;</td>
+                    <td colspan="6" style="padding:0">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="10%">总重量：</td>
+                        <td width="32%"><input type="text" class="inp" value=""> KG</td>
+                        <td width="12%">使用重量：</td>
+                        <td width="46%"><input type="text" class="inp" value=""> KG</td>
+                      </tr>
+                    </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td height="30" class="b">辅料：</td>
+                    <td colspan="6"><a href="javascript:void(0);" class="btn-red">录入辅料</a></td>
+                  </tr>
+                </table>
+                </div>
+              </li>
+              <li class="fb-line">
+              	执行标准：<input type="text" class="inp" size="90" value="《中国药典2010年版》、《四川省中药饮片炮制规范2002年版》、各岗位相关SOP">
+              </li>
+            </ul>
+        </div>
+        <div class="fb-bom">
+        	<cite class="gray"><input type="submit" value="下一步" class="sbt"></cite>
+        </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="/js/form.js"></script>
+</body>
+</html>

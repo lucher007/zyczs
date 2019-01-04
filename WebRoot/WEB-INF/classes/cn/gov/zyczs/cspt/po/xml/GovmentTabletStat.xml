@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="GovmentTabletStat">
+	<typeAlias alias="GovmentTabletStat" type="cn.gov.zyczs.cspt.po.GovmentTabletStat"/>
+	
+	
+	<select id="findByTabletList" parameterClass="GovmentTabletStat" resultClass="GovmentTabletStat">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (	
+			]]>
+			<![CDATA[
+			select to_char(ms.addtime,'YYYY-MM') mon, ms.province||ms.city||ms.area area,o.orgid,o.orgname,ms.tabletname,sum(ms.tabletweight)  totaltabletweight,count(ms.cpctablet) cpctabletCount,
+			sum(ms.tabletboxnum) codeCount,ms.cpctablet
+			 from zs_tabletstorage ms
+				inner join zs_org o
+				on o.orgid=ms.orgid
+				where ms.area is not null and zyctype=#zyctype#		
+
+			]]>
+			
+			<isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					ms.province=#province#
+			]]>
+			</isNotEmpty>
+			
+			<isNotEmpty property="city" prepend="and">
+				<![CDATA[
+					ms.city = #city#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+					ms.area =#area#
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="orgname" prepend="and">
+			<![CDATA[
+					o.orgname =#orgname#
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="tabletname" prepend="and">
+			<![CDATA[
+					ms.tabletname =#tabletname#
+			]]>
+			</isNotEmpty>
+			
+			<isNotEmpty property="starttime" prepend="and">
+			<![CDATA[
+					ms.addtime >= to_date('$starttime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS')
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="endtime" prepend="and">
+				<![CDATA[
+						ms.addtime <= add_months(to_date('$endtime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS'),1)
+				]]>
+			</isNotEmpty>
+			
+			<![CDATA[
+			 	group by ms.cpctablet,ms.tabletname, ms.province||ms.city||ms.area,to_char(ms.addtime,'YYYY-MM'),o.orgid,o.orgname order by ms.tabletname desc
+			]]>	
+		
+			<![CDATA[
+			 	)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByTabletCount" parameterClass="GovmentTabletStat" resultClass="Integer">
+		<![CDATA[
+			select count(*) from (	
+			]]>
+			<![CDATA[
+			select to_char(ms.addtime,'YYYY-MM') mon, ms.area,o.orgid,o.orgname,ms.tabletname from zs_tabletstorage ms
+				inner join zs_org o
+				on o.orgid=ms.orgid
+				where ms.area is not null and zyctype=#zyctype#
+				
+
+			]]>
+			<isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					ms.province=#province#
+			]]>
+			</isNotEmpty>
+			
+			<isNotEmpty property="city" prepend="and">
+				<![CDATA[
+					ms.city = #city#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+					ms.area =#area#
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="orgname" prepend="and">
+			<![CDATA[
+					o.orgname =#orgname#
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="tabletname" prepend="and">
+			<![CDATA[
+					ms.tabletname =#tabletname#
+			]]>
+			</isNotEmpty>
+			
+			<isNotEmpty property="starttime" prepend="and">
+			<![CDATA[
+					ms.addtime >= to_date('$starttime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS')
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="endtime" prepend="and">
+				<![CDATA[
+						ms.addtime <= add_months(to_date('$endtime$-01 00:00:00','YYYY-MM-DD HH24:MI:SS'),1)
+				]]>
+			</isNotEmpty>
+			
+			<![CDATA[
+			 	group by ms.area,to_char(ms.addtime,'YYYY-MM'),o.orgid,o.orgname,ms.tabletname
+			]]>	
+			
+			<![CDATA[
+			 	)a 
+			]]>	
+	</select>
+	
+	
+	<select id="findByOutStor" parameterClass="GovmentTabletStat" resultClass="GovmentTabletStat">
+		<![CDATA[
+		 	select count(INOUTSTORID) outorderCount, nvl(round(sum(TOTALWEIGHT/10000),2),0) outtotalweight ,nvl(round(avg(PRICE/10000),2),0) avgprice from zs_inoutstorbox where INOUTSTORID in (
+				select INOUTSTORID from zs_inoutstor where STORTYPE=1 and type=1 and orgid=#orgid#
+			) and prodname=#tabletname#
+		]]>
+		
+	</select>
+	
+	
+
+	
+</sqlMap>

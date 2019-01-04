@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Box">
+	<typeAlias alias="Box" type="cn.gov.zyczs.cspt.po.Box" />
+	<typeAlias alias="Freeze" type="cn.gov.zyczs.cspt.po.Freeze" />
+	
+	<!-- 药材分包 -->
+	<parameterMap id="boxMedMap" class="java.util.Map" >         		
+		<parameter property="storageid" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="weight" jdbcType="NUMBER" javaType="java.lang.Double" mode="IN"/>
+		<parameter property="totalnum" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="cpccorp" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="orgid" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		
+		<parameter property="cpcmed" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="loginname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="medname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="prodcode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="areacode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<procedure id="saveBoxMed" parameterMap="boxMedMap">   
+    	<![CDATA[
+    	{call PROC_SAVEBOXITEMMED(?,?,?,?,?,?,?,?,?,?)}
+    	]]>  
+	</procedure>
+	
+	<!-- 饮片二级（包,箱）分包 -->
+	<parameterMap id="boxTabletMap" class="java.util.Map" >         		
+		<parameter property="storageid" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="weight" jdbcType="NUMBER" javaType="java.lang.Double" mode="IN"/>
+		<parameter property="totalnum" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="boxitemnum" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="boxnum" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="cpccorp" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="orgid" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		
+		<parameter property="cpctablet" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="loginname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="tabletname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="prodcode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="areacode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="spec" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<procedure id="saveBoxTablet" parameterMap="boxTabletMap">   
+    	<![CDATA[
+    	{call PROC_SAVEBOXITEMTABLET(?,?,?,?,?,?,?,?,?,?,?,?,?)}
+    	]]>  
+	</procedure>
+	
+	<!-- 饮片获取袋码（7字开头） -->
+	<parameterMap id="boxTabletBagMap" class="java.util.Map" >         		
+		<parameter property="cpccorp" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="prodcode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="zycid" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+	</parameterMap>
+	
+	<procedure id="saveBoxTabletBag" parameterMap="boxTabletBagMap">   
+    	<![CDATA[
+    	{call PROC_SAVEBOXITEMTABLETBAG(?,?,?)}
+    	]]>  
+	</procedure>
+	
+	<!-- 饮片获取袋码（8字开头） -->
+	<parameterMap id="boxTabletBagMap8" class="java.util.Map" >         		
+		<parameter property="cpccorp" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="zycid" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+	</parameterMap>
+	
+	<procedure id="saveBoxTabletBag8" parameterMap="boxTabletBagMap8">   
+    	<![CDATA[
+    	{call PROC_SAVEBOXITEMTABLETBAG8(?,?)}
+    	]]>  
+	</procedure>
+	
+	<!-- 饮片一级（包） 分包 -->
+	<parameterMap id="boxTabletPackMap" class="java.util.Map" >         		
+		<parameter property="storageid" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="weight" jdbcType="NUMBER" javaType="java.lang.Double" mode="IN"/>
+		<parameter property="totalnum" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		<parameter property="cpccorp" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="orgid" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN"/>
+		
+		<parameter property="cpctablet" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="loginname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="tabletname" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="prodcode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="areacode" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+		<parameter property="spec" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
+	</parameterMap>
+	
+	<procedure id="saveBoxTabletPack" parameterMap="boxTabletPackMap">   
+    	<![CDATA[
+    	{call PROC_SAVEBOXITEMTABLETPACK(?,?,?,?,?,?,?,?,?,?,?)}
+    	]]>  
+	</procedure>
+	 
+
+    <select id="findByFreeze" parameterClass="Map" resultClass="Freeze">
+    	<![CDATA[
+				select * from zs_freeze  where state=1 and cpccode in ($boxcodes$)  order by cpclevel desc
+		]]>	
+    </select>
+    
+    
+	
+	<sql id="findByWhereId">
+		<isNotEmpty property="boxcode" prepend="and">
+		<![CDATA[
+		   boxcode = #boxcode#
+	    ]]>
+	    </isNotEmpty>
+	    <isNotEmpty property="flag">
+	    	<isEqual property="flag" compareValue="1" prepend="and">
+			<![CDATA[
+					state=0
+			]]>
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="storid" prepend="and">
+			<![CDATA[
+			   storid = #storid#
+		    ]]>
+	    </isNotEmpty>
+	</sql>
+	
+	<insert id="save" parameterClass="Box">
+		<![CDATA[
+			insert into zs_box(storid,boxcode,boxweight,state,instorboxid,boxitemnum,stortype,outstorboxid,packcode,orgid)
+			values(#storid#,#boxcode#,#boxweight#,#state#,#instorboxid#,#boxitemnum#,#stortype#,#outstorboxid#,#packcode#,#orgid#)
+		]]>
+	</insert>
+	
+	<update id="update" parameterClass="Box">
+		<![CDATA[
+			update zs_box
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state=#state#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="instorboxid" prepend=",">
+				<![CDATA[
+						instorboxid=#instorboxid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="outstorboxid" prepend=",">
+				<![CDATA[
+						outstorboxid=#outstorboxid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="packcode" prepend=",">
+				<![CDATA[
+						packcode=#packcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="boxweight" prepend=",">
+				<![CDATA[
+						boxweight=#boxweight#
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	
+	<update id="updatePackcode" parameterClass="Box">
+		<![CDATA[
+			update zs_box set packcode=#packcode# where storid = #storid# and state=#state# and stortype = #stortype# and boxcode = #boxcode#
+		]]>				
+	</update>
+	
+	
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="storid" prepend="and" >
+			<![CDATA[
+					storid = #storid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="stortype" prepend="and" >
+			<![CDATA[
+					stortype = #stortype#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">			
+			<![CDATA[
+					state=#state#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="packcode" prepend="and">			
+			<![CDATA[
+					packcode=#packcode#
+			]]>			
+		</isNotEmpty>
+	</sql>
+	
+    <select id="findByList" parameterClass="Box" resultClass="Box">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_box where boxcode is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by boxcode desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="Box" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_box
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByAll" parameterClass="Box" resultClass="Box">
+		<![CDATA[
+			select b.boxcode as boxcode,bi.sourcecode as sourcecode from zs_box b ,zs_boxitem bi 
+			where b.boxcode=bi.boxcode and b.storid=#storid# and b.stortype=#stortype# 
+		]]>
+		<isNotEmpty property="state" prepend="and">
+		<![CDATA[
+						b.state=#state#
+		]]>
+		</isNotEmpty>
+		<![CDATA[
+			order by b.boxcode
+		]]>
+	</select>
+	
+	<delete id="deleteByPackcode" parameterClass="Box" >
+		<![CDATA[	
+			update zs_box set state=#flag# where orgid=#orgid# and boxcode=#boxcode# and state=#state#
+		]]>			
+	</delete>
+	
+	<update id="updateWeight" parameterClass="Box">
+		<![CDATA[
+			update zs_box set boxweight=#boxweight# where storid = #storid# and state=#state# and stortype=#stortype#
+		]]>	
+	</update>
+	
+</sqlMap>

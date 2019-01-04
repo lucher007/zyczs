@@ -1,0 +1,106 @@
+﻿<!--如果查询的是药材，则返回查询结果去掉<piece>节点，是饮片则是下面的所有内容-->
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs>
+<msgbody>
+<piece desc="饮片">
+			<sourcecode desc="饮片溯源码"></sourcecode>
+			<name desc="饮片名称">麦冬</name>
+			<productioncompanies desc="生产企业"></productioncompanies>
+			<salescompanies desc="销售企业"></salescompanies>
+			<batchcode desc="饮片批次号"></batchcode>
+			<spec desc="生产规格">片</spec>
+			<standard desc="执行标准">中国药典2010年版</standard>
+			<processflow desc="生产流程">精选,</processflow>
+			<operator desc="工艺员">张三</operator>
+			<manager desc="生产部经理">张三</manager>
+			<qa desc="QA">张三</qa>
+			<producedate desc="生产日期">2012-05-31</producedate>
+			<remark desc="备注">生产正常</remark>
+			<weight desc="待包装重量(单位:g)">100</weight>
+			<areacode desc="地区编码,按国标处理">510500</areacode>
+
+		    <materials desc="检验">
+				<material desc="检验">
+					<corpcode desc="企业代码(14位)，流通节点编号">10127300005094</corpcode>
+					<checkmethod desc="检验方法">企业标准</checkmethod>
+					<checkgrade desc="质量级别">一级</checkgrade>
+					<checkthickmethod desc="粗加工方法">净选</checkthickmethod>
+					<checkcondition desc="贮藏条件">冷冻</checkcondition>
+					<checkuser desc="检验人员">张三</checkuser>
+					<checktime desc="检验时间">2012-12-13 15:35:35</checktime>
+					<reports>
+						<report>
+							 <type desc="检验报告类型：(检验报告|产地报告">1</type>
+							 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+						</report>
+						<report>
+							 <type desc="检验报告类型：(检验报告|产地报告">2</type>
+							 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+						</report>
+					</reports>
+				</material>
+			</materials>
+
+</piece>
+<medicine desc="药材" >
+	<medicinecode desc="药材批次号"></medicinecode>
+	<medicinename desc="药材名称"></medicinename>
+	<medicinesource desc="药材来源">溯源药材|非溯源药材</medicinesource>
+	<harvesttime desc="收获时间"></harvesttime>
+	<salescompanies desc="销售企业"></salescompanies>
+	<plant>
+		<plantcode desc="植物批次码"></plantcode>
+		<corpname desc="种植企业"></corpname>
+		<plantname desc="植物名称">麦冬</plantname>
+		<plantsource desc="种子来源:自购|栽培|野生">栽培</plantsource>
+		<plantarea desc="种植区域(单位:亩)">100</plantarea>
+		<plantcycle desc="种植周期(单位：月）">5</plantcycle>
+		<planttime desc="种植时间">2012-04-13</planttime>
+		<plantuser desc="负责人">张三</plantuser>
+		<fieldmanagements desc="田间管理">
+			<fieldmanagement>
+				<name desc="名称">尿素</name>
+				<type desc="类型">1-施肥 2-农药 3-浇水 4-中耕 5-除草 6-其他</type>
+				<weight desc="用量">100</weight>
+				<addtime desc="时间">2012-06-03 00:00:00</addtime>
+				<remark desc="备注"></remark>
+			</fieldmanagement>
+			<fieldmanagement>
+				<name desc="名称">尿素</name>
+				<type desc="类型">1-施肥 2-农药 3-浇水 4-中耕 5-除草 6-其他</type>
+				<weight desc="用量">100</weight>
+				<addtime desc="时间">2012-06-03 00:00:00</addtime>
+				<remark desc="备注"></remark>
+			</fieldmanagement>
+			<fieldmanagement>
+				<name desc="名称">尿素</name>
+				<type desc="类型">1-施肥 2-农药 3-浇水 4-中耕 5-除草 6-其他</type>
+				<weight desc="用量">100</weight>
+				<addtime desc="时间">2012-06-03 00:00:00</addtime>
+				<remark desc="备注"></remark>
+			</fieldmanagement>
+		</fieldmanagements>
+	</plant>
+	<materials desc="检验">
+			<material desc="检验">
+				<corpname desc="企业名称">中药企业</corpname>
+				<checkmethod desc="检验方法">企业标准</checkmethod>
+				<checkgrade desc="质量级别">一级</checkgrade>
+				<checkthickmethod desc="粗加工方法">净选</checkthickmethod>
+				<checkcondition desc="贮藏条件">冷冻</checkcondition>
+				<checkuser desc="检验人员">张三</checkuser>
+				<checktime desc="检验时间">2012-12-13 15:35:35</checktime>
+				<reports>
+					<report>
+						 <type desc="检验报告类型：(检验报告|产地报告">1</type>
+						 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+					</report>
+					<report>
+						 <type desc="检验报告类型：(检验报告|产地报告">2</type>
+						 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+					</report>
+				</reports>
+			</material>
+	</materials>
+</medicine>
+</msgbody></zyczs>

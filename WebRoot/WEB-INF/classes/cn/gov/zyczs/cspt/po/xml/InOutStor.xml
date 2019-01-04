@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="InOutStor">
+	<typeAlias alias="InOutStor" type="cn.gov.zyczs.cspt.po.InOutStor"/>
+		
+	<sql id="findByWhereId">
+		<![CDATA[
+		   inoutstorid = #inoutstorid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="sellcorpname" prepend="and" open="(">
+			<![CDATA[
+				lower(sellcorpname) like lower('%'||#sellcorpname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="sellcorpname" prepend="or" close=")">
+			<![CDATA[
+				lower(cpccorp) like lower('%'||#sellcorpname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="buycorpname" prepend="and" open="(">
+			<![CDATA[
+				lower(buycorpname) like lower('%'||#buycorpname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="buycorpname" prepend="or" close=")">
+			<![CDATA[
+				lower(cpccorp) like lower('%'||#buycorpname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="operstarttime" prepend="and">
+			<![CDATA[
+				opertime >= to_date('$operstarttime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="operendtime" prepend="and">
+			<![CDATA[
+				opertime <= to_date('$operendtime$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and" >
+			<![CDATA[
+				orgid = #orgid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and" >
+			<![CDATA[
+				type = #type#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="stortype" prepend="and" >
+			<![CDATA[
+				stortype = #stortype#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="prodname" prepend="and">
+			<![CDATA[
+				lower(prodname) like lower('%'||#prodname#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<insert id="save" parameterClass="InOutStor">
+		<![CDATA[
+			insert into zs_inoutstor
+    		(type, stortype, sellcorpname, buycorpname, opertime,  userid, totalmoney, totalweight,zstype, operator, cpccorp, mobile, address, orgid)
+			values
+  			(#type#, #stortype#, #sellcorpname#, #buycorpname#, to_date('$opertime$','YYYY-MM-DD HH24:MI:SS'),  #userid#, NVL(#totalmoney#,0), #totalweight#, #zstype#, #operator#, #cpccorp#, #mobile#, #address#, #orgid#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_INOUTSTOR.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+		
+	</insert>
+	
+	<update id="updateById" parameterClass="InOutStor">
+		<![CDATA[
+			update zs_inoutstor
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="opertime" prepend=",">
+				<![CDATA[
+						opertime=to_date('$opertime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<select id="findByCount" parameterClass="InOutStor" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_inoutstor stor,zs_inoutstorbox box where stor.inoutstorid = box.inoutstorid  		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="InOutStor" resultClass="InOutStor">
+		<![CDATA[
+		 select b.* from (select a.*,rownum r from (select stor.*, box.prodname, box.codetype,
+		 rtrim(rtrim(to_char(box.totalweight/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight, 
+		 rtrim(rtrim(to_char(box.totalmoney/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalmoney 
+		 from zs_inoutstor  stor,zs_inoutstorbox box where stor.inoutstorid = box.inoutstorid  and packstorboxid is null	
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by stor.inoutstorid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findById" parameterClass="InOutStor" resultClass="InOutStor">
+		<![CDATA[
+		 	 select stor.*,
+		 	 rtrim(rtrim(to_char(totalweight/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight, 
+		     rtrim(rtrim(to_char(totalmoney/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalmoney 
+		 	 from zs_inoutstor stor
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	
+	<sql id="findCompanyWhere">
+		<isNotEmpty property="orgid" prepend="and" >
+			<![CDATA[
+				orgid = #orgid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and" >
+			<![CDATA[
+				type = #type#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="stortype" prepend="and" >
+			<![CDATA[
+				stortype = #stortype#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="zstype" prepend="and" >
+			<![CDATA[
+				zstype = #zstype#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	
+	<!--销售企业历史记录-->
+	<select id="findByCompanyCount" parameterClass="InOutStor" resultClass="Integer">
+		<![CDATA[
+			select count(*) from (
+			select  trim(buycorpname) buycorpname,cpccorp,orgid,max(OPERSYSTIME) OPERSYSTIME from zs_inoutstor where buycorpname is not null     
+		]]>	
+		<dynamic prepend="and">
+			<include refid="findCompanyWhere" />
+		</dynamic>
+		<![CDATA[
+				group by trim(buycorpname),cpccorp,orgid  )a 
+			]]>		
+		
+	</select>
+	
+	<select id="findByCompanyList" parameterClass="InOutStor" resultClass="InOutStor">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+			select  trim(buycorpname) buycorpname,cpccorp,orgid,max(OPERSYSTIME) OPERSYSTIME from zs_inoutstor where buycorpname is not null     
+			]]>
+			
+		<dynamic prepend="and">
+			<include refid="findCompanyWhere" />
+		</dynamic>
+		
+			<![CDATA[
+				group by trim(buycorpname),cpccorp,orgid 
+			 	order by OPERSYSTIME desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+			]]>		
+	</select>
+	
+	<!--查询选择企业最近六个月的饮片入库信息  -->
+	<select id="findByList_Search" parameterClass="InOutStor" resultClass="InOutStor">
+		<![CDATA[
+			select stor.opertime, box.prodname, box.codetype,box.batchcpc,
+			rtrim(rtrim(to_char(box.totalweight/10000,'fm999999999999999999999999999990.0000'),'0'),'.') as strtotalweight
+			from zs_inoutstor stor
+			inner join zs_inoutstorbox box
+			on stor.inoutstorid = box.inoutstorid   
+			inner join zs_org o
+			on stor.orgid = o.orgid
+			where o.cpccorp=#cpccorp#        
+			and stor.type = 1         
+			and stor.stortype = 0   
+			and box.prodname=#prodname#
+			and stor.opertime > add_months(to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd'),-6)
+			order by stor.inoutstorid desc   
+		]]>
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="scales" extends="strutsdefault">
+    	<!-- 溯源秤交易action配置 -->
+		<action name="scalesbus" class="mappdataAction">
+		    <result name="findByList">/manage/scale/findScaleBusList.jsp</result>
+		   	<result name="findScaleSaleList">/manage/scale/findScaleSaleList.jsp</result>
+			<result name="findScaleBusMarket">/manage/scale/findScaleBusMarket.jsp</result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		
+		<!-- 溯源秤管理action配置 -->
+		<action name="scalesstat" class="scalestatAction">
+		    <result name="findByList">/manage/scale/findScaleStatList.jsp</result>
+		    <result name="update" type="redirect">
+				<param name="location">scalesstat!findByList.shtml</param>
+			</result>
+			<result name="updateScale" type="redirect">
+				<param name="location">scaleAction!findByList.shtml</param>
+			</result>
+			<result name="updateKeyver" type="redirect">
+				<param name="location">scaleAction!findByList.shtml</param>
+			</result>
+			<result name="updatePluver" type="redirect">
+				<param name="location">scaleAction!findByList.shtml</param>
+			</result>
+			<result name="synchronousPlu">/manage/scale/synchronousPluFinish.jsp</result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		<!-- 溯源秤配置action -->
+		<action name="scaleConf" class="scaleConfAction">
+		    <result name="findByList">/manage/scale/findScaleConfList.jsp</result>
+		    <result name="update" type="redirect">
+				<param name="location">scaleConf!findByList.shtml</param>
+			</result>
+			<result name="save" type="redirect">
+				<param name="location">scaleConf!findByList.shtml</param>
+			</result>
+			<result name="updateInit">/manage/scale/updateScaleConf.jsp</result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+		
+		
+		<!-- 溯源秤配置action -->
+		<action name="scaleAction" class="scaleAction">
+		    <result name="addScaleInit">/manage/scale/addScaleForMaket.jsp</result>
+		    <result name="saveScale" type="redirect">
+				<param name="location">scaleAction!addScaleInit.shtml</param>
+			</result>
+			<result name="findByList">/manage/scale/findScaleList.jsp</result>
+			<result name="updateScaleInit">/manage/scale/updateScaleFck.jsp</result>
+			 <result name="updateScalefck" type="redirect">
+				<param name="location">scaleAction!findByList.shtml</param>
+			</result>
+			<result name="findScalesListByCPC">/manage/scale/findScalesListByCPC.jsp</result>
+			<result name="findScalesCPC">/manage/scale/findScalesCPC.jsp</result>
+			<result name="saveFinsh">/manage/scale/addUserFinish.jsp</result>
+			<result name="checkScaleCode"></result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		</action>
+    </package>
+</struts>

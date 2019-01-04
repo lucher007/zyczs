@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Scaleplu">
+	<typeAlias alias="Scaleplu" type="cn.gov.zyczs.cspt.po.Scaleplu"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="plucode" prepend="and">
+			<![CDATA[
+					lower(plucode) like lower('%'||#plucode#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="commoditycode" prepend="and">
+			<![CDATA[
+					commoditycode = #commoditycode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="commodityname" prepend="and">
+			<![CDATA[
+					lower(commodityname) like lower('%'||#commodityname#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   plucode=#plucode#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="Scaleplu" resultClass="Scaleplu">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from s_scaleplu p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by plucode desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+
+	<select id="findByCount" parameterClass="Scaleplu" resultClass="Integer">
+		<![CDATA[
+			select count(1) from s_scaleplu
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	<insert id="save" parameterClass="Scaleplu">
+		<![CDATA[
+			insert into s_scaleplu (plucode,commoditycode,commodityname,pluver)
+			values (#plucode#,#commoditycode#,#commodityname#,#pluver#)				
+		]]>	
+	</insert>
+	<insert id="synchronousPlu" parameterClass="Scaleplu">
+		<![CDATA[
+			insert into s_scaleplu (plucode,commoditycode,commodityname,pluver)
+			select t.plu,
+			       t.sourceid || '1',
+			       t.name,
+			       (select max(pluver) from s_scaleplu) + 1 as pluver
+			       from zs_medbase t
+			 where t.plu <  (select max(plucode) + 5 from s_scaleplu)
+       		 and t.plu >  (select max(plucode) from s_scaleplu) 
+			 order by t.plu
+		]]>	
+	</insert>
+	<update id="updateByObj" parameterClass="Scaleplu">
+		<![CDATA[
+			update s_scaleplu
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="plucode" prepend=",">
+				<![CDATA[
+						plucode=#plucode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="commoditycode" prepend=",">
+				<![CDATA[
+						commoditycode=#commoditycode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="commodityname" prepend=",">
+				<![CDATA[
+						commodityname=#commodityname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="pluver" prepend=",">
+				<![CDATA[
+						pluver=#pluver#
+				]]>
+			</isNotEmpty>
+			
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	<select id="findMaxPluver" parameterClass="Scaleplu" resultClass="Integer">
+		<![CDATA[
+		 	select max(pluver) from s_scaleplu
+		]]>
+	</select>	
+	
+	<select id="findById" parameterClass="Scaleplu" resultClass="Scaleplu">
+		<![CDATA[
+		 	select * from s_scaleplu
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>	
+	
+	
+</sqlMap>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="Role">
+	<typeAlias alias="Role" type="cn.gov.zyczs.cspt.po.Role"/>
+	<typeAlias alias="User" type="cn.gov.zyczs.cspt.po.User"/>
+	<typeAlias alias="Menu" type="cn.gov.zyczs.cspt.po.Menu"/>
+	<typeAlias alias="RoleMenu" type="cn.gov.zyczs.cspt.po.RoleMenu"/>
+	<typeAlias alias="UserRole" type="cn.gov.zyczs.cspt.po.UserRole"/>
+	
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   roleid = #roleid:NUMBER#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">			
+		<isNotEmpty property="rolename" prepend="and">
+			<![CDATA[
+					lower(rolename) like lower('%'||#rolename#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+					orgid=#orgid#
+			]]>
+		</isNotEmpty>		
+	</sql>
+	
+	<insert id="save" parameterClass="Role">
+		<![CDATA[
+			insert into zs_role (rolename,orgid) values (#rolename#,#orgid#)			
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_ROLE.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="updateById" parameterClass="Role">
+		<![CDATA[
+			update zs_role 
+		]]>		
+		<dynamic prepend="SET">
+			<isNotEmpty property="rolename" prepend=",">
+				<![CDATA[
+						rolename=#rolename#
+				]]>
+			</isNotEmpty>									
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />			
+		</dynamic>		
+	</update>
+	
+	<delete id="deleteById" parameterClass="Role">
+		<![CDATA[
+			delete from zs_role
+		]]>		
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</delete>
+		
+	<select id="findByList" parameterClass="Role" resultClass="Role">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_role where roleid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by roleid desc)a where rownum<=$pager_offset$+10) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="Role" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_role
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findById" parameterClass="Role" resultClass="Role">
+		<![CDATA[
+		 	select * from zs_role
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<select id="findByExist" parameterClass="Role" resultClass="Role">
+		<![CDATA[
+			select * from zs_role where rolename=#rolename#
+		]]>	
+		<isNotEmpty property="roleid" prepend="and">
+			<![CDATA[
+				roleid<>#roleid#
+			]]>	
+		</isNotEmpty>	
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+				orgid=#orgid#
+			]]>	
+		</isNotEmpty>	
+	</select>
+	
+	<delete id="deleteByIdUserRole" parameterClass="Role">
+		<![CDATA[
+			delete from zs_userrole
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</delete>
+	
+	<delete id="deleteByIdRoleMenu" parameterClass="Role">
+		<![CDATA[
+			delete from zs_rolemenu
+		]]>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</delete>
+	
+	
+	<!-- ================================================== -->
+	
+	<select id="findByRoleUser" parameterClass="map"  resultClass="User">
+		<![CDATA[
+		 	select u.* from zs_userrole ur inner join zs_user u on ur.userid=u.userid where ur.roleid=#roleid# and u.orgid=#orgid#
+		]]>		
+	</select>
+	
+	<select id="findByRoleUserNot" parameterClass="map"  resultClass="User">
+		<![CDATA[
+		 	select * from zs_user t where t.orgid=#orgid# and t.userid not in (select u.userid from zs_userrole ur inner join zs_user u on ur.userid=u.userid where ur.roleid=#roleid# and u.orgid=#orgid#)
+		]]>		
+	</select>
+	
+	<delete id="deleteByIdRoleUserOne" parameterClass="map">
+		<![CDATA[
+			delete from zs_userrole where roleid=#roleid# and userid=#userid#
+		]]>		
+	</delete>
+	
+	<delete id="deleteByIdRoleUserId" parameterClass="map">
+		<![CDATA[
+			delete from zs_userrole where userid=#userid#
+		]]>		
+	</delete>
+	
+	<insert id="saveByIdRoleUserOne" parameterClass="map">
+		<![CDATA[
+			INSERT INTO zs_userrole (roleid,userid) VALUES (#roleid#,#userid#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_USERROLE.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<!-- ================================================== -->
+	
+	
+	<select id="findByRoleMenuAll" parameterClass="Integer"  resultClass="Menu">
+		<![CDATA[
+		 	select * from zs_menu where menusys=#menusys# order by menuorder asc
+		]]>		
+	</select>	
+	
+	<select id="findByRoleMenu" parameterClass="Integer" resultClass="RoleMenu">
+		<![CDATA[
+			select * from zs_rolemenu where roleid=#roleid#
+		]]>
+	</select>
+	
+	<insert id="saveByIdRoleMenuOne" parameterClass="map">
+		<![CDATA[
+			INSERT INTO zs_rolemenu (roleid,menuid) VALUES (#roleid#,#menuid#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_ROLEMENU.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	
+	<!-- 另加方法 -->
+	<select id="findByAll" parameterClass="Role" resultClass="Role">
+		<![CDATA[
+			select * from zs_role
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByExistUserRole" parameterClass="Integer" resultClass="UserRole">
+		<![CDATA[
+			select * from zs_userrole where userid=#userid#
+		]]>
+	</select>
+	
+	<delete id="deleteByIdUserRole_userid"  parameterClass="Integer">
+		<![CDATA[
+			delete from zs_userrole where userid=#userid#
+		]]>
+	</delete>	
+</sqlMap>

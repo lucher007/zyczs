@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChengSql">
+	<typeAlias alias="ChengSql" type="cn.gov.zyczs.cspt.po.ChengSql" />
+	
+	<insert id="saveOutSql" parameterClass="ChengSql">
+		<![CDATA[
+			insert into c_outsql(sql)
+			values(#sql#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_C_OUTSQL.CURRVAL as serno FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+    <select id="findOutSqlByList" parameterClass="ChengSql" resultClass="ChengSql">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from c_outsql 		
+		]]>
+		<![CDATA[
+		 	)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findOutSqlByCount" parameterClass="ChengSql" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_outsql
+		]]>
+	</select>
+</sqlMap>

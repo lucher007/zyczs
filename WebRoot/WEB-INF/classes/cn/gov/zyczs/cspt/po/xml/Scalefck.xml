@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Scalefck">
+	<typeAlias alias="Scalefck" type="cn.gov.zyczs.cspt.po.Scalefck"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="scalecode" prepend="and">
+			<![CDATA[
+					lower(scalecode) like lower('%'||#scalecode#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="fckcode" prepend="and">
+			<![CDATA[
+					fckcode = #fckcode#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="plucodes" prepend="and">
+			<![CDATA[
+					plucodes in($plucodes$)
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   scalecode=#scalecode#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="Scalefck" resultClass="Scalefck">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from s_scalefck p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by scalecode desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	<select id="quryListByScaleid" parameterClass="Scalefck" resultClass="Scalefck">
+		<![CDATA[
+		 	 select t.scalecode,
+		             s.scaleid,
+		             s.confvale,
+		             t.plucodes,
+		             t.medname,
+             		 t.fckcode,
+		             s.rowsname,
+		             s.columnname
+		 	from     s_ScaleKeyConf s 
+			left join s_scalefck t 
+			     on (t.fckcode = to_number(s.confvale))
+			where s.confvale is not null
+		]]>
+		<dynamic prepend="and">
+			<isNotEmpty property="scaleid" prepend="and">
+			<![CDATA[
+					s.scaleid=#scaleid#
+			]]>
+			</isNotEmpty>
+			<isNotEmpty property="scalecode" prepend="and">
+			<![CDATA[
+					t.scalecode=#scalecode#
+			]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>	
+	
+	<select id="quryByList" parameterClass="Scalefck" resultClass="Scalefck">
+		<![CDATA[
+		 	select * from s_scalefck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	
+	
+	
+	<select id="findByCount" parameterClass="Scalefck" resultClass="Integer">
+		<![CDATA[
+			select count(1) from s_scalefck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	<insert id="save" parameterClass="Scalefck">
+		<![CDATA[
+			insert into s_scalefck (scalecode,fckcode,plucodes,medname)
+			values (#scalecode#,#fckcode#,#plucodes#,#medname#)				
+		]]>	
+	</insert>
+	<delete id="deleteObj" parameterClass="Scalefck">
+		<![CDATA[
+			delete from s_scalefck 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>	
+	</delete>
+	<update id="updateByObj" parameterClass="Scalefck">
+		<![CDATA[
+			update s_scalefck
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="scalecode" prepend=",">
+				<![CDATA[
+						scalecode=#scalecode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="fckcode" prepend=",">
+				<![CDATA[
+						fckcode=#fckcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="plucodes" prepend=",">
+				<![CDATA[
+						plucodes=#plucodes#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="Scalefck" resultClass="Scalefck">
+		<![CDATA[
+		 	select * from s_scalefck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	
+</sqlMap>

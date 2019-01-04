@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" verticalAlign="top" fontSize="13"
+    horizontalAlign="center"  paddingTop="0" creationComplete="init()" backgroundColor="#FFFFFF" remove="removeListener()" xmlns:control="com.neower.control.*" xmlns:busness="com.neower.busness.*" xmlns:common="com.neower.common.*">
+    <mx:Script>
+        <![CDATA[
+        	import mx.charts.HitData;
+        	import mx.utils.ColorUtil;
+        	import com.neower.vo.IndexUser;
+        	import com.neower.event.GetPriceChartByPlantNameEvent;
+        	import mx.controls.Alert;
+        	import com.adobe.cairngorm.control.CairngormEventDispatcher;
+        	import com.adobe.cairngorm.control.CairngormEvent;
+       	    import mx.collections.ArrayCollection;
+       	    import flash.external.ExternalInterface;
+       	    public var queryType:String = "month";//默认按月查询
+       	    private var indexUser:IndexUser = new IndexUser();
+       	    private var plantNameTemp:String;//临时存放之前页面查询条件
+       	    private var objTemp:Object;
+       	    private var cpccorpTemp:String;
+       	    private var corptypeTemp:int;
+       	    
+       	    [Bindable]
+       	    private var flag:Boolean = true;
+			/**
+			 * 页面初始化执行
+			 **/
+			private function init():void
+			{
+				//Security.allowDomain("*");
+				//while(ExternalInterface.available)
+				//{
+					ExternalInterface.addCallback("js_getPriceChartByPlantName",getPriceChartByPlantName);
+					//getPriceChartByPlantName("川穹");
+				//}
+				this.addListener();
+			}
+			/**
+			 * 页面销毁移除监听
+			 **/
+			private function removeListener():void
+			{
+				if(CairngormEventDispatcher.getInstance().hasEventListener(GetPriceChartByPlantNameEvent.getPriceChartByPlantName_return))
+				{
+					CairngormEventDispatcher.getInstance().removeEventListener(GetPriceChartByPlantNameEvent.getPriceChartByPlantName_return,getQueryResult);
+				}
+			}
+			/**
+			 * 添加监听
+			 * */
+			private function addListener():void
+			{
+				CairngormEventDispatcher.getInstance().addEventListener(GetPriceChartByPlantNameEvent.getPriceChartByPlantName_return,getQueryResult);
+			}
+			/**
+			 * 执行成功后返回方法
+			 * */
+			private function getQueryResult(e:GetPriceChartByPlantNameEvent):void
+			{	
+				if(e.list.length == 1){
+					flag = false;
+				}else{
+					flag = true;
+				}
+				if(viewStack.selectedIndex == 0)
+				{
+					this.linechart_month.dataProvider = e.list;
+				}
+				else if(viewStack.selectedIndex == 1)
+				{
+					this.linechart_week.dataProvider = e.list;
+				}else{
+					this.linechart_weekAndMonth.dataProvider = e.list;
+				}
+			}
+			/**
+			 * viewStack切换时候执行
+			 **/
+			private function viewChange():void
+			{	
+				indexUser.pilltype = 0;
+				if(viewStack.selectedIndex==0)
+				{
+					queryType = "month";//本月价格指数
+				}
+				else if(viewStack.selectedIndex == 1)
+				{
+					queryType = "week";//本周价格指数
+				}else{
+					indexUser.pilltype = 1;
+					lab_current.text = "当前查询按月查询";
+					queryType = "month";
+				}
+				getPriceChartByPlantName(plantNameTemp,objTemp,corptypeTemp);
+			}
+			/**
+			 * 调用js函数
+			 * */
+			protected  function getPriceChartByPlantName(plantName:String,obj:Object,corptype:int):void
+			{
+				indexUser.indexusername = plantName;
+				plantNameTemp = plantName;
+				if(corptype == 0){
+					indexUser.cpccorp = obj.toString();
+					objTemp = obj.toString();
+				}else{
+					indexUser.orgid = parseInt(obj.toString());
+					objTemp =  parseInt(obj.toString());
+				}
+				indexUser.indexweekperiod = queryType;
+				indexUser.corptype = corptype;
+				corptypeTemp = corptype;
+				CairngormEventDispatcher.getInstance().dispatchEvent(new GetPriceChartByPlantNameEvent(GetPriceChartByPlantNameEvent.getPriceChartByPlantName,indexUser,null));
+			}
+			
+			
+			/**
+			 * 调用js函数
+			 * */
+			private  function getPriceChartByCondtion():void
+			{
+				indexUser.indexusername = plantNameTemp;
+				indexUser.indexweekperiod = queryType;
+				indexUser.startindexweekdate = startindexweekdate.text;
+				indexUser.endindexweekdate = endindexweekdate.text;
+				if(corptypeTemp == 0){
+					indexUser.cpccorp = objTemp.toString();
+				}else{
+					indexUser.orgid = parseInt(objTemp.toString());
+				}
+				CairngormEventDispatcher.getInstance().dispatchEvent(new GetPriceChartByPlantNameEvent(GetPriceChartByPlantNameEvent.getPriceChartByPlantName,indexUser,null));
+			}
+			/**
+			 * 切换到周
+			 * */
+			private function changeToWeek():void
+			{
+				queryType = "week";//本周价格指数
+				lab_week.setStyle("color","black");
+				lab_week.setStyle("fontSize","14");
+				lab_month.setStyle("color","red");
+				lab_month.setStyle("fontSize","12");
+				lab_current.text = "当前查询按周查询";
+			}
+			/**
+			 * 切换到月
+			 * */
+			private function changeToMonth():void
+			{
+				queryType = "month";//本月价格指数
+				lab_week.setStyle("color","red");
+				lab_week.setStyle("fontSize","12");
+				lab_month.setStyle("color","black");
+				lab_month.setStyle("fontSize","14");
+				lab_current.text = "当前查询按月查询";
+			}
+			
+			/**
+           * 点提示的信息
+           * hd.item为鼠标滑过点的对象
+           * */
+            private function lineChart_dataTipFunction(hd:HitData):String
+			 { 
+				 var curObj:Object = hd.item;
+				 var stateStr:String;
+				 return  "<font size='12'>时间:"+curObj.indexweekdate+"\n单价:"+curObj.indexweekvalue+"(元/Kg)</font>";
+			 }
+			 
+       ]]>
+    </mx:Script>
+ <!--实例化一个前端控制器-->
+<control:FController/>
+<!--实例化远程对象委托配置-->
+<busness:Services/>
+		<mx:Zoom id="zoomIn" duration="1000"/>
+         <mx:HBox  width="630" height="350" paddingTop="10" paddingRight="5" paddingBottom="10" paddingLeft="5" horizontalAlign="center">
+				<mx:VBox width="100%" height="100%" horizontalAlign="left">
+					<mx:Label text="药材单价(元/Kg)"/>
+					<mx:TabBar dataProvider="{ viewStack }"   borderStyle="solid" creationPolicy="auto"  width="50%"/>
+					<mx:ViewStack id="viewStack" width="100%" height="100%"  change="viewChange()">	
+						
+			        <mx:HBox label="按月浏览" width="100%" height="100%">
+			        	 <mx:VBox width="100%" height="100%">
+			        	 		<mx:VBox width="100%" height="98%">
+			        	 				<mx:LineChart id="linechart_month" color="0x323232" height="100%" width="100%"  showDataTips="{flag}" showAllDataTips="{!flag}" dataTipFunction="lineChart_dataTipFunction">
+								            <mx:horizontalAxis>
+								                <mx:CategoryAxis categoryField="indexweekdate"/>
+								            </mx:horizontalAxis>
+								            <mx:series>
+								                <mx:LineSeries yField="indexweekvalue" form="curve"
+								                    showDataEffect="{zoomIn}" 
+								                    itemRenderer="mx.charts.renderers.CircleItemRenderer"
+							                        horizontalCenter="true"
+								                >
+								               <mx:lineStroke> 
+                							   	<mx:Stroke color="#6666CC" weight="1.0" alpha="0.75" /> 
+               								   </mx:lineStroke> 
+								                </mx:LineSeries>
+								            </mx:series>
+								         
+								         
+								           <!-- series -->
+										<mx:backgroundElements> 
+											<mx:GridLines id="gridLines" 
+												direction="both" 
+												verticalTickAligned="false"> 
+											<mx:verticalStroke> 
+												<mx:Stroke color="haloSilver" 
+													weight="0" 
+													alpha="1.0" /> 
+											</mx:verticalStroke> 
+											<mx:horizontalStroke> 
+											<!-- Set alpha to 0 so stroke isn't visible. --> 
+											<mx:Stroke color="#FFFF99" 
+												weight="0" 
+												alpha="1.0" /> 
+											</mx:horizontalStroke> 
+											<mx:horizontalFill> 
+											<mx:SolidColor color="#009966" 
+												alpha="0.1" /> 
+											</mx:horizontalFill> 
+											</mx:GridLines> 
+										</mx:backgroundElements> 
+								
+								        <!-- series filters -->
+								        <mx:seriesFilters>
+								            <mx:Array />
+								        </mx:seriesFilters>
+								         
+								         </mx:LineChart>
+								        <mx:Legend dataProvider="{linechart_month}" color="0x323232"/>
+			        	 		</mx:VBox>
+			        	 		<mx:VBox width="100%" height="2%" horizontalAlign="center">
+			        	 			<mx:Label text="月统计"/>
+			        	 		</mx:VBox>
+			        	 </mx:VBox>	
+				       	  
+			        </mx:HBox >
+			        
+						<mx:HBox label="按周浏览" width="100%" height="100%">
+							 <mx:VBox width="100%" height="100%">
+				        	 		<mx:VBox width="100%" height="98%">	
+							       	 		 <mx:LineChart id="linechart_week" color="0x323232" height="100%" width="100%" showDataTips="{flag}" showAllDataTips="{!flag}" dataTipFunction="lineChart_dataTipFunction">
+									            <mx:horizontalAxis>
+									                <mx:CategoryAxis categoryField="indexweekdate"/>
+									            </mx:horizontalAxis>
+									            <mx:series>
+									                <mx:LineSeries yField="indexweekvalue" form="segment"
+									                	   showDataEffect="{zoomIn}" 
+									                  	   itemRenderer="mx.charts.renderers.CircleItemRenderer"
+									                  	   horizontalCenter="true"
+									                	>
+									                <mx:lineStroke> 
+                							   			<mx:Stroke color="#6666CC" weight="1.0" alpha="0.75" /> 
+               								  		</mx:lineStroke> 
+									               </mx:LineSeries>
+									            </mx:series>
+									            
+									          <!-- series -->
+											 <mx:backgroundElements> 
+												<mx:GridLines id="gridLines2" 
+													direction="both" 
+													verticalTickAligned="false"> 
+												<mx:verticalStroke> 
+													<mx:Stroke color="haloSilver" 
+														weight="0" 
+														alpha="1.0" /> 
+												</mx:verticalStroke> 
+												<mx:horizontalStroke> 
+												<!-- Set alpha to 0 so stroke isn't visible. --> 
+												<mx:Stroke color="#FFFF99" 
+													weight="0" 
+													alpha="1.0" /> 
+												</mx:horizontalStroke> 
+												<mx:horizontalFill> 
+												<mx:SolidColor color="#009966" 
+													alpha="0.1" /> 
+												</mx:horizontalFill> 
+												</mx:GridLines> 
+											</mx:backgroundElements> 
+								
+									        <!-- series filters -->
+									        <mx:seriesFilters>
+									            <mx:Array />
+									        </mx:seriesFilters>
+							       		  </mx:LineChart>
+							      		  <mx:Legend dataProvider="{linechart_week}" color="0x323232"/>
+							    </mx:VBox>
+				        	 		<mx:VBox width="100%" height="2%" horizontalAlign="center">
+				        	 			<mx:Label text="周统计"/>
+				        	 		</mx:VBox>
+			        	 </mx:VBox>	
+			           </mx:HBox >
+        	
+        			<mx:HBox label="自定义" width="100%" height="100%">
+							 <mx:VBox width="100%" height="100%">
+							 		<mx:HBox width="100%" height="2%">
+							 			<mx:Label text="开始时间:"/>
+							 			<mx:Spacer width="5"/>
+							 			<common:ChineseDateChooser width="120" id="startindexweekdate"/>
+						 				<mx:Label text="结束时间:"/>
+							 			<mx:Spacer width="5"/>
+							 			<common:ChineseDateChooser width="120" id="endindexweekdate"/>
+							 			<mx:Button label="查询"  click="getPriceChartByCondtion()"/>
+							 		</mx:HBox>
+							 		
+				        	 		<mx:VBox width="100%" height="98%">	
+							       	 		 <mx:LineChart id="linechart_weekAndMonth" color="0x323232" height="100%" width="100%" showDataTips="{flag}" showAllDataTips="{!flag}" dataTipFunction="lineChart_dataTipFunction">
+									            <mx:horizontalAxis>
+									                <mx:CategoryAxis categoryField="indexweekdate"/>
+									            </mx:horizontalAxis>
+									            <mx:series>
+									                <mx:LineSeries yField="indexweekvalue" form="segment"
+									                	   showDataEffect="{zoomIn}" 
+									                  	   itemRenderer="mx.charts.renderers.CircleItemRenderer"
+									                  	   horizontalCenter="true"
+									                	>
+									                 <mx:lineStroke> 
+                							   			<mx:Stroke color="#6666CC" weight="1.0" alpha="0.75" /> 
+               								  		</mx:lineStroke> 	
+									                </mx:LineSeries>
+									            </mx:series>
+									            
+									            <!-- series -->
+											 <mx:backgroundElements> 
+												<mx:GridLines id="gridLines3" 
+													direction="both" 
+													verticalTickAligned="false"> 
+												<mx:verticalStroke> 
+													<mx:Stroke color="haloSilver" 
+														weight="0" 
+														alpha="1.0" /> 
+												</mx:verticalStroke> 
+												<mx:horizontalStroke> 
+												<!-- Set alpha to 0 so stroke isn't visible. --> 
+												<mx:Stroke color="#FFFF99" 
+													weight="0" 
+													alpha="1.0" /> 
+												</mx:horizontalStroke> 
+												<mx:horizontalFill> 
+												<mx:SolidColor color="#009966" 
+													alpha="0.1" /> 
+												</mx:horizontalFill> 
+												</mx:GridLines> 
+											</mx:backgroundElements> 
+								
+									        <!-- series filters -->
+									        <mx:seriesFilters>
+									            <mx:Array />
+									        </mx:seriesFilters>
+									        
+							       			</mx:LineChart>
+							      		  <mx:Legend dataProvider="{linechart_weekAndMonth}" color="0x323232"/>
+							    </mx:VBox>
+					        	 		<mx:HBox width="100%" height="2%" horizontalAlign="center">
+					        	 			<mx:Label  id="lab_current"  color="#17D917"/>
+				        	 				<mx:Label text="切换到周" id="lab_week" click="changeToWeek()" color="red" fontSize="14"/>
+					        	 			<mx:Label text="切换到月" id="lab_month" click="changeToMonth()"/>
+				        	 			</mx:HBox>
+			        	 </mx:VBox>	
+			           </mx:HBox >
+        	
+        	</mx:ViewStack>
+			</mx:VBox>
+			
+		</mx:HBox>
+</mx:Application>

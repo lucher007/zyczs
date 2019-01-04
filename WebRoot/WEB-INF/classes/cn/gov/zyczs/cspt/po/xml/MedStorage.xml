@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MedStorage">
+	<typeAlias alias="MedStorage" type="cn.gov.zyczs.cspt.po.MedStorage"/>	
+	<typeAlias alias="Check" type="cn.gov.zyczs.cspt.po.Check"/>	
+	
+	<sql id="findByWhereId">				
+		<![CDATA[
+				medstorid = #medstorid#
+		]]>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+					lower(p.medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpcmed" prepend="and">
+			<![CDATA[
+					lower(p.cpcmed) like lower('%'||#cpcmed#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="checkstate" prepend="and">
+			<![CDATA[
+					checkstate = #checkstate#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+					lower(ms.medname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+					lower(ms.cpcmed) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medtype" prepend="and">
+			<![CDATA[
+					p.medtype = #medtype#
+			]]>
+		</isNotEmpty>
+			
+		<isEqual property="flag" compareValue="1" prepend="and">
+			<![CDATA[
+				(printstate < #printstate# 
+				and (
+						    (downstate=2 and to_char(addtime,'yyyy/mm/dd') 
+						       between (select to_char(sysdate-2,'yyyy/mm/dd') from dual) 
+						       and (select to_char(sysdate,'yyyy/mm/dd') from dual))
+						       or   (downstate=1 or downstate=0)
+						    )
+				   		 )   
+			]]>
+		</isEqual>
+				
+		<isEqual property="flag" compareValue="2" prepend="and">
+			<![CDATA[
+					(printstate = #printstate# or downstate = #downstate#)
+			]]>
+		</isEqual>
+		
+		
+		<isNotEmpty property="batchcpc" prepend="and">
+		<![CDATA[
+				p.cpcmed=#batchcpc#
+		]]>
+		</isNotEmpty>	
+		
+		
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+					state = #state#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medstorid" prepend="and">
+			<![CDATA[
+					medstorid = #medstorid#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByCheckWhere">
+		<isNotEmpty property="checkstate" prepend="and">
+			<![CDATA[
+				checkstate = #checkstate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="and" open="(">
+			<![CDATA[
+				lower(ms.medname) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="mcontent" prepend="or" close=")">
+			<![CDATA[
+				lower(ms.cpcmed) like lower('%'||#mcontent#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+				type = #type#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+				ms.state = #state#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+				lower(ms.medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	
+	<select id="findGroupByList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+			select p.cpcmed,p.medname,p.mednumweight,sum(p.medweight) as medweight,min(m.mednumber) as mednumber 
+			from ZS_MEDSTORAGE p
+			left join zs_med m on m.cpcmed = p.cpcmed 
+			where  orgid = #orgid#
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 group by p.cpcmed,p.medname,p.mednumweight order by min(p.addtime) desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+			]]>		
+	</select>
+	
+	<select id="findGroupByCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[
+			select count(1) from (
+			select p.cpcmed,p.medname,p.mednumweight,sum(p.medweight) as medweight,min(m.mednumber) as mednumber 
+			from ZS_MEDSTORAGE p
+			left join zs_med m on m.cpcmed = p.cpcmed 
+			where  orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			 group by p.cpcmed,p.medname,p.mednumweight )a
+			]]>	
+	</select>
+	
+	<select id="findChengWeightCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			select NVL(sum(totalweight),0)  from c_batchweight where batchcpc=#batchcpc# and orgid=#orgid#
+			
+		]]>
+		
+	</select>
+	
+	<select id="findByList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (
+			select p.*,m.mednumber
+			from ZS_MEDSTORAGE p 
+			left join zs_med m on m.cpcmed = p.cpcmed
+			where  p.orgid = #orgid#
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by p.addtime desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[
+			select count(1) from (
+				select p.*,m.mednumber
+				from ZS_MEDSTORAGE p 
+				left join zs_med m on m.cpcmed = p.cpcmed
+				where  p.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			 order by p.addtime desc )a
+			]]>	
+	</select>
+	
+	<insert id="save" parameterClass="MedStorage">
+		<![CDATA[
+			insert into zs_medstorage (medname, prodcode, cpcmed, medweight, mednum, mednumweight, province, city, area, areacode,state, medtype, printstate, orgid, checkstate,userid,orimedweight,addtime)
+			values
+  			(#medname#, #prodcode#, #cpcmed#, #medweight#, #mednum#, #mednumweight#, #province#, #city#, #area#, #areacode#, NVL(#state#,0), NVL(#medtype#,0), NVL(#printstate#,0), #orgid#, NVL(#checkstate#,0),NVL(#userid#,0),#orimedweight#,to_date('$addtime$','YYYY-MM-DD HH24:MI:SS'))
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_MedStorage.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>	
+
+	<!-- 药材检验管理 -->
+	<select id="findByCheckCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[	
+			select count(1) from (
+				select ms.medname, ms.cpcmed, sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber
+				from zs_medstorage ms 
+				left join zs_med m on m.cpcmed = ms.cpcmed
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed )
+		]]>
+	</select>
+	<select id="findByCheckList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[		
+			select b.* from (select a.*,rownum r from (
+				select ms.medname, ms.cpcmed, sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber
+				from zs_medstorage ms 
+				left join zs_med m on m.cpcmed = ms.cpcmed
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed order by min(ms.addtime) desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+	<!-- 生产平台药材检验 -->
+	<select id="findByProductionMedCheckCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[	
+			select count(1) from (
+				select ms.medname, ms.cpcmed, sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber
+				from zs_medstorage ms
+				left join zs_med m on m.cpcmed = ms.cpcmed
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed )
+		]]>
+	</select>
+	<select id="findByProductionMedCheckList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[		
+			select b.* from (select a.*,rownum r from (
+				select ms.medname, ms.cpcmed, sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber
+				from zs_medstorage ms 
+				left join zs_med m on m.cpcmed = ms.cpcmed
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed order by min(ms.addtime) desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+	
+	<!-- 药材已检药材 -->
+	<select id="findByCheckedCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[	
+			select count(1) from (
+				select  ms.medname,ms.cpcmed,sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber,min(c.checktime) as checktime
+			  	from  zs_medstorage ms 
+                left join zs_med m on m.cpcmed = ms.cpcmed
+                left join zs_check c on c.prodid = ms.medstorid
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed )
+		]]>
+	</select>
+	<select id="findByCheckedList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[		
+			select b.* from (select a.*,rownum r from (
+				select  ms.medname,ms.cpcmed,sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber,min(c.checktime) as checktime
+			  	from zs_medstorage ms 
+			  	left join zs_med m on m.cpcmed = ms.cpcmed
+			  	left join zs_check c on c.prodid = ms.medstorid
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed order by min(c.checktime) desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+	<!-- 生产平台的已检药材 -->
+	<select id="findByProductionMedCheckedCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[	
+			select count(1) from (
+				select  ms.medname,ms.cpcmed,sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber,min(c.checktime) as checktime
+			  	from zs_medstorage ms 
+			  	left join zs_med m on m.cpcmed = ms.cpcmed
+			  	left join zs_check c on c.prodid = ms.medstorid
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed )
+		]]>
+	</select>
+	<select id="findByProductionMedCheckedList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[		
+			select b.* from (select a.*,rownum r from (
+				select  ms.medname,ms.cpcmed,sum(ms.medweight) medweight,
+				min(ms.medstorid) as medstorid,min(m.mednumber) as mednumber,min(c.checktime) as checktime
+			  	from zs_medstorage ms 
+				left join zs_med m on m.cpcmed = ms.cpcmed
+			  	left join zs_check c on c.prodid = ms.medstorid
+				where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByCheckWhere" />
+		</dynamic>
+		<![CDATA[
+			group by ms.medname, ms.cpcmed order by min(c.checktime) desc  )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+	
+	
+	<update id="updateByCheck" parameterClass="Check">
+		<![CDATA[
+			update zs_medstorage
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="checkstate" prepend=",">
+				<![CDATA[
+						checkstate=#checkstate#
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<![CDATA[
+			where medstorid = #medstorid#
+		]]>
+	</update>
+	
+	<select id="findMedStorage" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select * from ZS_MEDSTORAGE p where  p.orgid = #orgid#
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+	</select>
+	
+	<select id="findByBox" parameterClass="Map" resultClass="MedStorage">
+		<![CDATA[
+		select m.medstorid,m.medname,m.prodcode,m.cpcmed,m.medweight,m.mednum,m.mednumweight,
+       			m.province,m.city,m.area,m.areacode,m.userid,m.addtime,m.state,m.medtype,m.printstate,
+       			m.orgid,m.checkstate,b.boxcode,b.boxweight
+		from zs_medstorage m,zs_box b 
+		where m.medstorid=b.storid and b.boxcode in ($boxcodes$) and b.state=0 and (m.printstate=3 or m.downstate=2) 
+		and b.stortype=0 and m.medtype=1 and m.mednum is not null and m.orgid=#orgid#
+		]]>
+	</select>
+	  
+	
+	<update id="update" parameterClass="MedStorage">
+		<![CDATA[
+			update zs_medstorage
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="checkstate" prepend=",">
+				<![CDATA[
+						checkstate=#checkstate#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="medweight" prepend=",">
+				<![CDATA[
+						medweight=#medweight#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state=#state#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mednum" prepend=",">
+				<![CDATA[
+						mednum=#mednum#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="downstate" prepend=",">
+				<![CDATA[
+						downstate=#downstate#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="printstate" prepend=",">
+				<![CDATA[
+						printstate=#printstate#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="userid" prepend=",">
+				<![CDATA[
+						userid=#userid#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mednumweight" prepend=",">
+				<![CDATA[
+						mednumweight=#mednumweight#
+				]]>
+			</isNotEmpty>
+		</dynamic>	
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	
+	<select id="findTabletMedStorage" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[		
+			select b.* from (select a.*,rownum r from (
+					select p.* from zs_medstorage p
+					where p.orgid = #orgid# 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			order by nlssort(p.medname,'NLS_SORT=SCHINESE_PINYIN_M'), p.cpcmed desc,p.mednumweight desc,p.medweight desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+	
+		
+	<select id="findTabletMedStorage2" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[		
+			select b.* from (select a.*,rownum r from (
+					select p.*,m.mednumber from zs_medstorage p inner join zs_med m
+					on p.cpcmed = m.cpcmed where p.orgid = #orgid# 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			order by nlssort(p.medname,'NLS_SORT=SCHINESE_PINYIN_M'), p.cpcmed desc,p.mednumweight desc,p.medweight desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+	
+	<select id="findTabletMedStorageCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[		
+				select count(1) from zs_medstorage p
+				where p.orgid = #orgid# 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findTabletMedStorageCount2" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[		
+				select count(1) from zs_medstorage p inner join zs_med m
+				on p.cpcmed = m.cpcmed where p.orgid = #orgid# 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+
+	<!-- 查询该药材经销商下的主要药材 
+	<select id="findMainMeds" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select t.medname from    (  
+				select count(ms.medname) c ,ms.medname from zs_medstorage ms 
+				where ms.orgid in
+				(select o.orgid from zs_org o where o.marketcode = (      
+					select cpccorp from zs_org where orgid = #orgid# and state = #state#)) 
+				group by ms.medname order by c desc    )  t              
+		]]>
+	</select>
+	-->
+	
+	<select id="findMainMeds" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select distinct(m.medname) from zs_medstorage m where m.orgid=#orgid#            
+		]]>
+	</select>
+	
+	<select id="findMarketMainMeds" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select distinct(m.medname) from zs_medstorage m
+			inner join zs_org o 
+			on m.orgid = o.orgid
+			where o.marketcode = #cpccorp#
+		]]>
+	</select>
+	
+	<select id="findById" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select * from ZS_MEDSTORAGE
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<!-- 市场的药材库存统计 -->
+	<sql id="findByMedmarketWhere">
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+				ms.state = #state#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+				lower(ms.medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medaddtime" prepend="and">
+			<![CDATA[
+				ms.addtime >= to_date('$medaddtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medendtime" prepend="and">
+			<![CDATA[
+				ms.addtime <= to_date('$medendtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+	</sql>
+	<select id="findByMedmarketMedStatCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[
+			select count(1) from (
+				select ms.medname,ms.cpcmed,ms.mednumweight,sum(ms.medweight) medweight,min(ms.addtime) addtime,min(m.mednumber) as mednumber
+				from zs_medstorage ms 
+				left join zs_med m on m.cpcmed = ms.cpcmed
+				where ms.orgid in (
+					select o.orgid from zs_org o where o.marketcode = (
+					select cpccorp from zs_org where orgid = #orgid#))
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+		<![CDATA[
+		 	group by ms.medname,ms.cpcmed,ms.mednumweight order by min(ms.addtime) desc )
+		]]>		
+	</select>
+	<select id="findByMedmarketMedStatList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (
+			select ms.medname,ms.cpcmed,ms.mednumweight,sum(ms.medweight) medweight,min(ms.addtime) addtime,min(m.mednumber) as mednumber
+			from zs_medstorage ms 
+			left join zs_med m on m.cpcmed = ms.cpcmed
+			where ms.orgid in (
+					select o.orgid from zs_org o where o.marketcode = (
+					select cpccorp from zs_org where orgid = #orgid#))	
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere" />
+		</dynamic>
+		<![CDATA[
+		 	group by ms.medname,ms.cpcmed,ms.mednumweight order by min(ms.addtime) desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	<select id="findByMedmarketMedStatTotalweight" parameterClass="MedStorage" resultClass="String">
+		<![CDATA[
+			select sum(medweight) / 10000 totalweight 
+			from zs_medstorage ms 
+			where ms.orgid in (
+				select o.orgid from zs_org o where o.marketcode = (
+					select cpccorp from zs_org where orgid = #orgid#))
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedmarketWhere"/>
+		</dynamic>
+	</select>
+	
+	<!-- 药材经销平台-药材库存统计 -->
+	<sql id="findByMedSellWhere">
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+				ms.state = #state#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medname" prepend="and">
+			<![CDATA[
+				lower(ms.medname) like lower('%'||#medname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medaddtime" prepend="and">
+			<![CDATA[
+				ms.addtime >= to_date('$medaddtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="medendtime" prepend="and">
+			<![CDATA[
+				ms.addtime <= to_date('$medendtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByMedsellStatCount" parameterClass="MedStorage" resultClass="Integer">
+		<![CDATA[
+			select count(1) from (
+			select ms.medname,ms.cpcmed,ms.mednumweight,sum(ms.medweight) medweight,min(ms.addtime) addtime,min(m.mednumber) as mednumber
+			from zs_medstorage ms 
+			left join zs_med m on m.cpcmed = ms.cpcmed
+			where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedSellWhere"/>
+		</dynamic>
+		<![CDATA[
+		 	group by ms.medname,ms.cpcmed,ms.mednumweight order by min(ms.addtime) desc)
+		]]>	
+	</select>	
+	<select id="findByMedsellStatList" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (
+			select ms.medname,ms.cpcmed,ms.mednumweight,sum(ms.medweight) medweight,min(ms.addtime) addtime,min(m.mednumber) as mednumber
+			from zs_medstorage ms 
+			left join zs_med m on m.cpcmed = ms.cpcmed
+			where ms.orgid = #orgid#	
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedSellWhere" />
+		</dynamic>
+		<![CDATA[
+		    group by ms.medname,ms.cpcmed,ms.mednumweight order by min(ms.addtime) desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	<select id="findByMedsellStatTotalweight" parameterClass="MedStorage" resultClass="String">
+		<![CDATA[
+			select sum(medweight) / 10000 totalweight from zs_medstorage ms where ms.orgid = #orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByMedSellWhere"/>
+		</dynamic>
+	</select>
+	
+	
+	<sql id="findMedByMedcpcWhere">
+		<isNotEmpty property="checkstate" prepend="and">
+			<![CDATA[
+				checkstate = #checkstate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+				orgid = #orgid#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+				type = #type#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+				state = #state#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	
+	<select id="findMedByMedcpc" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+		
+			select * from zs_medstorage ms where ms.cpcmed = #cpcmed# 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findMedByMedcpcWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by medstorid desc
+		]]>		
+	</select>
+	
+	
+	<select id="findCurrentMedWeight" parameterClass="MedStorage" resultClass="MedStorage">
+		<![CDATA[
+			select sum(m.medweight) medweight,m.prodcode,m.cpcmed from zs_medstorage m where m.orgid=#orgid#
+			and m.prodcode=#prodcode# and m.cpcmed=#cpcmed# group by m.prodcode,m.cpcmed
+		]]>
+	</select>
+	
+	<!--手持机相关接口	-->
+	
+	<!--库存信息-->
+	<select id="findMedListByCpccorp" parameterClass="Map" resultClass="MedStorage">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (
+			select medname,prodcode,sum(medweight) medweight from zs_medstorage where orgid =#orgid# 
+			 and  state=0 group by medname,prodcode
+		]]>
+		
+		<![CDATA[		 		 	
+		 	)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findMedCountByCpccorp" parameterClass="Integer" resultClass="Integer">
+		<![CDATA[
+		select count(1) from (
+			select medname,prodcode,sum(medweight) from zs_medstorage where orgid =#orgid#
+			 and  state=0 group by medname,prodcode 
+			) a 
+		]]>
+		
+	</select>
+	
+	<select id="findMedListByProdcode" parameterClass="Map" resultClass="MedStorage">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (
+			select cpcmed,sum(medweight) medweight from zs_medstorage 
+			where orgid =#orgid# and prodcode=#prodcode#
+			 and  state=0 group by cpcmed
+		]]>
+		
+		<![CDATA[		 		 	
+		 	)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findMedCountByProdcode" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+		select count(1) from (
+			select cpcmed,sum(medweight) from zs_medstorage 
+			where orgid =#orgid# and prodcode=#prodcode#
+			 and  state=0 group by cpcmed 
+			)a 
+		]]>
+		
+	</select>
+	
+	<!--超售信息-->
+	<select id="findMedExceedListByCpccorp" parameterClass="Map" resultClass="MedStorage">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (
+			select * from (   
+			select prodname as medname,(findOrimedweight(prodname,#orgid#,#begtime#,#endtime#)-sum(totalweight)) totalweight from zs_inoutstorbox where inoutstorid in (
+			select inoutstorid from zs_inoutstor where type=0 and stortype=1 
+			and orgid=#orgid#
+			and opersystime>=to_date(#begtime#,'YYYY-MM-DD HH24:MI:SS')
+			and opersystime<=to_date(#endtime#,'YYYY-MM-DD HH24:MI:SS')
+			
+			) group by prodname
+			) a where totalweight<0
+		]]>
+		
+		<![CDATA[		 		 	
+		 	)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findMedExceedCountByCpccorp" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+		select count(1) from (
+			select * from (   
+			select prodname,(findOrimedweight(prodname,#orgid#,#begtime#,#endtime#)-sum(totalweight)) totalweight from zs_inoutstorbox where inoutstorid in (
+			select inoutstorid from zs_inoutstor where type=0 and stortype=1 
+			and orgid=#orgid#
+			and opersystime>=to_date(#begtime#,'YYYY-MM-DD HH24:MI:SS')
+			and opersystime<=to_date(#endtime#,'YYYY-MM-DD HH24:MI:SS')
+			
+			) group by prodname
+			) a where totalweight<0
+			) b 
+		]]>
+		
+	</select>
+	
+	<select id="findChangeMedWeight" parameterClass="MedStorage" resultClass="Double">
+		<![CDATA[
+			select sum(nvl(medweight,0)) medweight from ZS_MEDSTORAGE p   
+			where  orgid = #orgid#    and    state = #state# and cpcmed = #cpcmed#
+		]]>
+	</select>
+	
+</sqlMap>

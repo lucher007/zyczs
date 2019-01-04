@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="OpLog">
+	<typeAlias alias="OpLog" type="cn.gov.zyczs.cspt.po.OpLog"/>
+
+
+
+	<sql id="findByWhere">				
+		<isNotEmpty property="sysid" prepend="and">
+			<![CDATA[
+					sysid =#sysid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="loginName" prepend="and">
+			<![CDATA[
+					lower(loginName) like lower('%'||#loginName#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="clientIp" prepend="and">
+			<![CDATA[
+					lower(clientip) like lower('%'||#clientIp#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="method" prepend="and">
+			<![CDATA[
+					method =#method#
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="addTime" prepend="and">
+			<![CDATA[					
+					addTime >=to_date('$addTime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endTime" prepend="and">
+			<![CDATA[
+					addTime <=to_date('$endTime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="OpLog" resultClass="OpLog">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from ZS_OpLog where id is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="OpLog" resultClass="Integer">
+		<![CDATA[
+			select count(1) from ZS_OpLog
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="OpLog">
+		<![CDATA[
+			insert into ZS_OpLog(sysid,method,loginName,userName,clientIp,content)		
+			values (#sysid#,#method#,#loginName#,#userName#,#clientIp#,#content#) 			
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_OPLOG.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	
+	
+	
+	
+</sqlMap>

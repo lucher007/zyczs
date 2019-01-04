@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Search">
+	<typeAlias alias="Search" type="cn.gov.zyczs.cspt.po.Search" />
+	<sql id="findById">				
+		<![CDATA[
+				id = #id#
+		]]>
+	</sql>
+	
+	
+	<sql id="findByWhere">		
+		<isNotEmpty property="area" prepend="and">		
+			<![CDATA[
+					area = #area#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList"  resultClass="Search" parameterClass="Search">
+		<![CDATA[
+			select * from zs_Kiosks
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+		<![CDATA[
+			order by id asc
+		]]>
+	</select>
+
+</sqlMap>

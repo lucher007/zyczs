@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DailyCheck">
+	<typeAlias alias="DailyCheck" type="cn.gov.zyczs.cspt.po.DailyCheck" />
+	
+	
+	<insert id="save" parameterClass="DailyCheck">
+		<![CDATA[
+			insert into zs_dailycheck
+  			(checkproject, checkresult, checkperson, checknote, cpcmeds, deductscore,userid,cpccorp,orgname,marketname,opername)
+			values
+ 		    (#checkproject#,#checkresult#,#checkperson#, #checknote#,#cpcmeds#, #deductscore#,#userid#,#cpccorp#,#orgname#,#marketname#,#opername#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_DailyCheck.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<sql id="findById">				
+		<![CDATA[
+				id = #id#
+		]]>
+	</sql>
+	
+	 <sql id="findByWhere">
+		 <isNotEqual  property="checkproject" compareValue="-1" prepend="and">
+			<![CDATA[
+					checkproject = #checkproject#
+			]]>
+		</isNotEqual>
+		 <isNotEqual  property="checkresult" compareValue="-1" prepend="and">
+			<![CDATA[
+					checkresult = #checkresult#
+			]]>
+		</isNotEqual>
+		<isNotEmpty property="marketname" prepend="and">			
+			<![CDATA[
+					marketname=#marketname#
+			]]>			
+		</isNotEmpty>
+			<isNotEmpty property="opername" prepend="and">			
+			<![CDATA[
+					opername=#opername#
+			]]>			
+		</isNotEmpty>
+		<isNotEmpty property="startcheckdate" prepend="and">
+			<![CDATA[
+					checkdate >= to_date('$startcheckdate$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endcheckdate" prepend="and">
+			<![CDATA[
+					checkdate <= to_date('$endcheckdate$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		 <isNotEmpty  property="supercpccorp"  prepend="and">
+			<![CDATA[
+					supercpccorp = #supercpccorp#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="DailyCheck" resultClass="DailyCheck">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from zs_dailycheck
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="DailyCheck" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_dailycheck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findById" parameterClass="Integer" resultClass="DailyCheck">
+		<![CDATA[
+			select * from zs_dailycheck
+		]]>
+		<dynamic prepend="where">
+			<include refid="findById" />
+		</dynamic>
+	</select>
+	
+	<select id="findByMaxDate"  resultClass="DailyCheck" parameterClass="DailyCheck">
+		<![CDATA[
+			select * from zs_dailycheck dc
+			where dc.checkdate in
+			(select max(dc.checkdate) from zs_dailycheck dc  where dc.cpccorp=#cpccorp#
+			group by dc.checkproject)
+		]]>
+	</select>
+	
+	
+	<select id="findCpcMedsByBoxCode"  resultClass="String" parameterClass="String">
+		<![CDATA[
+			select distinct(m.cpcmed) cpcmed from zs_medstorage m
+			inner join zs_box b
+			on m.medstorid = b.storid
+			where b.boxcode in ($cpcmeds$)
+		]]>
+	</select>
+
+</sqlMap>

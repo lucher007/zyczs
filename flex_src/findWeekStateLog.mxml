@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" verticalAlign="top" fontSize="13"
+    horizontalAlign="center"  paddingTop="0" creationComplete="init()" backgroundColor="#FFFFFF" remove="removeListener()" xmlns:control="com.neower.control.*" xmlns:busness="com.neower.busness.*" xmlns:common="com.neower.common.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.XMLListCollection;
+			import mx.charts.HitData;
+			import com.neower.vo.ChengState;
+			import mx.utils.ColorUtil;
+			import com.neower.event.FindWeekStateLogEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.adobe.cairngorm.control.CairngormEvent;
+       	    import mx.collections.ArrayCollection;
+       	    import flash.external.ExternalInterface;
+       	   	import mx.charts.LinearAxis;	
+       	    private var chengState:ChengState = new ChengState();
+       	    [Bindable]
+        	 private   var xmlListCollection:XMLListCollection = new XMLListCollection();
+			private function init():void
+			{	
+				ExternalInterface.addCallback("js_findWeekStateLog",js_findWeekStateLog);
+				this.addListener();
+			}
+			
+			/**
+			 * 调用js函数
+			 * */
+			private function js_findWeekStateLog(chengcode:String):void
+			{
+				chengState.chengcode = chengcode;
+				CairngormEventDispatcher.getInstance().dispatchEvent(new FindWeekStateLogEvent(FindWeekStateLogEvent.findWeekStateLog,chengState,null));
+			}
+			
+			/**
+			 * 添加监听
+			 * */
+			public function addListener():void
+			{
+				CairngormEventDispatcher.getInstance().addEventListener(FindWeekStateLogEvent.findWeekStateLog_return,getQueryResult);
+			}
+			/**
+			 * 获取返回结果
+			 **/
+			private function getQueryResult(e:FindWeekStateLogEvent):void
+			{
+					var arr : ArrayCollection = e.list as ArrayCollection;
+					var root:XML = new XML("<root/>");  
+	             	 for(var i:int = 0;i<arr.length;i++){  
+	                    var node:XML = new XML("<node/>"); 
+	                    node.addtime = arr[i].addtime;  
+	                    node.state= arr[i].state;  
+	                    root.appendChild(node);  
+	                }  
+	        		var xmlList:XMLList =  root.elements("node");
+	        		xmlListCollection.source = xmlList;
+	        		weekStateLog.dataProvider = xmlListCollection;
+			}
+			
+			/**
+			 * 页面销毁移除监听
+			 **/
+			private function removeListener():void
+			{
+				if(CairngormEventDispatcher.getInstance().hasEventListener(FindWeekStateLogEvent.findWeekStateLog_return))
+				{
+					CairngormEventDispatcher.getInstance().removeEventListener(FindWeekStateLogEvent.findWeekStateLog_return,getQueryResult);
+				}
+			}
+			
+			private static var tempTime:String;
+        	private var showTime:String; 
+        	
+        	private static var tempState:int = 1;
+        	private var showState:ArrayCollection = new ArrayCollection();
+        	/**
+        	 * x轴上刻度的显示值
+        	 */
+            private function dateAxis_labelFunc(item:Object, prevValue:Object, axis:CategoryAxis, categoryItem:Object):String {
+                var datNum:Number = Date.parse(item);
+                var tempDate:Date = new Date(datNum);
+               	showTime = dateFormatter.format(tempDate).toUpperCase();
+	               	if(showTime == tempTime){
+	               		return "";
+	               	}else{
+	               		tempTime = showTime;
+	               		return showTime;
+	               	}
+//	        	    var datNum:Number = Date.parse(item);
+//                var tempDate:Date = new Date(datNum);
+//                return dateFormatter.format(tempDate).toUpperCase();
+            }
+           /**
+        	 * y轴上刻度的显示值
+        	 */
+           private function stateAxis_labelFunc(item:Object, prevValue:Object, axis:CategoryAxis, categoryItem:Object):String {
+				if(tempState==2){
+					tempState++;
+					return "未连接";
+				}else if(tempState==10){
+					tempState++;
+					return "交易中";
+				}else if(tempState==15){
+					tempState++;
+					return "已开机";
+				}
+				  tempState++;
+				  return "";
+           }
+           /**
+           * 点提示的信息
+           * hd.item为鼠标滑过点的对象
+           * */
+            private function lineChart_dataTipFunction(hd:HitData):String
+			 { 
+				 var curObj:Object = hd.item;
+				 var stateStr:String;
+				 if(curObj.state== "1"){
+				 		stateStr = "已开机";
+				 }else if(curObj.state== "2"){
+				 		stateStr = "交易中";
+				 }else if(curObj.state== "3"){
+				 	stateStr = "未连接";
+				 }
+				 return  "时间:"+curObj.addtime+"\n秤状态:"+stateStr;
+			 }
+		]]>
+	</mx:Script>
+ <!--实例化一个前端控制器-->
+<control:FController/>
+<!--实例化远程对象委托配置-->
+<busness:Services/>
+<mx:Zoom id="zoomIn" duration="1000"/>
+<mx:DateFormatter id="dateFormatter" formatString="YYYY-MM-DD" />
+<mx:VBox width="100%" height="100%">
+ 	<mx:VBox width="100%" height="100%">
+	     <mx:LineChart id="weekStateLog"
+            showDataTips="true"
+            width="100%"
+            height="100%"
+            dataTipFunction="lineChart_dataTipFunction"
+           >
+
+        <!-- vertical axis
+        <mx:verticalAxis>
+             <mx:CategoryAxis id="stateAxis"
+                    categoryField="state"
+                  />
+        </mx:verticalAxis>
+		
+		<mx:verticalAxisRenderer>
+			 <mx:AxisRenderer axis="{stateAxis}"
+                    canDropLabels="true" visible="false"
+                   />
+		</mx:verticalAxisRenderer>
+		  -->
+		  
+		<mx:verticalAxis>
+			<mx:LinearAxis maximum="3" minimum="0" interval="1"/>
+		</mx:verticalAxis>
+        <!-- horizontal axis -->
+        <mx:horizontalAxis>
+            <mx:CategoryAxis id="addTimeAxis"
+                    categoryField="addtime"
+                    labelFunction="dateAxis_labelFunc"
+                     />
+        </mx:horizontalAxis>
+	
+        <!-- horizontal axis renderer -->
+        <mx:horizontalAxisRenderers>
+            <mx:AxisRenderer axis="{addTimeAxis}" 
+                    canDropLabels="false" visible="true"/>
+        </mx:horizontalAxisRenderers>
+        
+        
+        <!-- series -->
+        <mx:series >
+            <mx:LineSeries yField="state" form="curve"   showDataEffect="{zoomIn}"  itemRenderer="mx.charts.renderers.CircleItemRenderer">
+          	 	<mx:lineStroke> 
+                  <mx:Stroke color="0X26F1D2" weight="1.0" alpha="0.75" /> 
+                </mx:lineStroke> 
+          	</mx:LineSeries>
+        </mx:series>
+		
+		<mx:backgroundElements> 
+			<mx:GridLines id="gridLines" 
+				direction="both" 
+				verticalTickAligned="false"> 
+			<mx:verticalStroke> 
+				<mx:Stroke color="haloSilver" 
+					weight="0" 
+					alpha="1.0" /> 
+			</mx:verticalStroke> 
+			<mx:horizontalStroke> 
+			<!-- Set alpha to 0 so stroke isn't visible. --> 
+			<mx:Stroke color="#FFFF99" 
+				weight="0" 
+				alpha="1.0" /> 
+			</mx:horizontalStroke> 
+			<mx:horizontalFill> 
+			<mx:SolidColor color="#66FFFF" 
+				alpha="0.1" /> 
+			</mx:horizontalFill> 
+			</mx:GridLines> 
+		</mx:backgroundElements> 
+
+        <!-- series filters -->
+        <mx:seriesFilters>
+            <mx:Array />
+        </mx:seriesFilters>
+    </mx:LineChart>
+ 	</mx:VBox>
+ 	<mx:VBox width="100%" height="2%" horizontalAlign="left">
+ 		<mx:Text width="100%" color="0x323232">
+            <mx:htmlText>
+                <![CDATA[
+<font color="#EE1122">修改说明：
+<font color="#EE1122">1、状态变化图记录秤的每个心跳状态，（0关机、1开机、2交易），然后绘成折线图.</br> 
+<font color="#EE1122">2、如果相邻两个心跳记录大于2个心跳时间，则此处不绘折线图，以表示此段时间溯源秤状态为关机。
+<font color="#EE1122">3、点击“历史状态记录”按钮链接到历史状态记录页。
+                ]]>
+            </mx:htmlText>
+        </mx:Text>
+ 	</mx:VBox>
+</mx:VBox>	
+</mx:Application>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ScaleConf">
+	<typeAlias alias="ScaleConf" type="cn.gov.zyczs.cspt.po.ScaleConf"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="keynum" prepend="and">
+			<![CDATA[
+					keynum = #keynum#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="companyname" prepend="and">
+			<![CDATA[
+					companyname = #companyname#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   scaleid=#scaleid#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="ScaleConf" resultClass="ScaleConf">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from s_scaleconf p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by to_number(keynum) asc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	<select id="queryByList" parameterClass="ScaleConf" resultClass="ScaleConf">
+		<![CDATA[
+			select * from s_scaleconf p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by to_number(keynum) asc
+		]]>		
+	</select>
+	<select id="findByCount" parameterClass="ScaleConf" resultClass="Integer">
+		<![CDATA[
+			select count(1) from s_scaleconf
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	<insert id="save" parameterClass="ScaleConf">
+		<![CDATA[
+			insert into s_scaleconf (columnnum,companyname,keynum,modelnumber,rowsnum)
+			values (#columnnum#,#companyname#,#keynum#,#modelnumber#,#rowsnum#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_SCALECONF.CURRVAL as scaleid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="updateByObj" parameterClass="ScaleConf">
+		<![CDATA[
+			update s_scaleconf
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="columnnum" prepend=",">
+				<![CDATA[
+						columnnum=#columnnum#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="companyname" prepend=",">
+				<![CDATA[
+						companyname=#companyname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="keynum" prepend=",">
+				<![CDATA[
+						keynum=#keynum#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="modelnumber" prepend=",">
+				<![CDATA[
+						modelnumber=#modelnumber#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="rowsnum" prepend=",">
+				<![CDATA[
+						rowsnum=#rowsnum#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="ScaleConf" resultClass="ScaleConf">
+		<![CDATA[
+		 	select * from s_scaleconf
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	 
+	
+	
+</sqlMap>

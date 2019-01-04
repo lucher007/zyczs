@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChengFckTmp">
+	<typeAlias alias="ChengFckTmp" type="cn.gov.zyczs.cspt.po.ChengFckTmp"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="tmpid" prepend="and">
+			<![CDATA[
+					tmpid = #tmpid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="keyvalue" prepend="and">
+			<![CDATA[
+					keyvalue = #keyvalue#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByCount" parameterClass="ChengFckTmp" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_chengfcktmp
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="ChengFckTmp" resultClass="ChengFckTmp">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from c_chengfcktmp p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by tmpid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="quryByList" parameterClass="ChengFckTmp" resultClass="ChengFckTmp">
+		<![CDATA[
+		 	select * from c_chengfcktmp
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>	
+	
+	<insert id="save" parameterClass="ChengFckTmp">
+		<![CDATA[
+			insert into c_chengfcktmp (tmpid,keyvalue,plucodes,medname)
+			values (#tmpid#,#keyvalue#,#plucodes#,#medname#)				
+		]]>	
+	</insert>
+	
+	<delete id="delete" parameterClass="ChengFckTmp">
+		<![CDATA[
+			delete from c_chengfcktmp 
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>	
+	</delete>
+    
+    <select id="findById" parameterClass="ChengFckTmp" resultClass="ChengFckTmp">
+		<![CDATA[
+		 	select * from c_chengfcktmp where tmpid = #tmpid# and keyvalue = #keyvalue#
+		]]>
+	</select>	
+	
+	<select id="quryListByTmpid" parameterClass="ChengFckTmp" resultClass="ChengFckTmp">
+		<![CDATA[
+			select t.confid,
+			       t.keyvalue,
+			       t.rowsnum,
+			       t.columnnum,
+			       ft.tmpid,
+			       ft.plucodes,
+			       ft.medname 
+            from (
+                   select t.tmpid, k.* from c_chengkey k,c_chengtmp t 
+                   where k.confid = t.confid  
+                   and k.keyvalue is not null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			 	  ) t left join c_chengfcktmp ft on t.keyvalue = ft.keyvalue where t.tmpid = ft.tmpid
+		]]>		
+	</select>
+</sqlMap>

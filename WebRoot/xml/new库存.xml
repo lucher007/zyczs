@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs guid="1201023102030123">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="stock">
+		<code>经营者编号</code>
+		<codeinfo>
+			<stocktime desc="库存时间">2012-07-11 00:00:00</stocktime>
+				<stockitems>
+					<stockitem>
+					  <batchcode desc="药材或者饮片批号"></batchcode>
+						<itemtype desc="溯源类型:药材0,饮片1">0</itemtype>
+						<code desc="药材或者饮片编码"></code>
+						<name desc="药材或者饮片名称"></name>
+						<weightall desc="库存总重量 kg"></weightall>
+					</stockitem>
+					<stockitem>
+					  <batchcode desc="药材或者饮片批号"></batchcode>
+						<itemtype desc="溯源类型:药材0,饮片1">0</itemtype>
+						<code desc="药材或者饮片编码"></code>
+						<name desc="药材或者饮片名称"></name>
+						<weightall desc="库存总重量 kg"></weightall>
+					</stockitem>
+			</stockitems>
+		</codeinfo>
+		
+		<outstore desc="出库">
+			<time desc="出库时间">2012-12-13 11:56:56</time>
+			<corptype desc="溯源企业-1|非溯源企业-0">1</corptype> 
+ 			<newcorpcode desc="新货主cpccode">1201203010230123</newcorpcode>
+			<weightall desc="出库总重量/单位（kg）">1010</weightall>
+			<amount desc="合计金额">1010</amount>
+			<ptype desc="出库对象">medicine-药材、pieces-药品</ptype>
+			<medicinebatchs>
+				<medicinebatch>
+					<batchno desc="药材/饮片批次号">1010020102</batchno> 
+					<spec desc="规格"> </spec>
+					<weightall desc="出库总重量小计kg）">1010</weightall>
+					<unitprice desc="单价 元/公斤*">1010</unitprice>
+					<amount desc="合计金额">1010</amount>
+					<sourcecode>
+						<code desc="溯源码">35位数据</code>
+						<code desc="溯源码">35位数据</code>
+						<code desc="溯源码">35位数据</code>
+					</sourcecode> 		
+				</medicinebatch>
+				<medicinebatch>
+					<medicinebatchno desc="药材批次号">1010020102</medicinebatchno> 
+					<spec desc="规格"></spec>
+					<weightall desc="出库总重量小计kg）">1010</weightall>
+					<price desc="单价">1010</price>
+					<priceall desc="合计金额">1010</priceall>
+					<sourcecode>
+						<code desc="溯源码">35位数据</code>
+						<code desc="溯源码">35位数据</code>
+						<code desc="溯源码">35位数据</code>
+					</sourcecode> 		
+				</medicinebatch> 			 			
+		  </medicinebatchs> 			
+		</outstore>
+		
+		
+		<instore desc="入库">
+			<time desc="入库时间">2012-12-13 11:56:56</time>
+			<sourcecode>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+			</sourcecode>
+		</instore>
+		
+		<destory desc="销毁">
+			<time desc="销毁时间">2012-12-13 11:56:56</time>
+			<reason desc="销毁原因">1-拆包销售、2-药厂/医院、3-质量原因、4-印刷废码、5-其他</reason>
+			<ptype desc="入库对象">medicine-药材、pieces-药品</ptype>
+			<sourcecode>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+			</sourcecode>
+		</destory>
+		<backstore desc="退货">
+			<time desc="退货时间">2012-12-13 11:56:56</time>
+			<ptype desc="入库对象">medicine-药材、pieces-药品</ptype>
+			<sourcecode>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+			</sourcecode>
+		</backstore>
+	</msgbody>
+</zyczs>

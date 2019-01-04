@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Check">
+	<typeAlias alias="Check" type="cn.gov.zyczs.cspt.po.Check" />
+	<typeAlias alias="MedStorage" type="cn.gov.zyczs.cspt.po.MedStorage" />
+
+	<insert id="save" parameterClass="Check">
+		<![CDATA[
+			insert into zs_check(checkmethod, checkgrade, checkcondition, checkthickmethod, checkuser, checktime, orgid, userid, prodid, type)
+			values(#checkmethod#,#checkgrade#,#checkcondition#,#checkthickmethod#,#checkuser#,to_date('$checktime$','YYYY-MM-DD HH24:MI:SS'),#orgid#,#userid#,#prodid#,#type#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_CHECK.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+
+	<sql id="findByWhere">
+		<isNotEmpty property="medstorid" prepend="and">
+			<![CDATA[
+				c.prodid = #medstorid#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="tabletid" prepend="and">
+			<![CDATA[
+				c.prodid = #tabletid#
+			]]>		
+		</isNotEmpty>
+		<isNotEmpty property="type" prepend="and">
+			<![CDATA[
+				c.type = #type#
+			]]>	
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+				c.orgid = #orgid#
+			]]>		
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findCheckDetail" parameterClass="Check" resultClass="Check">
+		<![CDATA[
+			select c.*,ms.cpcmed,ms.medname
+			from zs_check c inner join zs_medstorage ms on c.prodid = ms.medstorid
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	<select id="findTabletCheckDetail" parameterClass="Check" resultClass="Check">
+		<![CDATA[
+			select c.prodid,c.type,c.orgid,c.checkmethod,c.checkuser,c.checkcondition,c.checktime,t.cpctablet,t.tabletname
+			from zs_check c inner join zs_tablet t on c.prodid = t.tabletid
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="Check" resultClass="Check">
+		<![CDATA[		
+			select b.* from (select a.*,rownum r from (
+				select  c.*,ms.medname,ms.cpcmed,ms.medweight
+			  	from zs_check c left join zs_medstorage ms on c.prodid = ms.medstorid
+				where ms.orgid = #orgid# and ms.cpcmed = #cpcmed#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			order by nlssort(ms.medname,'NLS_SORT=SCHINESE_PINYIN_M'), ms.cpcmed desc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+</sqlMap>

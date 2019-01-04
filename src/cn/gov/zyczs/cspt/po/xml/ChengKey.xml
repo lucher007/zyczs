@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ChengKey">
+	<typeAlias alias="ChengKey" type="cn.gov.zyczs.cspt.po.ChengKey"/>	
+	
+	<sql id="findByConfid">				
+		<isNotEmpty property="confid" prepend="and">
+			<![CDATA[
+					confid = #confid#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByKeyid">
+		<![CDATA[
+		   keyid = #keyid#
+	    ]]>
+	</sql>
+	
+	<select id="findByList" parameterClass="ChengKey" resultClass="ChengKey">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from c_chengkey p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByConfid" />
+			</dynamic>
+			<![CDATA[
+			 	order by rowsnum,columnnum asc )a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="queryByList" parameterClass="ChengKey" resultClass="ChengKey">
+		<![CDATA[
+			select * from c_chengkey p	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByConfid" />
+			</dynamic>
+			<![CDATA[
+			 	order by rowsnum,columnnum asc
+		]]>		
+	</select>
+	
+	<select id="queryListByValueNull" parameterClass="ChengKey" resultClass="ChengKey">
+		<![CDATA[
+			select * from c_chengkey 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByConfid" />
+			</dynamic>
+			<![CDATA[
+			 	and keyvalue is not null order by rowsnum,columnnum asc
+		]]>		
+	</select>
+	
+	<select id="queryKeyconfList" parameterClass="ChengKey" resultClass="ChengKey">
+		<![CDATA[
+			select * from c_chengkey t where keyvalue is not null 
+			]]>
+		<dynamic prepend="and">
+			<isNotEmpty property="confid" prepend="and">
+			<![CDATA[
+					confid = #confid#
+			]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<delete id="delete" parameterClass="ChengKey">
+		<![CDATA[
+			delete from c_chengkey 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByKeyid" />
+			</dynamic>
+	</delete>
+
+    <delete id="deleteConfKeys" parameterClass="ChengKey">
+		<![CDATA[
+			delete from c_chengkey 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByConfid" />
+			</dynamic>
+	</delete>
+
+	<select id="findByCount" parameterClass="ChengKey" resultClass="Integer">
+		<![CDATA[
+			select count(1) from c_chengkey
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByConfid" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="ChengKey">
+		<![CDATA[
+			insert into c_chengkey (confid,rowsnum,columnnum,keyvalue)
+			values (#confid#,#rowsnum#,#columnnum#,#keyvalue#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_C_CHENGKEY.CURRVAL as keyid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterClass="ChengKey">
+		<![CDATA[
+			update c_chengkey
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="keyvalue">
+				<![CDATA[
+						keyvalue=#keyvalue#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByKeyid" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="ChengKey" resultClass="ChengKey">
+		<![CDATA[
+		 	select * from c_chengkey
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByKeyid" />
+		</dynamic>
+	</select>	
+	
+	
+</sqlMap>

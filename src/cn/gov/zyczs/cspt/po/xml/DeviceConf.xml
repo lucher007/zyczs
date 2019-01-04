@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="DeviceConf">
+	<typeAlias alias="DeviceConf" type="cn.gov.zyczs.cspt.po.DeviceConf"/>	
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="companyname" prepend="and">
+			<![CDATA[
+					lower(companyname) like lower('%'||#companyname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="conftype" prepend="and">
+			<![CDATA[
+					conftype = #conftype#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   confid = #confid#
+	    ]]>
+	</sql>
+	
+	<select id="queryByList" parameterClass="DeviceConf" resultClass="DeviceConf">
+		<![CDATA[
+			select * from zs_deviceconf 
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by confid desc
+		]]>		
+	</select>
+	
+	<select id="findByList" parameterClass="DeviceConf" resultClass="DeviceConf">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select * from zs_deviceconf 	
+			]]>
+			<dynamic prepend="where">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by confid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="DeviceConf" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_deviceconf
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="DeviceConf">
+		<![CDATA[
+			insert into zs_deviceconf (companyname,normname,conftype)
+			values (#companyname#,#normname#,#conftype#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_DEVICECONF.CURRVAL as confid FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterClass="DeviceConf">
+		<![CDATA[
+			update zs_deviceconf
+		]]>	
+		<dynamic prepend="SET">
+		    <isNotEmpty property="companyname" prepend=",">
+				<![CDATA[
+						companyname=#companyname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="normname" prepend=",">
+				<![CDATA[
+						normname=#normname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="conftype" prepend=",">
+				<![CDATA[
+						conftype=#conftype#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="WHERE">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	
+	<select id="findById" parameterClass="DeviceConf" resultClass="DeviceConf">
+		<![CDATA[
+		 	select * from zs_deviceconf
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>	 
+	
+	
+</sqlMap>

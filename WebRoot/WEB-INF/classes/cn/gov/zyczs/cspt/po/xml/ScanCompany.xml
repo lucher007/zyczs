@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ScanCompany">
+	<typeAlias alias="ScanCompany" type="cn.gov.zyczs.cspt.po.ScanCompany" />
+	<typeAlias alias="org" type="cn.gov.zyczs.cspt.po.Org" />
+	
+	<sql id="findByWhere">
+		<isEqual  property="querytype" compareValue="1" prepend="and">
+			<![CDATA[
+					TO_CHAR(sc.scandate,'YYYY-MM-DD') = TO_CHAR(sysdate,'YYYY-MM-DD')
+			]]>
+		</isEqual>
+		<isEqual  property="querytype" compareValue="2" prepend="and">
+			<![CDATA[
+					TO_CHAR(sc.scandate,'YYYY-MM') = TO_CHAR(sysdate,'YYYY-MM')
+			]]>
+		</isEqual>
+		<isEqual  property="querytype" compareValue="3" prepend="and">
+			<![CDATA[
+					TO_CHAR(sc.scandate,'YYYY') = TO_CHAR(sysdate,'YYYY')
+			]]>
+		</isEqual>
+		<isEqual  property="querytype" compareValue="4">
+			<isNotEmpty property="startscandate" prepend="and">
+				<![CDATA[
+						sc.scandate >= to_date('$startscandate$ 00:00:00','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="endscandate" prepend="and">
+				<![CDATA[
+						sc.scandate <= to_date('$endscandate$ 23:59:59','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</isEqual>
+	</sql>
+	
+	
+	<insert id="save" parameterClass="ScanCompany">
+		<![CDATA[
+			insert into zs_scancompany
+  			(userid,cpccorp)
+			values
+  			(#userid#, #cpccorp#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_SCANCOMPANY.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<select id="findByList" parameterClass="ScanCompany" resultClass="org">
+		<![CDATA[
+			select b.* from (select a.*,rownum r from (select o.orgname,o.cpccorp,(select o.orgname from zs_org o where o.cpccorp=#cpccorp#) marketname 
+			from zs_scancompany sc
+			inner join zs_org o
+			on sc.cpccorp = o.cpccorp
+			where sc.userid = #userid#
+			]]>
+			<dynamic prepend="and">
+				<include refid="findByWhere" />
+			</dynamic>
+			<![CDATA[
+			 	order by sc.id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="ScanCompany" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_scancompany sc
+			inner join zs_org o
+			on sc.cpccorp = o.cpccorp
+			where sc.userid = #userid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+</sqlMap>

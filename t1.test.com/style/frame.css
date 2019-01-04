@@ -1,0 +1,45 @@
+@import url(common.css);
+
+body{ background:url(../images/frame/top-bg.jpg) repeat-x;}
+#top{ width:970px; height:108px; margin:auto;}
+.plant_logo{ background:url(../images/plant/top_logo.jpg) no-repeat 51px top;}
+.user_logo{ background:url(../images/user/top_logo.jpg) no-repeat 51px top;}
+.prod_logo{ background:url(../images/production/top_logo.jpg) no-repeat 51px top;}
+.mart_logo{ background:url(../images/market/top_logo.jpg) no-repeat 51px top;}
+.med_logo{ background:url(../images/medicine/top_logo.jpg) no-repeat 51px top;}
+.tablet_logo{ background:url(../images/tablet/top_logo.jpg) no-repeat 51px top;}
+.hosp_logo{ background:url(../images/hospital/top_logo.jpg) no-repeat 51px top;}
+.site{ font-size:14px; font-weight:bold; color:#FFF; padding-top:45px; padding-left:500px; width:200px; height:30px; overflow:hidden;}
+#menu{ width:100%; height:34px; line-height:34px; background:url(../images/frame/frame_07.jpg) repeat-x left top;}
+#menu .m-list{ width:970px; height:34px; line-height:34px; background:url(../images/frame/menu-bg.jpg) no-repeat 150px -1px; margin:auto; position:relative;}
+#menu .m-list div{ padding-left:170px; width:610px; position:absolute; height:43px;}
+#menu .m-list div a{ display:inline-block; height:43px; color:#FFF; background:url(../images/frame/frame-bg.png) no-repeat left 12px; padding-left:14px; margin-left:20px; font-size:14px; font-weight:bold;}
+#menu .m-list div a:hover{ color:#FF0;}
+#menu .m-list div a.act{ background-position:center -485px;}
+#menu .m-list cite{}
+#menu .m-list cite a{ color:#FFF; background:url(../images/frame/frame-bg.png) no-repeat; margin-left:5px; text-decoration:underline;}
+#menu .m-list cite a:hover{ color:#CF0;}
+#menu .m-list cite a.m-user{ background:url(../images/frame/my-account.png) no-repeat left center; padding:2px 0; padding-left:21px;}
+#menu .m-list cite a.m-out{ background:url(../images/frame/logout.png) no-repeat left center; padding:2px 0; padding-left:21px;}
+
+#main{ width:970px; margin:auto; border-bottom:solid #32650f 1px; margin-bottom:10px; overflow:hidden;}
+.m-left,.m-right{ float:left; overflow:hidden; margin-bottom:-10000px; padding-bottom:10000px; }
+.m-left{ width:181px; border-right:solid #32650f 1px; background:#f4f6d7;}
+.ml-user{ line-height:22px; text-align:center; padding:10px 0;}
+.ml-user a{ text-decoration:underline;}
+.ml-menu{ width:159px; overflow:hidden; margin:auto;}
+.ml-menu li{ padding-bottom:10px;}
+.ml-menu a{ display:block; width:149px; height:27px; line-height:27px; padding-left:10px; color:#FFF; background:url(../images/frame/frame-bg.png) no-repeat left -187px;}
+.ml-menu a:hover{ background-position:left -158px; text-decoration:none; color:#FFC;}
+.ml-menu a.act{ background-position:left -129px; text-decoration:none; font-weight:bold;}
+.mlm-list{ width:159px; overflow:hidden; padding-bottom:10px;}
+.mlm-tit a{ text-align:left; width:149px; padding-left:10px;} 
+.mlm-list li{ height:22px; padding:2px 0;}
+.mlm-list li a{ display:block; width:120px; height:22px; line-height:22px; padding-left:32px; background:none; color:#333;}
+.mlm-list li a:hover{ color:#666; text-decoration:underline; background:none;}
+.mlm-list li a.act{ text-decoration:none; font-weight:bold; background:url(../images/frame/frame-bg.png) no-repeat 18px -87px;}
+.m-right{ width:788px; background:#FFF}
+.m-right iframe{ min-height:460px;}
+
+#foot{ width:100%; height:55px; padding-top:5px; background:url(../images/frame/frame_9.jpg); color:#FFF; line-height:25px;}
+.copy{ width:600px; margin:auto; color:#FFF; line-height:25px;}

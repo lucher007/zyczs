@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="Company">
+	<typeAlias alias="Company" type="cn.gov.zyczs.cspt.po.Company"/>
+	
+	<sql id="findByWhereId">
+	    <isNotEmpty property="companyid">
+			<![CDATA[
+					companyid = #companyid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp">
+			<![CDATA[
+					cpccorp = #cpccorp#
+			]]>
+		</isNotEmpty>
+		
+	</sql>	
+	
+	<sql id="findByWhereIdUpdate">
+	    <isNotEmpty property="companyid">
+			<![CDATA[
+					companyid = #companyid#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="corpname" prepend="and">
+			<![CDATA[
+					lower(corpname) like lower('%'||#corpname#||'%')
+			]]>
+		</isNotEmpty>	
+		<isNotEmpty property="province" prepend="and">
+			<![CDATA[
+					province=#province#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="city" prepend="and">
+			<![CDATA[
+					city=#city#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="area" prepend="and">
+			<![CDATA[
+					area=#area#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="state" prepend="and">
+			<![CDATA[
+					state = #state#
+			]]>
+		</isNotEmpty>				
+	</sql>
+	
+	<insert id="save" parameterClass="Company">
+		<![CDATA[
+			insert into zs_company
+  			(cpccorp, corpname, corpshortname, linkman, masterman, identitycard, businesscode, mobile, telephone, officephone, email, postcode, province, city, area, registeraddress, areacode, orgcode, zyctype, canum, gapcode, gmpcode, gspcode,state,opertype,longitude,latitude,corp,ishospital)
+			values
+  			(#cpccorp#, #corpname#, #corpshortname#, #linkman#, #masterman#, #identitycard#, #businesscode#, #mobile#, #telephone#, #officephone#, #email#, #postcode#, #province#, #city#, #area#, #registeraddress#, #areacode#, #orgcode#, #zyctype#, #canum#, #gapcode#, #gmpcode#, #gspcode#,NVL(#state#,0),NVL(#opertype#,0),#longitude#,#latitude#,#corp#,#ishospital#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_COMPANY.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="updateById" parameterClass="Company">
+		<![CDATA[
+			update zs_company
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="corpname" prepend=",">
+				<![CDATA[
+						corpname=#corpname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="corpshortname" prepend=",">
+				<![CDATA[
+						corpshortname=#corpshortname#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="linkman" prepend=",">
+				<![CDATA[
+						linkman=#linkman#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="masterman" prepend=",">
+				<![CDATA[
+						masterman=#masterman#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="identitycard" prepend=",">
+				<![CDATA[
+						identitycard=#identitycard#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="businesscode" prepend=",">
+				<![CDATA[
+						businesscode=#businesscode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">
+				<![CDATA[
+						mobile=#mobile#
+				]]>
+			</isNotEmpty>	
+			<isNotEmpty property="telephone" prepend=",">
+				<![CDATA[
+						telephone=#telephone#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="officephone" prepend=",">
+				<![CDATA[
+						officephone=#officephone#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="email" prepend=",">
+				<![CDATA[
+						email=#email#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="postcode" prepend=",">
+				<![CDATA[
+						postcode=#postcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="province" prepend=",">
+				<![CDATA[
+						province=#province#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="city" prepend=",">
+				<![CDATA[
+						city=#city#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="area" prepend=",">
+				<![CDATA[
+						area=#area#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="registeraddress" prepend=",">
+				<![CDATA[
+						registeraddress=#registeraddress#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="areacode" prepend=",">
+				<![CDATA[
+						areacode=#areacode#
+				]]>
+			</isNotEmpty>	
+			<isNotEmpty property="orgcode" prepend=",">
+				<![CDATA[
+						orgcode=#orgcode#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="zyctype" prepend=",">
+				<![CDATA[
+						zyctype=#zyctype#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state=#state#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="cpccorp" prepend=",">
+				<![CDATA[
+						cpccorp=#cpccorp#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="longitude" prepend=",">
+				<![CDATA[
+						longitude=#longitude#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="latitude" prepend=",">
+				<![CDATA[
+						latitude=#latitude#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereIdUpdate" />
+		</dynamic>
+	</update>
+	
+	<select id="findByCount" parameterClass="Company" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_company where companyid is not null  
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="Company" resultClass="Company">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_company where companyid is not null
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by companyid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>
+	</select>
+	
+	<select id="findById" parameterClass="Company" resultClass="Company">
+		<![CDATA[
+		 	select * from zs_company
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<select id="findByCpccorp" parameterClass="Company" resultClass="Company">
+		<![CDATA[
+		 	select * from zs_company
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<select id="findByExist" parameterClass="Company" resultClass="Company">
+		<![CDATA[
+			select * from zs_company where corpname=#corpname#
+		]]>	
+		<isNotEmpty property="companyid" prepend="and">
+			<![CDATA[
+				companyid<>#companyid#
+			]]>	
+		</isNotEmpty>
+	</select>
+	
+	<delete id="deleteByCompanyId" parameterClass="Integer">
+		<![CDATA[
+			delete from zs_company where companyid=#companyid#
+		]]>		
+	</delete>
+	
+</sqlMap>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="tablet" extends="strutsdefault">
+    	<!-- 饮片生产action配置 -->
+		<action name="tablet" class="tabletAction"> 
+			<result name="save" >/manage/tablet/addTabletFinish.jsp</result>
+			<result name="findTabletUnchecked">/manage/tablet/findTabletUnchecked.jsp</result>
+			<result name="tabletCheck">/manage/tablet/tabletCheck.jsp</result>
+			<result name="findDetails">/manage/tablet/findDetails.jsp</result>
+			<result name="findTabletChecked">/manage/tablet/findTabletChecked.jsp</result>
+			<result name="findByList">/manage/tablet/findByList.jsp</result>
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">save</param>
+		    </interceptor-ref>
+		    
+        </action>
+        <!-- 饮片基础action配置 -->
+        <action name="tabletBase" class="tabletBaseAction"> 
+			<result name="tabletBaseChoice">/manage/tabletBase/tabletBaseChoice.jsp</result>			
+			<result name="findByList">/manage/tabletBase/findByList.jsp</result>
+			<result name="findByList_un">/manage/tabletBase/addtabletBase.jsp</result>
+			<result name="addBaseOrgFinish">/manage/tabletBase/addBaseOrgFinish.jsp</result>
+			
+        </action>
+        
+        <!-- 饮片库存action配置 -->
+        <action name="tabletStorage" class="tabletStorageAction"> 
+			<result name="findTabletStorageStock">/manage/tabletStorage/findTabletStorage.jsp</result>
+			<result name="findTabletUnPack">/manage/tabletStorage/findTabletUnPack.jsp</result>		
+			<result name="pack">/manage/tabletStorage/updateTabletPack.jsp</result>
+			<result name="updateTabletPackFinish" >/manage/tabletStorage/updateTabletPackFinish.jsp</result>
+			<result name="findTabletUnOut">/manage/tabletStorage/findTabletUnOut.jsp</result>
+			<result name="findTabletUnOut_tabletSell">/manage/tabletSellInOutStorage/findTabletUnOut.jsp</result>
+			<result name="findOutStorage" >/manage/tabletInOutStorage/findOutStorage.jsp</result>
+			<result name="addOutStorage" >/manage/tabletInOutStorage/addOutStorage.jsp</result>	
+			<result name="findPrintUnCode" >/manage/tabletStorage/findPrintUnCode.jsp</result>	
+			<result name="findTabletRecord" >/manage/tabletStorage/findTabletRecord.jsp</result>
+			<result name="findTabletPackLog" >/manage/tabletStorage/findTabletPackLog.jsp</result>		
+			<result name="showBoxList">/manage/tabletSellInOutStorage/showBoxList.jsp</result>
+			
+			<result name="showInBoxList">/manage/tabletSellInOutStorage/showInBoxList.jsp</result>
+		  	
+		  	<!--批量下载大包溯源码-->
+		  	<result name="findByDownCode">/manage/tabletStorage/findByDownCode.jsp</result>
+			
+			
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">updateTabletPack</param>
+		    </interceptor-ref>
+		    
+        </action>
+        	
+        <!-- 饮片药材action配置 -->
+        <action name="tabletMedStorage" class="tabletMedStorage"> 
+			<result name="findTabletMedStorage">/manage/tabletmed/findMedGroupStorage.jsp</result>
+			<result name="addNotSourceMed">/manage/tabletmed/addNotSourceMed.jsp</result>
+			<result name="addNotSourceMedFinish">/manage/tabletmed/addNotSourceMedFinish.jsp</result>
+			<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">notSourceMedSave</param>
+		    </interceptor-ref>
+		    
+        </action>
+        
+        <!-- 药材经销出入库扫码操作 action配置 -->
+		<action name="tabletMedInOut" class="tabletMedInOutAction">
+			<!--入库-->
+		    <result name="findInStorage">/manage/tabletMedInOut/findInStorage.jsp</result>
+		    <result name="addInStorage">/manage/tabletMedInOut/addInStorage.jsp</result>
+		    <result name="addInStorageFinish">/manage/tabletMedInOut/addInStorageFinish.jsp</result>
+	  
+		</action>
+        	
+    </package>
+    
+</struts>

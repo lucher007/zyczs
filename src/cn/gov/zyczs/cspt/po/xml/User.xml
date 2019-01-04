@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="User">
+	<typeAlias alias="User" type="cn.gov.zyczs.cspt.po.User"/>
+	<typeAlias alias="Menu" type="cn.gov.zyczs.cspt.po.Menu"/>
+		
+	<select id="login" parameterClass="User" resultClass="User">
+		<![CDATA[
+			select * from zs_user where loginname=#loginname# and loginpass=#loginpass# and state=1
+		]]>
+	</select>
+	
+	<select id="findRoleMenu" parameterClass="User" resultClass="Menu">
+		<![CDATA[
+			select distinct(rm.menuid),m.menumainid,m.menutitle,m.menuurl,m.menuparentid,m.menuorder,m.menutype,m.menusys from zs_user u inner join zs_userrole ur on u.userid=ur.userid
+			inner join zs_role r on ur.roleid=r.roleid 
+			inner join zs_rolemenu rm on ur.roleid=rm.roleid 
+			inner join zs_menu m on rm.menuid=m.menumainid 
+			where u.userid=#userid# order by m.menuorder asc
+		]]>
+	</select>
+	
+	<select id="findByExist" parameterClass="User" resultClass="User">
+		<![CDATA[
+			select * from zs_user where loginname in (#loginname#)
+		]]>	
+		<isNotEmpty property="userid" prepend="and">
+			<![CDATA[
+				userid<>#userid#
+			]]>	
+		</isNotEmpty>
+	</select>
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   userid = #userid#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">				
+		<isNotEmpty property="username" prepend="and">
+			<![CDATA[
+					lower(username) like lower('%'||#username#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+					cpccorp=#cpccorp#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+					orgid=#orgid#
+			]]>
+		</isNotEmpty>		
+	</sql>
+	
+	<insert id="save" parameterClass="User">
+		<![CDATA[
+			insert into zs_user
+  			(loginname, loginpass, orgid, state, usertype, auth ,username ,cpccorp,partion,coordinate)
+			values
+  			(#loginname#, #loginpass#, #orgid#, NVL(#state#,0), #usertype#, #auth#, #username#,#cpccorp#,#partion#,#coordinate#)
+		]]>
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_USER.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<update id="updateById" parameterClass="User">
+		<![CDATA[
+			update zs_user
+		]]>	
+		<dynamic prepend="SET">
+			<isNotEmpty property="loginpass" prepend=",">
+				<![CDATA[
+						loginpass=#loginpass#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="state" prepend=",">
+				<![CDATA[
+						state=#state#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="username" prepend=",">
+				<![CDATA[
+						username=#username#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="cpccorp" prepend=",">
+				<![CDATA[
+						cpccorp=#cpccorp#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="lasttime" prepend=",">
+				<![CDATA[
+						lasttime=to_date('$lasttime$','YYYY-MM-DD HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="ipaddress" prepend=",">
+				<![CDATA[
+						ipaddress=#ipaddress#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="partion" prepend=",">
+				<![CDATA[
+						partion=#partion#
+				]]>
+			</isNotEmpty>
+			<isNotEmpty property="coordinate" prepend=",">
+				<![CDATA[
+						coordinate=#coordinate#
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</update>
+	
+	<select id="findByCount" parameterClass="User" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_user
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<select id="findByList" parameterClass="User" resultClass="User">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_user where userid is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by userid desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findById" parameterClass="User" resultClass="User">
+		<![CDATA[
+		 	select * from zs_user
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereId" />
+		</dynamic>
+	</select>
+	
+	<select id="findByCpccorp" parameterClass="User" resultClass="User">
+		<![CDATA[
+			select * from zs_user
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere"/>
+		</dynamic>
+	</select>
+	
+	
+	<delete id="deleteByCompanyId" parameterClass="Integer">
+		<![CDATA[
+			delete from zs_user where cpccorp=#cpccorp#
+		]]>		
+	</delete>
+	
+	<select id="findByCompanyId" parameterClass="Integer" resultClass="User">
+		<![CDATA[
+			select * from zs_user where cpccorp=#cpccorp#
+		]]>
+	</select>
+	
+	<select id="findByOrgId" parameterClass="Integer" resultClass="User">
+		<![CDATA[
+			select * from zs_user where orgid=#orgid#
+		]]>
+	</select>
+	
+	<select id="findParAndCoor" parameterClass="User" resultClass="User">
+		<![CDATA[
+			select u.partion,u.coordinate,o.orgname,c.state cstate  from zs_user u
+			inner join zs_org o
+			on o.cpccorp = u.cpccorp
+			inner join c_cheng c
+    		on c.cpccorp = o.cpccorp
+			where o.marketcode=#cpccorp# and u.partion = #partion#
+		]]>
+	</select>
+	
+	
+	<update id="updatePassword" parameterClass="User">
+		<![CDATA[
+			update zs_user u set u.loginpass=#loginpass# where u.userid=#userid#
+		]]>
+	</update>
+</sqlMap>

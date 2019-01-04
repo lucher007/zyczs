@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs guid="100101200120102023">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="medicine">
+		<code desc="药材批次码">1101273000049981208210031</code>
+		<codeinfo desc="批次码信息">
+			<name desc="药材名称">麦冬</name>
+			<weight desc="药材重量(单位:g)">50</weight>
+			<areacode desc="地区编码,按国标处理">510500</areacode>
+			<plantcode desc="种植批次">34203040203402340</plantcode>
+			<harvesttime desc="收获时间">2012-12-13 15:35:35</harvesttime>
+			<plantmes desc="种植信息">
+				<plantsource desc="种子来源:自购|栽培|野生">栽培</plantsource>
+				<fertilizer desc="施肥情况">磷酸二铵 30公斤；农家肥2000kg</fertilizer>
+				<pesticide desc="喷药情况">低毒残留；石灰硫黄合剂</pesticide>
+			</plantmes>
+		</codeinfo>
+		<materials desc="检验">
+			<material desc="检验">
+				<corpcode desc="企业代码(14位)，流通节点编号">10127300005094</corpcode>
+				<checkmethod desc="检验方法">企业标准</checkmethod>
+				<checkgrade desc="质量级别">一级</checkgrade>
+				<checkthickmethod desc="粗加工方法">净选</checkthickmethod>
+				<checkcondition desc="贮藏条件">冷冻</checkcondition>
+				<checkuser desc="检验人员">张三</checkuser>
+				<checktime desc="检验时间">2012-12-13 15:35:35</checktime>
+				<reports>
+					<report>
+						 <type desc="检验报告类型：(检验报告|产地报告">1</type>
+						 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+					</report>
+					<report>
+						 <type desc="检验报告类型：(检验报告|产地报告">2</type>
+						 <url desc="检验报告地址">http://www.zycsy.cn/report/1.png</url>
+					</report>
+				</reports>
+			</material>
+		</materials>
+	 <taxcode desc="赋码">
+			<pcode desc="商品编码"/>
+			<pname desc="品名"/>
+			<areacode desc="区域编码"/>
+			<weight desc="重量"/>
+			<spec desc="规格"/>
+			<time desc="赋码时间"></time>
+			<sourcecode>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+				<code desc="溯源码">35位数据</code>
+			</sourcecode>
+	   </taxcode>
+	</msgbody>
+</zyczs>

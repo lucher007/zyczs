@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="hospital" extends="strutsdefault">
+    	
+    	<!-- 药材经销action配置 -->
+		<action name="hospitalInOut" class="hospitalInOutAction">
+			
+		    <result name="findTabletStorage">/manage/hospital/findTabletStorage.jsp</result>
+			<!--入库-->
+		    <result name="findInStorage">/manage/hospitalInOutStorage/findInStorage.jsp</result>
+		    <result name="addInStorage">/manage/hospitalInOutStorage/addInStorage.jsp</result>
+		    <result name="addInStorageFinish">/manage/hospitalInOutStorage/addInStorageFinish.jsp</result>
+		    
+		  	<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginInterceptor" />
+				<result name="invalid.token">/exception.jsp</result>
+				<interceptor-ref name="token">
+			    <param name="includeMethods">addInStorage</param>
+		    </interceptor-ref>
+		</action>
+		
+    </package>
+</struts>

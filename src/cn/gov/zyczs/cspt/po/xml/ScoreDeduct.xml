@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ScoreDeduct">
+	<typeAlias alias="ScoreDeduct" type="cn.gov.zyczs.cspt.po.ScoreDeduct"/>	
+	
+	<sql id="findByWhereId">
+		<![CDATA[
+		   id = #id#
+	    ]]>
+	</sql>
+	
+	<sql id="findByWhere">
+		<isNotEmpty property="orgid" prepend="and">
+			<![CDATA[
+					orgid=#orgid#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="deductreason" prepend="and">
+			<![CDATA[
+					lower(deductreason) like lower('%'||#deductreason#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="addtime" prepend="and">
+			<![CDATA[
+					addtime >= to_date('$addtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endtime" prepend="and">
+			<![CDATA[
+					addtime <= to_date('$endtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="deducttype">
+			<isNotEqual property="deducttype" prepend="and" compareValue="-1">
+			<![CDATA[
+					deducttype=#deducttype#
+			]]>
+			</isNotEqual>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByList" parameterClass="ScoreDeduct" resultClass="ScoreDeduct">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select * from zs_scorededuct where id is not null 		
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+		 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCount" parameterClass="ScoreDeduct" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_scorededuct
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhere" />
+		</dynamic>
+	</select>
+	
+	<insert id="save" parameterClass="ScoreDeduct">
+		<![CDATA[
+			insert into zs_scorededuct (orgid,score,deductreason,deducttype,deductoper)
+			values (#orgid#,#score#,#deductreason#,#deducttype#,#deductoper#)				
+		]]>	
+		<selectKey resultClass="int">
+			<![CDATA[
+				SELECT SEQ_ZS_SCOREDEDUCT.CURRVAL as ID FROM dual
+			]]>
+		</selectKey>
+	</insert>
+	
+	<select id="findByCurrentScore" parameterClass="ScoreDeduct" resultClass="Integer">
+		<![CDATA[
+			select sum(score) from zs_scorededuct where orgid=#orgid#
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhere" />
+		</dynamic>
+		<![CDATA[
+			group by orgid
+		]]>
+	</select>
+	
+	
+	
+	
+	<sql id="findByWhereSelectAll">
+		
+		<isNotEmpty property="deductreason" prepend="and">
+			<![CDATA[
+					lower(sd.deductreason) like lower('%'||#deductreason#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="addtime" prepend="and">
+			<![CDATA[
+					sd.addtime >= to_date('$addtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endtime" prepend="and">
+			<![CDATA[
+					sd.addtime <= to_date('$endtime$','YYYY-MM-DD HH24:MI:SS')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="deducttype">
+			<isNotEqual property="deducttype" prepend="and" compareValue="-1">
+			<![CDATA[
+					sd.deducttype=#deducttype#
+			]]>
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEmpty property="orgname" prepend="and">
+			<![CDATA[
+					lower(o.orgname) like lower('%'||#orgname#||'%')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="cpccorp" prepend="and">
+			<![CDATA[
+					lower(o.cpccorp) like lower('%'||#cpccorp#||'%')
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="findByListSelectAll" parameterClass="ScoreDeduct" resultClass="ScoreDeduct">
+		<![CDATA[
+		select b.* from (select a.*,rownum r from (select sd.*,o.cpccorp,o.orgname from zs_scorededuct sd
+			inner join zs_org o
+			on sd.orgid = o.orgid
+			where sd.id is not null 
+		]]>
+		<dynamic prepend="and">
+			<include refid="findByWhereSelectAll" />
+		</dynamic>
+		<![CDATA[
+		 	order by id desc)a where rownum<=$pager_offset$+$pager_openset$) b where r>=$pager_offset$+1
+		]]>		
+	</select>
+	
+	<select id="findByCountSelectAll" parameterClass="ScoreDeduct" resultClass="Integer">
+		<![CDATA[
+			select count(1) from zs_scorededuct sd
+			inner join zs_org o
+			on sd.orgid = o.orgid
+		]]>
+		<dynamic prepend="where">
+			<include refid="findByWhereSelectAll" />
+		</dynamic>
+	</select>
+	
+</sqlMap>

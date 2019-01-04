@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<zyczs guid="100101200120102023">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="scale">
+		<scale desc="销售记录">
+				<scalediv desc="1-案秤、2-地秤">1</scalediv>
+				<scalecode desc="案秤编码">ac234234</scalecode>
+				<time desc="销售时间">2012-12-13 11:56:56</time>
+				<oldcorpcode desc="卖家">234234234</oldcorpcode>
+				<newcorpcode desc="买家">234234234</newcorpcode>
+				<weightall desc="出库重量/单位（kg）">1010</weightall>
+				<amount desc="金额">1010</amount>
+				<unitprice desc="单价">10</unitprice>
+				<batchno desc="药材批次号">1010020102</batchno> 
+				<pcode desc="商品编码">234234234</pcode>
+				<pname desc="品名">火鼠</pname>
+				<areacode desc="区域编码">234234</areacode>
+				<sourcecode desc="溯源码">35位数据</sourcecode>
+		</scale>
+	</msgbody>
+</zyczs>
+
+<!--销毁溯源码-->
+<msgbody msgtype="trash">
+<trashcodes desc="拆包废码">
+<sourcecode desc="溯源码">11010101020010200102012</sourcecode>
+<sourcecode desc="溯源码">11010101020010200102012</sourcecode>
+<sourcecode desc="溯源码">11010101020010200102012</sourcecode>
+<sourcecode desc="溯源码">11010101020010200102012</sourcecode>
+<sourcecode desc="溯源码">11010101020010200102012</sourcecode>
+</trashcodes>
+</msgbody>

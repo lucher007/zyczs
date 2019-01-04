@@ -1,0 +1,22 @@
+<zyczs guid="100101200120102023">
+	<deployment>
+		<code>deploy0001</code>
+		<name>chengdu</name>
+		<password>chengdu</password>
+	</deployment>
+	<msgbody msgtype="scaleprovide">
+		<scale desc="溯源秤发放">
+				<scalecode desc="溯源秤编码">00000000000000000000000123123</scalecode>
+				<cpccode desc="企业cpccode">101201212</cpccode>
+			        <scalediv desc="1-台秤、2-地秤"></scalediv>
+				<scalebrand desc="1-九洲、2-欣创摩尔"></scalebrand>
+				<scalemodel desc="秤型号">cts-100</scalemodel>
+				<providetime desc="发放时间">2012-12-13 11:56:56</providetime>
+		</scale>
+	</msgbody>
+</zyczs>
+
+
+
+
+

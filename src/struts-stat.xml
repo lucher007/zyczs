@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+   <package name="stat" extends="strutsdefault">
+    	<!-- 种植平台统计分析action配置 -->
+		<action name="medStat" class="medStatAction"> 
+			<result name="getGrowTaskStat" >/manage/medStat/growTaskStat.jsp</result>
+			<result name="getMedStorageStat" >/manage/medStat/medStorageStat.jsp</result>
+		    <result name="getMedSellStat" >/manage/medStat/medSellStat.jsp</result>
+		    <result name="medPriceChart" >/manage/medStat/medPriceChart.jsp</result>
+		</action>
+		<!-- 生产平台统计分析action配置 -->		
+		<action name="tabletStat" class="tabletStatAction">
+			<result name="medStorageStat">/manage/tabletStat/medStorageStat.jsp</result>
+			<result name="tabletStorageStat">/manage/tabletStat/tabletStorageStat.jsp</result>
+		    <result name="getTabletSellStat" >/manage/tabletStat/tabletSellStat.jsp</result>
+		</action>
+		<!-- 药材经销统计分析action配置 -->		
+		<action name="medSellStat" class="medSellStatAction">
+		    <result name="getMedSellStat" >/manage/medsell/medSellStat.jsp</result>
+		</action>
+		<!-- 饮片经销统计分析action配置 -->		
+		<action name="tabletSellStat" class="tabletSellStatAction">
+			<result name="findByTabletStorageStat">/manage/tabletSellStat/tabletStorageStat.jsp</result>
+		    <result name="getTabletSellStat" >/manage/tabletSellStat/tabletSellStat.jsp</result>
+		</action>
+		<!-- 医院平台统计分析action配置 -->		
+		<action name="hospitalStat" class="hospitalStatAction">
+			<result name="findByTabletStorageStat">/manage/hospitalStat/tabletStorageStat.jsp</result>
+		    <result name="getTabletBuyStat" >/manage/hospitalStat/tabletBuyStat.jsp</result>
+		</action>
+		<!-- 药材市场统计分析action配置 -->		
+		<action name="medMarketStat" class="medMarketStatAction">
+		    <result name="getMedSellStat" >/manage/medMarket/medSellStat.jsp</result>
+		</action>
+		<!-- 监管平台统计分析action配置 -->		
+		<action name="govmentStat" class="govmentStatAction">
+		    <result name="getSellTotalWeightStat" >/manage/govStat/findSellTotalWeightStat.jsp</result>
+		    <result name="getSellAveragePriceStat" >/manage/govStat/sellAveragePriceStat.jsp</result>
+		    <result name="getOrg" >/manage/govStat/findGovOrg.jsp</result>
+		    <result name="getScaleStat" >/manage/govStat/findScaleStat.jsp</result>
+		</action>
+    </package>
+</struts>

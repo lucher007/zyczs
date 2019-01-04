@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>饮片出库</title>
+<link type="text/css" rel="stylesheet" href="/style/production.css">
+</head>
+
+<body>
+<div id="body">
+	<div class="cur-pos">当前位置：饮片库存销售 > 饮片出库</div>
+	<div class="form-box">
+    	<form action="tablet-out2.html">
+    	<div class="fb-tit">待出库饮片 <b class="red f12">提示：输入溯源码后敲回车即可提交后台查询</b></div>
+        <div class="fb-con">
+        	<table width="736" border="0" cellpadding="0" cellspacing="0" class="com-sel">
+              <tr>
+              	<td align="right">溯源码：</td>
+                <td><input type="text" value="请手动输入或者使用扫码枪输入溯源码" id="boxcodes" class="inp w320" style=" padding:7px;"></td>
+                <td width="70" align="right">采购企业：</td>
+                <td width="216"><a href="javascript:void(0);">非溯源企业</a><a href="javascript:void(0);" class="current">溯源企业</a></td>
+              </tr>
+            </table>
+            <div class="com-list">
+            	<table width="100%" class="hide" border="0">
+                    <tr>
+                      <td width="148" align="right" height="30">采购企业名称：</td>
+                      <td width="400">	                    
+                          <input type="text" id="buycorpname1" name="buycorpname1" class="inp w250 fl"   maxlength="20" onblur="onBlurCheck(this.name);" >
+                          <a href="javascript:void(0);" onclick="selCompany(1);" id="xzyp3" class="btn-xzs fl">选择历史采购企业</a><span class="red">&nbsp;*</span>	  
+                      </td>
+                      <td colspan="2">
+                          <label name="buycorpname1Lab" id="buycorpname1Lab" class="noico">
+                              采购企业名称没有输入
+                          </label>
+                     </td>
+                    </tr>
+                    <tr>
+                      <td align="right" height="30">联系电话：</td>
+                      <td>
+                          <input type="text" class="inp w250" name="mobile" id="mobile" maxlength="20" onblur="checkVal(this.name);" onkeyup="onkeyupCheck(this);" onkeypress="onkeypressCheck(this);">
+                      </td>
+                      <td colspan="2">
+                          <label name="mobileLab" id="mobileLab" class="noico">
+                          </label>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="right" height="30">经营地址：</td>
+                      <td colspan="3"><input type="text" class="inp w250" name="address" id="address" maxlength="20"></td>
+                    </tr>
+                </table>
+                <table width="100%" class="show" border="0">
+                  <tr>
+                    <td width="148" align="right" height="30">采购企业名称（必填）：</td>
+                     <td colspan="3">	                
+                    <input type="text" id="buycorpname0" name="buycorpname0" class="inp w250 fl"   maxlength="20" >
+                    <a href="javascript:void(0);" onclick="selCompany(0);" id="xzyp" class="btn-xzs fl">选择采购企业</a> 
+                    <a href="javascript:void(0);" onclick="selCompany(2);" id="xzyp2" class="btn-xzs fl">选择历史采购企业</a> 
+                    <span class="red">&nbsp;*</span>           
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="30">采购企业CPC码（必填）：</td>
+                    <td colspan="3">
+                    <input type="text" class="inp w120" name="cpccorp" id="cpccorp" maxlength="14" onkeyup="onkeyupCheck(this);" onkeypress="onkeyupCheck(this);"  onblur="onkeyupCheck(this);">
+                    <span class="red">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td height="30">&nbsp;</td>
+                    <td colspan="3" class="red">注：14位数字编号、若填写，请确保填写正确。若填写错误，将导致采购企业无法入库。</td>
+                  </tr>
+                </table>
+                <table>
+                  <tr align="right" height="30">
+		        	<td width="148" align="right">出库操作人：</td>
+		            <td align="left" colspan="3"><input type="text" class="inp" name="operator" id="operator" maxlength="11"></td>
+		          </tr>
+                </table>
+            </div>
+            <table width="726" border="0" cellspacing="0" cellpadding="0" class="fbc-box ml10 mt5" id="content">
+              <tr class="fbc-tit">
+                <td>品名</td>
+                <td>生产批次号</td>
+                <td>包数</td>
+                <td>规格(kg/包)</td>
+                <td>总重量(kg)</td>
+                <td>实际重量(kg)</td>
+                <td>单价(元/kg)</td>
+                <td>总价(元)</td>
+              </tr>
+              <tr class="fb-list">
+                <td height="30">大师傅大师傅</td>
+                <td>235324234234234324234</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td><input maxlength="6" type="text" class="inp w60" /></td>
+                <td><input maxlength="6" type="text" class="inp w60"  /></td>
+                <td></td>
+              </tr>
+              <tr class="fb-list">
+                <td height="30">大师傅大师傅</td>
+                <td>235324234234234324234</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td><input maxlength="6" type="text" class="inp w60" /></td>
+                <td><input maxlength="6" type="text" class="inp w60"  /></td>
+                <td></td>
+              </tr>
+              <tr class="fb-list">
+                <td height="30">大师傅大师傅</td>
+                <td>235324234234234324234</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td><input maxlength="6" type="text" class="inp w60" /></td>
+                <td><input maxlength="6" type="text" class="inp w60"  /></td>
+                <td></td>
+              </tr>
+              <tr class="fb-list">
+                <td height="30">大师傅大师傅</td>
+                <td>235324234234234324234</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td><input maxlength="6" type="text" class="inp w60" /></td>
+                <td><input maxlength="6" type="text" class="inp w60"  /></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td height="30">大师傅大师傅</td>
+                <td>235324234234234324234</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td><input maxlength="6" type="text" class="inp w60" /></td>
+                <td><input maxlength="6" type="text" class="inp w60"  /></td>
+                <td></td>
+              </tr>
+            </table>
+            <table width="734" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="30"></td>
+                <td width="300"><span>合计重量(kg)：<b style="color:red;" id="totalweight">0</b></span><cite>总计(元)：<b class="red" id="totalmoney">0</b></cite></td>
+                <td height="30" width="10"></td>
+              </tr>
+            </table>
+        </div>
+        <div class="fb-bom">
+        	<cite class="gray"><input type="submit" value="下一步" class="sbt"></cite>
+            <input type="button" value="取 消" class="sbt">
+        </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" language="javascript" src="/js/common/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="/js/form.js"></script>
+<script type="text/javascript">
+	inp("#boxcodes","请手动输入或者使用扫码枪输入溯源码");
+	$(".com-sel a").click(function(){
+		$(this).addClass("current").siblings().removeClass("current");
+		var t = $(".com-sel a").index(this);
+		$(".com-list table").eq(t).attr("class","show");
+		t==0?$(".com-list table").eq(1).attr("class","hide"):$(".com-list table").eq(0).attr("class","hide");
+	});
+</script>
+</body>
+</html>
